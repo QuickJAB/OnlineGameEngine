@@ -1,3 +1,6 @@
+# Ignore Visual Studio workspace settings
+.vs/
+
 # Ignore build output folders
 /bin/
 /bin-int/
