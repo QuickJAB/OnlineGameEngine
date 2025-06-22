@@ -10,7 +10,7 @@ extern/
 
 # Visual Studio generated files (Windows-specific, safe to keep)
 *.sln
-*.vcxproj*
+*.vcxproj
 *.user
 *.opensdf
 *.sdf
