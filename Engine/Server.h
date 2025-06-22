@@ -2,22 +2,15 @@
 
 #include <mutex>
 #include <queue>
+#include <NetworkSettings.h>
 
 #include "../extern/enet/include/enet/enet.h"
-
-// Net channels are per-peer and should be used too logically separate out data flows
-enum NetChannel
-{
-	unreliable,
-	reliable,
-	size
-};
 
 struct PacketInfo
 {
 	std::string data;
-	int peerIndex;			// Set to -1 to send the packet to all peers
-	NetChannel channel;
+	int peerIndex;						// Set to -1 to send the packet to all peers
+	NetSettings::NetChannel channel;
 };
 
 class Server
@@ -31,7 +24,7 @@ public:
 	void cleanup();
 
 	void queueOutgoingPacketData(std::string* in_data, int in_peerIndex = -1,
-		NetChannel in_channel = NetChannel::unreliable);
+		NetSettings::NetChannel in_channel = NetSettings::NetChannel::unreliable);
 
 private:
 	ENetHost* m_host = nullptr;

@@ -15,11 +15,7 @@ bool Engine::init()
 
 	bool success = true;
 
-	// Create the server if required
-	if (m_mode == EngineMode::server)
-	{
-		success &= initServer();
-	}
+	success &= initNetwork();
 
 	std::cout << "Engine initialized!\n";
 	return success;
@@ -74,28 +70,47 @@ void Engine::cleanup()
 {
 	std::cout << "Closing engine...\n";
 
-	if (m_mode == EngineMode::server && m_server != nullptr)
+	// Cleanup the server
+	if (m_server != nullptr)
 	{
 		m_server->cleanup();
 		delete m_server;
 		m_server = nullptr;
 	}
+	
+	enet_deinitialize();
 }
 
-bool Engine::initServer()
+bool Engine::initNetwork()
 {
-	m_server = new Server();
-	if (m_server == nullptr)
+	std::cout << "Initializing network...\n";
+
+	// Initialize ENet
+	if (enet_initialize() != 0)
 	{
-		cout << "ERROR: Failed to create server!\n";
+		cout << "ERROR: Failed to init ENet!\n";
 		return false;
 	}
 
-	if (!m_server->init())
+	if (m_mode == EngineMode::client) // Create and initalize a client
 	{
-		cout << "ERROR: Failed to initialize server!\n";
-		return false;
+
+	}
+	else if (m_mode == EngineMode::server) // Create and initalize a server
+	{
+		m_server = new Server();
+		if (m_server == nullptr)
+		{
+			cout << "ERROR: Failed to create server!\n";
+			return false;
+		}
+		if (!m_server->init())
+		{
+			cout << "ERROR: Failed to initialize server!\n";
+			return false;
+		}
 	}
 
+	std::cout << "Network initialized!\n";
 	return true;
 }

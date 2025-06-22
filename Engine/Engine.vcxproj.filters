@@ -7,29 +7,23 @@
     <Filter Include="src\network">
       <UniqueIdentifier>{dade6f73-0b78-4966-8999-275dba78aa97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\network\server">
-      <UniqueIdentifier>{2df6c175-8bb9-42fc-a0c8-d91febeed52e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\network\client">
-      <UniqueIdentifier>{5cf34259-02ed-4e72-8279-658d401474dd}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="Server.cpp">
-      <Filter>src\network\server</Filter>
+      <Filter>src\network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="Server.h">
-      <Filter>src\network\server</Filter>
-    </ClInclude>
     <ClInclude Include="NetworkSettings.h">
+      <Filter>src\network</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
       <Filter>src\network</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,7 +4,6 @@
 
 enum EngineMode
 {
-	singleplayer,
 	client,
 	server
 };
@@ -12,7 +11,7 @@ enum EngineMode
 class Engine
 {
 public:
-	Engine(EngineMode in_mode = singleplayer);
+	Engine(EngineMode in_mode);
 	~Engine() = default;
 
 	bool init();
@@ -23,13 +22,12 @@ private:
 	bool m_running = false;
 	float m_fixedTimeStep = 0.f;
 
-	EngineMode m_mode = EngineMode::singleplayer;
+	EngineMode m_mode = EngineMode::client;
 
 	void cleanup();
 
-	// Server
+	// Network
 	Server* m_server = nullptr;
-
-	bool initServer();
+	bool initNetwork();
 };
 

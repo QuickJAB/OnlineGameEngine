@@ -1,28 +1,21 @@
 #include "Server.h"
 
 #include <iostream>
-#include <NetworkSettings.h>
 
 using namespace std;
+using namespace NetSettings;
+using namespace NetSettings::ServerSettings;
 
 bool Server::init()
 {
     cout << "Initializing server...\n";
-
-    // Initialize ENet and ensure it will automatically deinitalize when the program exist
-    if (enet_initialize() != 0)
-    {
-        cout << "ERROR: Failed to init ENet!\n";
-        return false;
-    }
 
     // Set up the servers address so that it can receive a connection from any IP on the Port defined in the settings
     m_address.host = ENET_HOST_ANY;
     m_address.port = NetSettings::PORT;
 
     // Create the ENet server object
-    m_host = enet_host_create(&m_address, NetSettings::Server::MAX_CONNECTIONS, NetChannel::size, NetSettings::Server::IN_BANDWIDTH,
-        NetSettings::Server::OUT_BANDWIDTH);
+    m_host = enet_host_create(&m_address, MAX_CONNECTIONS, NetChannel::size, IN_BANDWIDTH, OUT_BANDWIDTH);
     if (m_host == nullptr)
     {
         std::cout << "ERROR: Failed to create the host!\n";
@@ -46,7 +39,7 @@ void Server::update(bool& in_running)
     while (in_running)
     {
         // Listen for new network events
-        while (enet_host_service(m_host, &m_event, NetSettings::Server::TICK_TIME) > 0)
+        while (enet_host_service(m_host, &m_event, TICK_TIME) > 0)
         {
             switch (m_event.type)
             {
@@ -94,8 +87,6 @@ void Server::cleanup()
     }
 
     enet_host_destroy(m_host);
-
-    enet_deinitialize();
 }
 
 void Server::onClientConnected()
