@@ -1,0 +1,9 @@
+[submodule "extern/SDL"]
+    path = extern/SDL
+    url = https://github.com/libsdl-org/SDL.git
+[submodule "extern/SDL_ttf"]
+    path = extern/SDL_ttf
+    url = https://github.com/libsdl-org/SDL_ttf.git
+[submodule "extern/enet"]
+    path = extern/enet
+    url = https://github.com/lsalzman/enet.git

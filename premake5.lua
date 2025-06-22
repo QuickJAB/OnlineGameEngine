@@ -1,0 +1,118 @@
+workspace "OnlineGame"
+    architecture "x86_64"
+    configurations { "Debug", "Release" }
+
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
+IncludeDir = {}
+IncludeDir["SDL"] = "extern/SDL/install/include"
+IncludeDir["ENet"] = "extern/enet/install/include"
+IncludeDir["stb"] = "extern/stb"
+
+LibraryDir = {}
+LibraryDir["SDL_Debug"] = "extern/SDL/install/lib"
+LibraryDir["SDL_Release"] = "extern/SDL/install/lib"
+LibraryDir["ENet_Debug"] = "extern/enet/install/lib"
+LibraryDir["ENet_Release"] = "extern/enet/install/lib"
+
+project "Engine"
+    location "Engine"
+    kind "StaticLib"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files {
+        "Engine/**.h",
+        "Engine/**.cpp"
+    }
+
+    includedirs {
+        "Engine",
+        "%{IncludeDir.SDL}",
+        "%{IncludeDir.ENet}",
+        "%{IncludeDir.stb}"
+    }
+
+    filter "configurations:Debug"
+        libdirs {
+            "%{LibraryDir.SDL_Debug}",
+            "%{LibraryDir.ENet_Debug}"
+        }
+        links {
+            "SDL3", "enet"
+        }
+
+    filter "configurations:Release"
+        libdirs {
+            "%{LibraryDir.SDL_Release}",
+            "%{LibraryDir.ENet_Release}"
+        }
+        links {
+            "SDL3", "enet"
+        }
+
+    filter {}
+
+project "Client"
+    location "Client"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files {
+        "Client/**.h",
+        "Client/**.cpp"
+    }
+
+    includedirs {
+        "Engine",
+        "%{IncludeDir.SDL}",
+        "%{IncludeDir.ENet}",
+        "%{IncludeDir.stb}"
+    }
+
+    links {
+        "Engine"
+    }
+
+    dependson {
+        "Engine"
+    }
+
+project "Server"
+    location "Server"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files {
+        "Server/**.h",
+        "Server/**.cpp"
+    }
+
+    includedirs {
+        "Engine",
+        "%{IncludeDir.SDL}",
+        "%{IncludeDir.ENet}",
+        "%{IncludeDir.stb}"
+    }
+
+    links {
+        "Engine"
+    }
+
+    dependson {
+        "Engine"
+    }
