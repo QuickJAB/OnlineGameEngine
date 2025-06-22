@@ -43,7 +43,7 @@ project "Engine"
             "%{LibraryDir.ENet_Debug}"
         }
         links {
-            "SDL3", "enet"
+            "SDL3", "enet", "ws2_32", "winmm"
         }
 
     filter "configurations:Release"
@@ -52,7 +52,7 @@ project "Engine"
             "%{LibraryDir.ENet_Release}"
         }
         links {
-            "SDL3", "enet"
+            "SDL3", "enet", "ws2_32", "winmm"
         }
 
     filter {}
