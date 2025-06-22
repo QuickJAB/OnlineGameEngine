@@ -10,7 +10,6 @@ Run setup.bat
 
 ### Linux
 
-chmod +x setup.sh
-run setup.sh
+chmod +x setup.sh then run setup.sh
 
 Open the .sln and build the solution
