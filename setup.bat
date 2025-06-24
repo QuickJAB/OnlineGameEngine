@@ -34,7 +34,7 @@ echo Building SDL3 (Debug and Release)...
 mkdir extern\SDL\build >nul 2>&1
 cd extern\SDL\build
 
-cmake .. -DSDL_TEST=OFF -DCMAKE_INSTALL_PREFIX=..\install
+cmake .. -DSDL_TEST=OFF -DSDL_SHARED=ON -DSDL_STATIC=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=..\install
 
 cmake --build . --config Debug
 cmake --install . --config Debug
