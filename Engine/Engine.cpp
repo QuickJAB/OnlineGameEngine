@@ -55,6 +55,12 @@ void Engine::run()
 			// Remove the time step amount from the tick accumulator instead of setting it to 0 to avoid tick drift
 			tickAcum -= m_fixedTimeStep;
 		}
+
+		// Check if the game instance has requested to quit
+		if (m_gInst->shouldQuit())
+		{
+			m_running.store(false);
+		}
 	}
 
 	cleanup();
@@ -68,4 +74,6 @@ void Engine::cleanup()
 	m_gInst->cleanup();
 	delete m_gInst;
 	m_gInst = nullptr;
+
+	cout << "Engine closed\n";
 }

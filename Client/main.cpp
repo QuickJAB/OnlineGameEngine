@@ -1,9 +1,11 @@
 #pragma once
 
 #include <Engine.h>
-#include <GameInstance.h>
 #include <iostream>
 #include <atomic>
+#include <Window.h>
+#include <Renderer.h>
+#include "CliGameInstance.h"
 
 using namespace std;
 
@@ -15,7 +17,7 @@ int main()
 	atomic<bool> running = true;
 
 	// This will be initalized and cleanedup by the engine
-	GameInstance* gInst = new GameInstance();
+	CliGameInstance* gInst = new CliGameInstance();
 
 	// Create and inialize the engine
 	Engine* eng = new Engine(running, 1000.f / 60.f);
@@ -37,7 +39,6 @@ int main()
 	// Cleanup pointers
 	delete eng;
 	eng = nullptr;
-
 	gInst = nullptr;
 
 	cout << "Ended OnlineGameClient\n";

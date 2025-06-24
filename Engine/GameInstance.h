@@ -10,5 +10,10 @@ public:
 	virtual void fixedUpdate(float dt) {}
 	virtual bool init() { return true; }
 	virtual void cleanup() {}
+
+	bool shouldQuit() { return m_shouldQuit; }
+
+protected:
+	bool m_shouldQuit = false;
 };
 
