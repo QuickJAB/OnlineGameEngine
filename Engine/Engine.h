@@ -1,33 +1,26 @@
 #pragma once
 
-#include <Server.h>
+#include <atomic>
 
-enum EngineMode
-{
-	client,
-	server
-};
+class GameInstance;
 
 class Engine
 {
 public:
-	Engine(EngineMode in_mode);
+	Engine(std::atomic<bool>& in_running, float in_fixedTimeStep) : 
+		m_running(in_running), m_fixedTimeStep(in_fixedTimeStep) {}
 	~Engine() = default;
 
-	bool init();
+	bool init(GameInstance* in_gInst);
 	void run();
 
 private:
 	// General
-	bool m_running = false;
+	std::atomic<bool>& m_running;
 	float m_fixedTimeStep = 0.f;
 
-	EngineMode m_mode = EngineMode::client;
+	GameInstance* m_gInst = nullptr;
 
 	void cleanup();
-
-	// Network
-	Server* m_server = nullptr;
-	bool initNetwork();
 };
 

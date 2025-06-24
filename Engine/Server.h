@@ -16,17 +16,19 @@ struct PacketInfo
 class Server
 {
 public:
-	Server() = default;
+	Server(std::atomic<bool>& in_running) : m_running(in_running) {}
 	~Server() = default;
 
 	bool init();
-	void update(bool& in_running);
+	void update();
 	void cleanup();
 
 	void queueOutgoingPacketData(std::string* in_data, int in_peerIndex = -1,
 		NetSettings::NetChannel in_channel = NetSettings::NetChannel::unreliable);
 
 private:
+	std::atomic<bool>& m_running;
+	
 	ENetHost* m_host = nullptr;
 	ENetAddress m_address;
 	ENetEvent m_event;

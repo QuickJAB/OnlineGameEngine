@@ -7,6 +7,9 @@
     <Filter Include="src\network">
       <UniqueIdentifier>{dade6f73-0b78-4966-8999-275dba78aa97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\gameExtendables">
+      <UniqueIdentifier>{d4a215a6-28e5-438e-a650-85504e51fd0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -14,6 +17,9 @@
     </ClCompile>
     <ClCompile Include="Server.cpp">
       <Filter>src\network</Filter>
+    </ClCompile>
+    <ClCompile Include="GameInstance.cpp">
+      <Filter>src\gameExtendables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -25,6 +31,9 @@
     </ClInclude>
     <ClInclude Include="Server.h">
       <Filter>src\network</Filter>
+    </ClInclude>
+    <ClInclude Include="GameInstance.h">
+      <Filter>src\gameExtendables</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

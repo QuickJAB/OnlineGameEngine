@@ -10,6 +10,13 @@ bool Server::init()
 {
     cout << "Initializing server...\n";
 
+    // Initialize ENet
+    if (enet_initialize() != 0)
+    {
+        cout << "ERROR: Failed to initalize ENet!\n";
+        return false;
+    }
+
     // Set up the servers address so that it can receive a connection from any IP on the Port defined in the settings
     m_address.host = ENET_HOST_ANY;
     m_address.port = NetSettings::PORT;
@@ -27,16 +34,9 @@ bool Server::init()
     return true;
 }
 
-void Server::update(bool& in_running)
+void Server::update()
 {
-    // The server thread can call this function with a null server object
-    // in this scenario, prevent this thread from continuing by simply returning
-    if (this == nullptr)
-    {
-        return;
-    }
-
-    while (in_running)
+    while (m_running.load())
     {
         // Listen for new network events
         while (enet_host_service(m_host, &m_event, TICK_TIME) > 0)
@@ -87,6 +87,8 @@ void Server::cleanup()
     }
 
     enet_host_destroy(m_host);
+
+    enet_deinitialize();
 }
 
 void Server::onClientConnected()
