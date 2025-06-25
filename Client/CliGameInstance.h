@@ -3,6 +3,7 @@
 #include <GameInstance.h>
 #include <Window.h>
 #include <Renderer.h>
+#include <EventHandler.h>
 
 class CliGameInstance : public GameInstance
 {
@@ -17,4 +18,7 @@ public:
 private:
 	Window* m_window;
 	Renderer* m_renderer;
+	EventHandler* m_eventHndlr;
+
+	void onEventQuitGameReceived() { m_shouldQuit = true; }
 };

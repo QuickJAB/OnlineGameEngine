@@ -6,19 +6,10 @@ using namespace std;
 
 void CliGameInstance::update(float dt)
 {
-	// Temporary test code allowing the client to exit by closing the window
-	SDL_Event event;
-	SDL_PollEvent(&event);
-	if (event.type == SDL_EVENT_QUIT)
-	{
-		m_shouldQuit = true;
-	}
+	m_eventHndlr->pollEvents();
 
-	// Temporary test code for drawing a blank window
-	SDL_SetRenderDrawColor(m_renderer->getSDLRenderer(), 0x00, 0x00, 0x00, 0x00);
-	SDL_RenderClear(m_renderer->getSDLRenderer());
-
-	SDL_RenderPresent(m_renderer->getSDLRenderer());
+	m_renderer->clearScreen();
+	m_renderer->renderQueue();
 }
 
 bool CliGameInstance::init()
@@ -53,6 +44,17 @@ bool CliGameInstance::init()
 		return false;
 	}
 
+	// Create the event handler
+	m_eventHndlr = new EventHandler();
+	if (m_eventHndlr == nullptr)
+	{
+		cout << "ERROR: Failed to crete the event handler!\n";
+		return false;
+	}
+
+	// Bind delegates to event handler
+	m_eventHndlr->onEventQuit.bind(this, &CliGameInstance::onEventQuitGameReceived);
+
 	cout << "Initalized Client Game Instance\n";
 
 	return true;
@@ -60,6 +62,13 @@ bool CliGameInstance::init()
 
 void CliGameInstance::cleanup()
 {
+	// Unbind delegates from event handler
+	m_eventHndlr->onEventQuit.unbind();
+
+	// Cleanup event handler
+	delete m_eventHndlr;
+	m_eventHndlr = nullptr;
+
 	// Cleanup renderer
 	m_renderer->cleanup();
 	delete m_renderer;
