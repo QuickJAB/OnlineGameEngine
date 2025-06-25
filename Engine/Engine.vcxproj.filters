@@ -7,14 +7,14 @@
     <Filter Include="src\network">
       <UniqueIdentifier>{dade6f73-0b78-4966-8999-275dba78aa97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\gameExtendables">
-      <UniqueIdentifier>{d4a215a6-28e5-438e-a650-85504e51fd0c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window">
-      <UniqueIdentifier>{a997bd09-2693-40b5-ab0f-c107448d5c33}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\renderer">
+    <Filter Include="src\graphics">
       <UniqueIdentifier>{2bc8bb61-0fe6-422a-9109-bf5526770bbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\inputs">
+      <UniqueIdentifier>{25eb205a-8fec-401e-a914-4a4381d6c66a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gameBase">
+      <UniqueIdentifier>{d4a215a6-28e5-438e-a650-85504e51fd0c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -25,13 +25,16 @@
       <Filter>src\network</Filter>
     </ClCompile>
     <ClCompile Include="GameInstance.cpp">
-      <Filter>src\gameExtendables</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>src\window</Filter>
+      <Filter>src\gameBase</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
-      <Filter>src\renderer</Filter>
+      <Filter>src\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="EventHandler.cpp">
+      <Filter>src\inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>src\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -45,13 +48,19 @@
       <Filter>src\network</Filter>
     </ClInclude>
     <ClInclude Include="GameInstance.h">
-      <Filter>src\gameExtendables</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>src\window</Filter>
+      <Filter>src\gameBase</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
-      <Filter>src\renderer</Filter>
+      <Filter>src\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="EventHandler.h">
+      <Filter>src\inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Delegates.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>src\graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
