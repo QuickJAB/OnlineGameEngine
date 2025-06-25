@@ -11,8 +11,8 @@ public:
 	bool init(SDL_Window* in_window);
 	void cleanup();
 
-	// Remove this in the future, all rendering calls should be done through engine code
-	SDL_Renderer* getSDLRenderer() { return m_renderer; }
+	void clearScreen(Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 0);
+	void renderQueue();
 
 private:
 	SDL_Renderer* m_renderer;

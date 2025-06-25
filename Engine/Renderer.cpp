@@ -22,3 +22,14 @@ void Renderer::cleanup()
 	SDL_DestroyRenderer(m_renderer);
 	m_renderer = nullptr;
 }
+
+void Renderer::clearScreen(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+	SDL_SetRenderDrawColor(m_renderer, r, g, b, a);
+	SDL_RenderClear(m_renderer);
+}
+
+void Renderer::renderQueue()
+{
+	SDL_RenderPresent(m_renderer);
+}
