@@ -1,15 +1,14 @@
 #include "CliGameInstance.h"
 
 #include <iostream>
+#include <Entity.h>
 
 using namespace std;
 
 void CliGameInstance::update(float dt)
 {
 	m_eventHndlr->pollEvents();
-
-	m_renderer->clearScreen();
-	m_renderer->renderQueue();
+	m_renderer->draw();
 }
 
 bool CliGameInstance::init()
@@ -55,6 +54,10 @@ bool CliGameInstance::init()
 	// Bind delegates to event handler
 	m_eventHndlr->onEventQuit.bind(this, &CliGameInstance::onEventQuitGameReceived);
 
+	// Temp code to create an Entity and pass it to the renderer
+	entity = new Entity(910.f, 490.f, 100.f, 100.f);
+	m_renderer->addUIRect(entity->getRect());
+
 	cout << "Initalized Client Game Instance\n";
 
 	return true;
@@ -62,6 +65,10 @@ bool CliGameInstance::init()
 
 void CliGameInstance::cleanup()
 {
+	// Temp code to cleanup the entity
+	delete entity;
+	entity = nullptr;
+
 	// Unbind delegates from event handler
 	m_eventHndlr->onEventQuit.unbind();
 

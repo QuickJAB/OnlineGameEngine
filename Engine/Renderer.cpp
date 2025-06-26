@@ -18,18 +18,30 @@ bool Renderer::init(SDL_Window* in_window)
 
 void Renderer::cleanup()
 {
+	// Empty the render arrays, the individual objects are responsible for the respective lifetimes
+	m_uiRects.clear();
+
 	// Cleanup the renderer
 	SDL_DestroyRenderer(m_renderer);
 	m_renderer = nullptr;
 }
 
-void Renderer::clearScreen(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+void Renderer::draw()
 {
-	SDL_SetRenderDrawColor(m_renderer, r, g, b, a);
+	// Clear the screen to black
+	SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);
 	SDL_RenderClear(m_renderer);
-}
 
-void Renderer::renderQueue()
-{
+	// Render UI rects
+	if (!m_uiRects.empty())
+	{
+		SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
+		for (const SDL_FRect* rect : m_uiRects)
+		{
+			SDL_RenderFillRect(m_renderer, rect);
+		}
+	}
+	
+	// Present rendered world to the window
 	SDL_RenderPresent(m_renderer);
 }

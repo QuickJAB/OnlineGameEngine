@@ -36,6 +36,9 @@
     <ClCompile Include="Window.cpp">
       <Filter>src\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>src\gameBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>src\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>src\gameBase</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
