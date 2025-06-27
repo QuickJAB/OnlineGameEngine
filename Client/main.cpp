@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Engine.h>
-#include <iostream>
+#include <print>
 #include <atomic>
 #include <Window.h>
 #include <Renderer.h>
@@ -11,7 +11,7 @@ using namespace std;
 
 int main()
 {
-	cout << "Starting OnlineGameClient\n";
+	println("Starting OnlineGameClient");
 
 	// Create an atomic bool that can be safely accessed by multiple threads simultaneously
 	atomic<bool> running = true;
@@ -23,13 +23,13 @@ int main()
 	Engine* eng = new Engine(running, 1000.f / 60.f);
 	if (eng == nullptr)
 	{
-		cout << "ERROR: Failed to create the engine!\n";
+		println("ERROR: Failed to create the engine!");
 		return 1;
 	}
 
 	if (!eng->init(gInst))
 	{
-		cout << "ERROR: Failed to initalize the engine!\n";
+		println("ERROR: Failed to initalize the engine!");
 		return 1;
 	}
 
@@ -41,7 +41,7 @@ int main()
 	eng = nullptr;
 	gInst = nullptr;
 
-	cout << "Ended OnlineGameClient\n";
+	println("Ended OnlineGameClient");
 
 	return 0;
 }

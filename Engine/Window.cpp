@@ -1,6 +1,6 @@
 #include "Window.h"
 #include <SDL3/SDL_init.h>
-#include <iostream>
+#include <print>
 
 using namespace std;
 
@@ -16,7 +16,7 @@ bool Window::init()
 	// Init SDL, the window is the first thing in SDL that will be created so SDL is initalized here
 	if (!SDL_Init(SDL_INIT_VIDEO))
 	{
-		cout << "ERROR: Failed to init SDL!\n";
+		println("ERROR: Failed to init SDL!");
 		return false;
 	}
 
@@ -24,7 +24,7 @@ bool Window::init()
 	m_wnd = SDL_CreateWindow(m_title.c_str(), m_width, m_height, SDL_WINDOW_VULKAN);
 	if (m_wnd == nullptr)
 	{
-		cout << "ERROR: Failed to create the SDL_Window!\n";
+		println("ERROR: Failed to create the SDL_Window!");
 		return false;
 	}
 

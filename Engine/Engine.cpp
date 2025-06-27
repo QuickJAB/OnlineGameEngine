@@ -1,6 +1,6 @@
 #include "Engine.h"
 
-#include <iostream>
+#include <print>
 #include <chrono>
 
 #include "GameInstance.h"
@@ -9,26 +9,26 @@ using namespace std;
 
 bool Engine::init(GameInstance* in_gInst)
 {
-	cout << "Initializing engine...\n";
+	println("Initializing engine...");
 
 	bool success = true;
 
 	if (in_gInst == nullptr)
 	{
-		cout << "ERROR: Attempted to initalize engine with an invalid GameInstace!\n";
+		println("ERROR: Attempted to initalize engine with an invalid GameInstace!");
 		return false;
 	}
 	m_gInst = in_gInst;
 	success &= m_gInst->init();
 
-	cout << "Engine initialized!\n";
+	println("Engine initialized!");
 
 	return success;
 }
 
 void Engine::run()
 {
-	cout << "Started engine\n";
+	println("Started engine");
 
 	// Setup time variables
 	float tickAcum = 0.f;
@@ -68,12 +68,12 @@ void Engine::run()
 
 void Engine::cleanup()
 {
-	cout << "Closing engine...\n";
+	println("Closing engine...");
 
 	// Cleanup the game
 	m_gInst->cleanup();
 	delete m_gInst;
 	m_gInst = nullptr;
 
-	cout << "Engine closed\n";
+	println("Engine closed");
 }

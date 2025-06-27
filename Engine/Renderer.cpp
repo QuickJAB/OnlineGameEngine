@@ -1,5 +1,6 @@
 #include "Renderer.h"
-#include <iostream>
+
+#include <print>
 
 using namespace std;
 
@@ -9,7 +10,7 @@ bool Renderer::init(SDL_Window* in_window)
 	m_renderer = SDL_CreateRenderer(in_window, nullptr);
 	if (m_renderer == nullptr)
 	{
-		cout << "ERROR: Failed to create the SDL_Renderer!\n";
+		println("ERROR: Failed to create the SDL_Renderer!");
 		return false;
 	}
 

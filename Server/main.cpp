@@ -2,7 +2,7 @@
 
 #include <Engine.h>
 #include <GameInstance.h>
-#include <iostream>
+#include <print>
 #include <atomic>
 #include <Server.h>
 
@@ -10,7 +10,7 @@ using namespace std;
 
 int main()
 {
-	cout << "Starting OnlineGameServer\n";
+	println("Starting OnlineGameServer");
 
 	// Create an atomic bool that can be safely accessed by multiple threads simultaneously
 	atomic<bool> running = true;
@@ -19,13 +19,13 @@ int main()
 	Server* server = new Server(running);
 	if (server == nullptr)
 	{
-		cout << "ERROR: Failed to create the server!\n";
+		println("ERROR: Failed to create the server!");
 		return 1;
 	}
 
 	if (!server->init())
 	{
-		cout << "ERROR: Failed to init the server!\n";
+		println("ERROR: Failed to init the server!");
 		return 1;
 	}
 
@@ -36,13 +36,13 @@ int main()
 	Engine* eng = new Engine(running, 1000.f / 60.f);
 	if (eng == nullptr)
 	{
-		cout << "ERROR: Failed to create the engine!\n";
+		println("ERROR: Failed to create the engine!");
 		return 1;
 	}
 
 	if (!eng->init(gInst))
 	{
-		cout << "ERROR: Failed to initalize the engine!\n";
+		println("ERROR: Failed to initalize the engine!");
 		return 1;
 	}
 
@@ -65,7 +65,7 @@ int main()
 	delete server;
 	server = nullptr;
 
-	cout << "Ended OnlineGameServer\n";
+	println("Ended OnlineGameServer");
 
 	return 0;
 }

@@ -3,11 +3,9 @@
 
 void PlayerController::update(float in_dt, const bool* in_keyStates)
 {
-	if (m_entity == nullptr)
-	{
-		return;
-	}
+	if (m_entity == nullptr) return;
 
+	// Set the direction based of the key state bools of WASD keys
 	m_direction[0] = in_keyStates[SDL_SCANCODE_D] - in_keyStates[SDL_SCANCODE_A];
 	m_direction[1] = in_keyStates[SDL_SCANCODE_S] - in_keyStates[SDL_SCANCODE_W];
 

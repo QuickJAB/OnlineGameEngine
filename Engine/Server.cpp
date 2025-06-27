@@ -1,6 +1,6 @@
 #include "Server.h"
 
-#include <iostream>
+#include <print>
 
 using namespace std;
 using namespace NetSettings;
@@ -8,12 +8,12 @@ using namespace NetSettings::ServerSettings;
 
 bool Server::init()
 {
-    cout << "Initializing server...\n";
+    println("Initializing server...");
 
     // Initialize ENet
     if (enet_initialize() != 0)
     {
-        cout << "ERROR: Failed to initalize ENet!\n";
+        println("ERROR: Failed to initalize ENet!");
         return false;
     }
 
@@ -25,11 +25,11 @@ bool Server::init()
     m_host = enet_host_create(&m_address, MAX_CONNECTIONS, NetChannel::size, IN_BANDWIDTH, OUT_BANDWIDTH);
     if (m_host == nullptr)
     {
-        std::cout << "ERROR: Failed to create the host!\n";
+        println("ERROR: Failed to create the host!");
         return false;
     }
 
-    cout << "Server initialized!\n";
+    println("Server initialized!");
     
     return true;
 }
@@ -93,7 +93,7 @@ void Server::cleanup()
 
 void Server::onClientConnected()
 {
-    cout << "Client connected from " + std::to_string(m_event.peer->address.host) << "\n";
+    println("Client connected from {}", to_string(m_event.peer->address.host));
 }
 
 void Server::onReceivePacket()
@@ -106,7 +106,7 @@ void Server::onReceivePacket()
 
 void Server::onClientDisconnected()
 {
-    cout << "Client disconnected from " + std::to_string(m_event.peer->address.host) << "\n";
+    println("Client disconnected from {}", to_string(m_event.peer->address.host));
 }
 
 void Server::sendPackets()
@@ -143,7 +143,7 @@ void Server::sendPackets()
     ENetPacket* packet = enet_packet_create(pktInf.data.c_str(), strlen(pktInf.data.c_str()) + 1, pktFlag);
     if (packet == nullptr)
     {
-        std::cout << "WARNING: Failed to create a packet with the following payload: " << pktInf.data << "\n";
+        println("WARNING: Failed to create a packet with the following payload: {}", pktInf.data);
         return;
     }
 
@@ -161,8 +161,7 @@ void Server::sendPackets()
     }
     else
     {
-        std::cout << "WARNING: Invalid peedIndex " << pktInf.peerIndex <<
-            "! Failed to send a packet with the following payload: " << pktInf.data << "\n";
+        println("WARNING: Invalid peedIndex {}! Failed to send a packet with the following payload: {}", pktInf.peerIndex, pktInf.data);
     }
 }
 

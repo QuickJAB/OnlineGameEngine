@@ -1,6 +1,6 @@
 #include "CliGameInstance.h"
 
-#include <iostream>
+#include <print>
 #include <Entity.h>
 
 #include "PlayerController.h"
@@ -18,19 +18,19 @@ void CliGameInstance::update(float in_dt)
 
 bool CliGameInstance::init()
 {
-	cout << "Initalizing Client Game Instance...\n";
+	println("Initalizing Client Game Instance...");
 
 	// Create and init the window
 	m_window = new Window("Client", 1920, 1080);
 	if (m_window == nullptr)
 	{
-		cout << "ERROR: Failed to create the window!\n";
+		println("ERROR: Failed to create the window!");
 		return false;
 	}
 
 	if (!m_window->init())
 	{
-		cout << "ERROR: Failed to init the window!\n";
+		println("ERROR: Failed to init the window!");
 		return false;
 	}
 
@@ -38,13 +38,13 @@ bool CliGameInstance::init()
 	m_renderer = new Renderer();
 	if (m_renderer == nullptr)
 	{
-		cout << "ERROR: Failed to create the renderer!\n";
+		println("ERROR: Failed to create the renderer!");
 		return false;
 	}
 
 	if (!m_renderer->init(m_window->getSDLWindow()))
 	{
-		cout << "ERROR: Failed to initalize the renderer!\n";
+		println("ERROR: Failed to initalize the renderer!");
 		return false;
 	}
 
@@ -52,7 +52,7 @@ bool CliGameInstance::init()
 	m_eventHndlr = new EventHandler();
 	if (m_eventHndlr == nullptr)
 	{
-		cout << "ERROR: Failed to crete the event handler!\n";
+		println("ERROR: Failed to crete the event handler!");
 		return false;
 	}
 
@@ -66,7 +66,7 @@ bool CliGameInstance::init()
 	// Temp code to create a controller to posses the entity
 	m_playerCon = new PlayerController(m_entity);
 
-	cout << "Initalized Client Game Instance\n";
+	println("Initalized Client Game Instance");
 
 	return true;
 }
