@@ -11,6 +11,8 @@ public:
 
 	void pollEvents();
 
+	const bool* getKeyStates() { return m_keyStates; }
+
 	Delegate<void()> onEventQuit;
 
 private:

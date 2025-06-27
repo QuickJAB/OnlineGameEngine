@@ -15,9 +15,15 @@
     <ClCompile Include="CliGameInstance.cpp">
       <Filter>src\game</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CliGameInstance.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
       <Filter>src\game</Filter>
     </ClInclude>
   </ItemGroup>

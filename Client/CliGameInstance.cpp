@@ -3,11 +3,16 @@
 #include <iostream>
 #include <Entity.h>
 
+#include "PlayerController.h"
+
 using namespace std;
 
-void CliGameInstance::update(float dt)
+void CliGameInstance::update(float in_dt)
 {
 	m_eventHndlr->pollEvents();
+
+	m_playerCon->update(in_dt, m_eventHndlr->getKeyStates());
+
 	m_renderer->draw();
 }
 
@@ -55,8 +60,11 @@ bool CliGameInstance::init()
 	m_eventHndlr->onEventQuit.bind(this, &CliGameInstance::onEventQuitGameReceived);
 
 	// Temp code to create an Entity and pass it to the renderer
-	entity = new Entity(910.f, 490.f, 100.f, 100.f);
-	m_renderer->addUIRect(entity->getRect());
+	m_entity = new Entity(910.f, 490.f, 100.f, 100.f);
+	m_renderer->addUIRect(m_entity->getRect());
+
+	// Temp code to create a controller to posses the entity
+	m_playerCon = new PlayerController(m_entity);
 
 	cout << "Initalized Client Game Instance\n";
 
@@ -65,9 +73,13 @@ bool CliGameInstance::init()
 
 void CliGameInstance::cleanup()
 {
+	// Temp code to cleanup controller
+	delete m_playerCon;
+	m_playerCon = nullptr;
+
 	// Temp code to cleanup the entity
-	delete entity;
-	entity = nullptr;
+	delete m_entity;
+	m_entity = nullptr;
 
 	// Unbind delegates from event handler
 	m_eventHndlr->onEventQuit.unbind();

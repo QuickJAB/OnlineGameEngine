@@ -6,8 +6,8 @@ public:
 	GameInstance() = default;
 	~GameInstance() = default;
 
-	virtual void update(float dt) {}
-	virtual void fixedUpdate(float dt) {}
+	virtual void update(float in_dt) {}
+	virtual void fixedUpdate(float in_dt) {}
 	virtual bool init() { return true; }
 	virtual void cleanup() {}
 

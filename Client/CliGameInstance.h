@@ -6,6 +6,7 @@
 #include <EventHandler.h>
 
 class Entity;
+class PlayerController;
 
 class CliGameInstance : public GameInstance
 {
@@ -13,7 +14,7 @@ public:
 	CliGameInstance() = default;
 	~CliGameInstance() = default;
 
-	void update(float dt) override;
+	void update(float in_dt) override;
 	bool init() override;
 	void cleanup() override;
 
@@ -22,7 +23,8 @@ private:
 	Renderer* m_renderer;
 	EventHandler* m_eventHndlr;
 
-	Entity* entity = nullptr;
+	Entity* m_entity = nullptr;
+	PlayerController* m_playerCon = nullptr;
 
 	void onEventQuitGameReceived() { m_shouldQuit = true; }
 };
