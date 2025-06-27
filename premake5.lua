@@ -21,7 +21,7 @@ project "Engine"
     location "Engine"
     kind "StaticLib"
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++23"
     staticruntime "off"            -- Use dynamic CRT (/MD)
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -65,7 +65,7 @@ project "Client"
     location "Client"
     kind "ConsoleApp"
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++23"
     staticruntime "off"            -- Use dynamic CRT (/MD)
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -109,7 +109,7 @@ project "Server"
     location "Server"
     kind "ConsoleApp"
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++23"
     staticruntime "off"            -- Use dynamic CRT (/MD)
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
