@@ -12,13 +12,9 @@ public:
 	bool init(SDL_Window* in_window);
 	void cleanup();
 
-	void draw();
-
-	void addUIRect(const SDL_FRect* in_rect) { m_uiRects.push_back(in_rect); }
+	void draw(std::vector<const SDL_FRect*>& in_data);
 
 private:
 	SDL_Renderer* m_renderer;
-
-	std::vector<const SDL_FRect*> m_uiRects;
 };
 

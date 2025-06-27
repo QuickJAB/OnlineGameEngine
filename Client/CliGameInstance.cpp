@@ -1,7 +1,8 @@
 #include "CliGameInstance.h"
 
 #include <print>
-#include <Entity.h>
+#include <World.h>
+#include <GameMode.h>
 
 #include "PlayerController.h"
 
@@ -9,11 +10,17 @@ using namespace std;
 
 void CliGameInstance::update(float in_dt)
 {
+	// Get the inputs from the event handler
 	m_eventHndlr->pollEvents();
 
-	m_playerCon->update(in_dt, m_eventHndlr->getKeyStates());
+	// Update the game mode and the world
+	m_gameMode->update(in_dt, m_eventHndlr->getKeyStates());
+	m_world->update(in_dt);
 
-	m_renderer->draw();
+	// Gather the render data from the world and pass it to the renderer
+	vector<const SDL_FRect*> renderData;
+	m_world->collectRenderData(renderData);
+	m_renderer->draw(renderData);
 }
 
 bool CliGameInstance::init()
@@ -59,12 +66,14 @@ bool CliGameInstance::init()
 	// Bind delegates to event handler
 	m_eventHndlr->onEventQuit.bind(this, &CliGameInstance::onEventQuitGameReceived);
 
-	// Temp code to create an Entity and pass it to the renderer
-	m_entity = new Entity(910.f, 490.f, 100.f, 100.f);
-	m_renderer->addUIRect(m_entity->getRect());
-
-	// Temp code to create a controller to posses the entity
-	m_playerCon = new PlayerController(m_entity);
+	// TEMPORARY CODE START
+	m_world = new World();
+	Entity* entity = m_world->spawnEntity(100.f, 100.f);
+	m_gameMode = new GameMode();
+	PlayerController* playerController = new PlayerController("playerController");
+	m_gameMode->registerController(playerController);
+	m_gameMode->setControllerEntity("playerController", entity);
+	// TEMPORARY CODE END
 
 	println("Initalized Client Game Instance");
 
@@ -73,14 +82,6 @@ bool CliGameInstance::init()
 
 void CliGameInstance::cleanup()
 {
-	// Temp code to cleanup controller
-	delete m_playerCon;
-	m_playerCon = nullptr;
-
-	// Temp code to cleanup the entity
-	delete m_entity;
-	m_entity = nullptr;
-
 	// Unbind delegates from event handler
 	m_eventHndlr->onEventQuit.unbind();
 

@@ -1,16 +1,21 @@
 #pragma once
+#include <string>
 
-#include <Entity.h>
+class Entity;
 
 class Controller
 {
 public:
-	Controller(Entity* in_entity) : m_entity(in_entity) {}
+	Controller(std::string in_id) : m_id(in_id) {}
 	~Controller() = default;
 
 	virtual void update(float in_dt, const bool* in_keyStates) {}
+	void posses(Entity* in_entity) { m_entity = in_entity; }
+
+	std::string getId() const { return m_id; }
 
 protected:
 	Entity* m_entity = nullptr;
+	std::string m_id;
 };
 
