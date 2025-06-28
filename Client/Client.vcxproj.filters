@@ -12,7 +12,7 @@
     <ClCompile Include="main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="CliGameInstance.cpp">
+    <ClCompile Include="CGameInstance.cpp">
       <Filter>src\game</Filter>
     </ClCompile>
     <ClCompile Include="PlayerController.cpp">
@@ -20,7 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CliGameInstance.h">
+    <ClInclude Include="CGameInstance.h">
       <Filter>src\game</Filter>
     </ClInclude>
     <ClInclude Include="PlayerController.h">

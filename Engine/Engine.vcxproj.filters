@@ -36,16 +36,16 @@
     <ClCompile Include="Window.cpp">
       <Filter>src\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>src\gameBase</Filter>
-    </ClCompile>
     <ClCompile Include="Controller.cpp">
       <Filter>src\gameBase</Filter>
     </ClCompile>
-    <ClCompile Include="World.cpp">
+    <ClCompile Include="Entity.cpp">
       <Filter>src\gameBase</Filter>
     </ClCompile>
     <ClCompile Include="GameMode.cpp">
+      <Filter>src\gameBase</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
       <Filter>src\gameBase</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,16 +74,16 @@
     <ClInclude Include="Window.h">
       <Filter>src\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>src\gameBase</Filter>
-    </ClInclude>
     <ClInclude Include="Controller.h">
       <Filter>src\gameBase</Filter>
     </ClInclude>
-    <ClInclude Include="World.h">
+    <ClInclude Include="Entity.h">
       <Filter>src\gameBase</Filter>
     </ClInclude>
     <ClInclude Include="GameMode.h">
+      <Filter>src\gameBase</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
       <Filter>src\gameBase</Filter>
     </ClInclude>
   </ItemGroup>

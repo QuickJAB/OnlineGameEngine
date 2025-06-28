@@ -5,7 +5,7 @@
 #include <atomic>
 #include <Window.h>
 #include <Renderer.h>
-#include "CliGameInstance.h"
+#include "CGameInstance.h"
 
 using namespace std;
 
@@ -17,7 +17,7 @@ int main()
 	atomic<bool> running = true;
 
 	// This will be initalized and cleanedup by the engine
-	CliGameInstance* gInst = new CliGameInstance();
+	CGameInstance* gInst = new CGameInstance();
 
 	// Create and inialize the engine
 	Engine* eng = new Engine(running, 1000.f / 60.f);

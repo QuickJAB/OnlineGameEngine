@@ -61,6 +61,50 @@ project "Engine"
 
     filter {}
 
+project "Game"
+    location "Game"
+    kind "StaticLib"
+    language "C++"
+    cppdialect "C++23"
+    staticruntime "off"            -- Use dynamic CRT (/MD)
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files {
+        "Game/**.h",
+        "Game/**.cpp"
+    }
+	
+	    includedirs {
+        "Engine",
+        "%{IncludeDir.SDL}",
+        "%{IncludeDir.ENet}",
+        "%{IncludeDir.stb}"
+    }
+
+    links {
+        "Engine"
+    }
+
+    dependson {
+        "Engine"
+    }
+	
+	    filter "configurations:Debug"
+        runtime "Debug"
+        postbuildcommands {
+            'cmd /c if exist "..\\extern\\SDL\\install\\bin\\SDL3.dll" copy /Y "..\\extern\\SDL\\install\\bin\\SDL3.dll" "%{cfg.targetdir}"'
+        }
+
+    filter "configurations:Release"
+        runtime "Release"
+        postbuildcommands {
+            'cmd /c if exist "..\\extern\\SDL\\install\\bin\\SDL3.dll" copy /Y "..\\extern\\SDL\\install\\bin\\SDL3.dll" "%{cfg.targetdir}"'
+        }
+
+    filter {}
+	
 project "Client"
     location "Client"
     kind "ConsoleApp"
@@ -84,11 +128,11 @@ project "Client"
     }
 
     links {
-        "Engine"
+        "Game"
     }
 
     dependson {
-        "Engine"
+        "Game"
     }
 
     filter "configurations:Debug"
@@ -128,11 +172,11 @@ project "Server"
     }
 
     links {
-        "Engine"
+        "Game"
     }
 
     dependson {
-        "Engine"
+        "Game"
     }
 
     filter "configurations:Debug"

@@ -1,4 +1,4 @@
-#include "CliGameInstance.h"
+#include "CGameInstance.h"
 
 #include <print>
 #include <World.h>
@@ -8,7 +8,7 @@
 
 using namespace std;
 
-void CliGameInstance::update(float in_dt)
+void CGameInstance::update(float in_dt)
 {
 	// Get the inputs from the event handler
 	m_eventHndlr->pollEvents();
@@ -23,7 +23,7 @@ void CliGameInstance::update(float in_dt)
 	m_renderer->draw(renderData);
 }
 
-bool CliGameInstance::init()
+bool CGameInstance::init()
 {
 	println("Initalizing Client Game Instance...");
 
@@ -64,7 +64,7 @@ bool CliGameInstance::init()
 	}
 
 	// Bind delegates to event handler
-	m_eventHndlr->onEventQuit.bind(this, &CliGameInstance::onEventQuitGameReceived);
+	m_eventHndlr->onEventQuit.bind(this, &CGameInstance::onEventQuitGameReceived);
 
 	// TEMPORARY CODE START
 	m_world = new World();
@@ -80,7 +80,7 @@ bool CliGameInstance::init()
 	return true;
 }
 
-void CliGameInstance::cleanup()
+void CGameInstance::cleanup()
 {
 	// Unbind delegates from event handler
 	m_eventHndlr->onEventQuit.unbind();

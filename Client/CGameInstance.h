@@ -5,11 +5,11 @@
 #include <Renderer.h>
 #include <EventHandler.h>
 
-class CliGameInstance : public GameInstance
+class CGameInstance : public GameInstance
 {
 public:
-	CliGameInstance() = default;
-	~CliGameInstance() = default;
+	CGameInstance() = default;
+	~CGameInstance() = default;
 
 	void update(float in_dt) override;
 	bool init() override;
