@@ -10,6 +10,8 @@ using namespace std;
 
 void CGameInstance::update(float in_dt)
 {
+	__super::update(in_dt);
+
 	// Get the inputs from the event handler
 	m_eventHndlr->pollEvents();
 
@@ -25,6 +27,11 @@ void CGameInstance::update(float in_dt)
 
 bool CGameInstance::init()
 {
+	if (!__super::init())
+	{
+		return false;
+	}
+
 	println("Initalizing Client Game Instance...");
 
 	// Create and init the window
@@ -98,4 +105,6 @@ void CGameInstance::cleanup()
 	m_window->cleanup();
 	delete m_window;
 	m_window = nullptr;
+
+	__super::cleanup();
 }

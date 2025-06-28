@@ -1,24 +1,24 @@
 #pragma once
 
-#include <GameInstance.h>
+#include <GGameInstance.h>
 #include <Window.h>
 #include <Renderer.h>
 #include <EventHandler.h>
 
-class CGameInstance : public GameInstance
+class CGameInstance : public GGameInstance
 {
 public:
-	CGameInstance() = default;
-	~CGameInstance() = default;
+	CGameInstance() : GGameInstance() {};
+	~CGameInstance() {};
 
 	void update(float in_dt) override;
 	bool init() override;
 	void cleanup() override;
 
 private:
-	Window* m_window;
-	Renderer* m_renderer;
-	EventHandler* m_eventHndlr;
+	Window* m_window = nullptr;
+	Renderer* m_renderer = nullptr;
+	EventHandler* m_eventHndlr = nullptr;
 
 	void onEventQuitGameReceived() { m_shouldQuit = true; }
 };

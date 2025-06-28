@@ -124,7 +124,8 @@ project "Client"
         "Engine",
         "%{IncludeDir.SDL}",
         "%{IncludeDir.ENet}",
-        "%{IncludeDir.stb}"
+        "%{IncludeDir.stb}",
+		"Game",
     }
 
     links {
@@ -168,7 +169,8 @@ project "Server"
         "Engine",
         "%{IncludeDir.SDL}",
         "%{IncludeDir.ENet}",
-        "%{IncludeDir.stb}"
+        "%{IncludeDir.stb}",
+		"Game",
     }
 
     links {
