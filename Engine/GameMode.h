@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <string>
 
@@ -11,13 +12,12 @@ public:
 	GameMode() = default;
 	~GameMode() = default;
 
-	void update(float in_dt, const bool* in_keyStates);
+	virtual void update(float in_dt);
 
-	void registerController(Controller* in_controller);
-
+	virtual void registerController(Controller* in_controller);
 	void setControllerEntity(std::string in_controllerId, Entity* in_entity);
 
-private:
+protected:
 	std::vector<Controller*> m_controllers;
 };
 

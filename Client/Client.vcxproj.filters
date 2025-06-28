@@ -15,7 +15,10 @@
     <ClCompile Include="CGameInstance.cpp">
       <Filter>src\game</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerController.cpp">
+    <ClCompile Include="CGameMode.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerController.cpp">
       <Filter>src\game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -23,7 +26,10 @@
     <ClInclude Include="CGameInstance.h">
       <Filter>src\game</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerController.h">
+    <ClInclude Include="CGameMode.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerController.h">
       <Filter>src\game</Filter>
     </ClInclude>
   </ItemGroup>

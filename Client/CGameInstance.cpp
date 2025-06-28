@@ -2,35 +2,14 @@
 
 #include <print>
 #include <World.h>
-#include <GameMode.h>
-
-#include "PlayerController.h"
+#include "CGameMode.h"
+#include "CPlayerController.h"
 
 using namespace std;
 
-void CGameInstance::update(float in_dt)
-{
-	__super::update(in_dt);
-
-	// Get the inputs from the event handler
-	m_eventHndlr->pollEvents();
-
-	// Update the game mode and the world
-	m_gameMode->update(in_dt, m_eventHndlr->getKeyStates());
-	m_world->update(in_dt);
-
-	// Gather the render data from the world and pass it to the renderer
-	vector<const SDL_FRect*> renderData;
-	m_world->collectRenderData(renderData);
-	m_renderer->draw(renderData);
-}
-
 bool CGameInstance::init()
 {
-	if (!__super::init())
-	{
-		return false;
-	}
+	if (!__super::init()) return false;
 
 	println("Initalizing Client Game Instance...");
 
@@ -73,11 +52,25 @@ bool CGameInstance::init()
 	// Bind delegates to event handler
 	m_eventHndlr->onEventQuit.bind(this, &CGameInstance::onEventQuitGameReceived);
 
-	// TEMPORARY CODE START
+	// Create the world
 	m_world = new World();
+	if (m_world == nullptr)
+	{
+		println("ERROR: Failed to create the World!");
+		return false;
+	}
+
+	// Create the game mode and pass it the event handler
+	m_gameMode = new CGameMode(m_eventHndlr);
+	if (m_gameMode == nullptr)
+	{
+		println("ERROR: Failed to create the Game Mode!");
+		return false;
+	}
+
+	// TEMPORARY CODE START
 	Entity* entity = m_world->spawnEntity(100.f, 100.f);
-	m_gameMode = new GameMode();
-	PlayerController* playerController = new PlayerController("playerController");
+	CPlayerController* playerController = new CPlayerController("playerController");
 	m_gameMode->registerController(playerController);
 	m_gameMode->setControllerEntity("playerController", entity);
 	// TEMPORARY CODE END
@@ -85,6 +78,20 @@ bool CGameInstance::init()
 	println("Initalized Client Game Instance");
 
 	return true;
+}
+
+void CGameInstance::update(float in_dt)
+{
+	// Get inputs
+	m_eventHndlr->pollEvents();
+
+	// Update the game
+	__super::update(in_dt);
+
+	// Pass render data from the world to the renderer
+	vector<const SDL_FRect*> renderData;
+	m_world->collectRenderData(renderData);
+	m_renderer->draw(renderData);
 }
 
 void CGameInstance::cleanup()

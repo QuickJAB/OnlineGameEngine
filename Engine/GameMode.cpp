@@ -4,11 +4,11 @@
 
 using namespace std;
 
-void GameMode::update(float in_dt, const bool* in_keyStates)
+void GameMode::update(float in_dt)
 {
 	for (Controller* controller : m_controllers)
 	{
-		controller->update(in_dt, in_keyStates);
+		controller->update(in_dt);
 	}
 }
 

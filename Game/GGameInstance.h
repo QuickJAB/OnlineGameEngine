@@ -8,11 +8,8 @@ public:
 	GGameInstance() : GameInstance() {}
 	~GGameInstance() {}
 
-	virtual void update(float in_dt) override { __super::update(in_dt); };
-	virtual bool init() override { return __super::init(); };
-	virtual void cleanup() override { __super::cleanup(); };
-
-protected:
+	virtual bool init() override;
+	virtual void update(float in_dt) override;
+	virtual void cleanup() override;
 
 };
-
