@@ -1,6 +1,9 @@
 #pragma once
+
 #include <vector>
-#include "Entity.h"
+#include <SDL3/SDL_rect.h>
+
+class Entity;
 
 class World
 {

@@ -1,9 +1,10 @@
 #pragma once
 
-#include <GGameInstance.h>
 #include <Window.h>
 #include <Renderer.h>
 #include <EventHandler.h>
+
+#include <GGameInstance.h>
 
 class CGameInstance : public GGameInstance
 {

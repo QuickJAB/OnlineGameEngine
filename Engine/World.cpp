@@ -1,5 +1,7 @@
 #include "World.h"
 
+#include "Entity.h"
+
 using namespace std;
 
 void World::update(float in_dt)

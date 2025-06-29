@@ -1,10 +1,12 @@
 #pragma once
 
-#include <Engine.h>
 #include <print>
 #include <atomic>
+
+#include <Engine.h>
 #include <Window.h>
 #include <Renderer.h>
+
 #include "CGameInstance.h"
 
 using namespace std;

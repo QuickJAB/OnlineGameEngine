@@ -1,9 +1,10 @@
 #pragma once
 
-#include <Engine.h>
-#include <GameInstance.h>
 #include <print>
 #include <atomic>
+
+#include <Engine.h>
+#include <GameInstance.h>
 #include <Server.h>
 
 using namespace std;

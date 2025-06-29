@@ -1,7 +1,8 @@
 #pragma once
 
-#include <GPlayerController.h>
 #include <EventHandler.h>
+
+#include <GPlayerController.h>
 
 class CPlayerController : public GPlayerController
 {

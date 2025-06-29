@@ -1,7 +1,8 @@
 #pragma once
 
-#include <GGameMode.h>
 #include <EventHandler.h>
+
+#include <GGameMode.h>
 
 class CGameMode : public GGameMode
 {
