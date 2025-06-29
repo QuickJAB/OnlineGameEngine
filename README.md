@@ -2,14 +2,6 @@
 
 ## Setup Instructions
 
-Clone the repository
-
-### Windows
-
-Run setup.bat
-
-### Linux
-
-chmod +x setup.sh then run setup.sh
-
-Open the .sln and build the solution
+1. Clone the repository
+2. Run setup.bat
+3. Open the .sln and build the solution
