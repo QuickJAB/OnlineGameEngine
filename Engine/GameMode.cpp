@@ -1,6 +1,6 @@
 #include "GameMode.h"
 
-#include <Controller.h>
+#include "Controller.h"
 
 using namespace std;
 

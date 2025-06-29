@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <NetworkSettings.h>
+#include "NetworkSettings.h"
 #include <mutex>
 #include <queue>
 #include "../extern/enet/include/enet/enet.h"
