@@ -69,11 +69,15 @@ bool Client::tryConnect(std::string in_ip, uint32_t in_attemptLength)
 
 void Client::onReceiveConnection()
 {
+    __super::onReceiveConnection();
+
     println("Connected to the server!");
 }
 
 void Client::onReceiveDisconnection()
 {
+    __super::onReceiveDisconnection();
+
     println("Disconnected from the server!");
 }
 
