@@ -46,6 +46,9 @@ void NetBase::update()
             }
         }
 
+        // Destroy the received packet
+        enet_packet_destroy(m_event.packet);
+
         // Send network packets
         sendPackets();
     }
@@ -71,16 +74,22 @@ void NetBase::cleanup()
     enet_deinitialize();
 }
 
+void NetBase::onReceiveConnection()
+{
+    queueIncomingPacketData(m_event.packet);
+}
+
 void NetBase::onReceivePacket()
 {
     // NOTE TO FUTURE SELF: This function should be expanded to partially process the packet data and instantly send out
     // any data that is just being relayed through the server to other players e.g. text chat messages
 
-    // Copy the packet to the incoming queue
     queueIncomingPacketData(m_event.packet);
+}
 
-    // Destroy the original packet copy so a new packet can be receieved
-    enet_packet_destroy(m_event.packet);
+void NetBase::onReceiveDisconnection()
+{
+    queueIncomingPacketData(m_event.packet);
 }
 
 void NetBase::queueIncomingPacketData(ENetPacket* in_packet)

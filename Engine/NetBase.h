@@ -43,9 +43,9 @@ protected:
 
 	virtual void queueIncomingPacketData(ENetPacket* in_packet);
 
-	virtual void onReceiveConnection() {}
+	virtual void onReceiveConnection();
 	virtual void onReceivePacket();
-	virtual void onReceiveDisconnection() {}
+	virtual void onReceiveDisconnection();
 
 	virtual void sendPackets() {}
 };
