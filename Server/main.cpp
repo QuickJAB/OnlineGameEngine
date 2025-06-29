@@ -23,7 +23,7 @@ int main()
 		return 1;
 	}
 
-	if (!server->init())
+	if (!server->init(NetSettings::ServerSettings::TICK_TIME))
 	{
 		println("ERROR: Failed to init the server!");
 		return 1;

@@ -48,6 +48,12 @@
     <ClCompile Include="World.cpp">
       <Filter>src\gameBase</Filter>
     </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>src\network</Filter>
+    </ClCompile>
+    <ClCompile Include="NetBase.cpp">
+      <Filter>src\network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -85,6 +91,12 @@
     </ClInclude>
     <ClInclude Include="World.h">
       <Filter>src\gameBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>src\network</Filter>
+    </ClInclude>
+    <ClInclude Include="NetBase.h">
+      <Filter>src\network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
