@@ -40,8 +40,6 @@ void Server::cleanup()
         }
     }
 
-    enet_host_destroy(m_host);
-
     __super::cleanup();
 }
 

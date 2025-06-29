@@ -66,6 +66,8 @@ void NetBase::cleanup()
         m_outgoingPacketData.pop();
     }
 
+    enet_host_destroy(m_host);
+
     enet_deinitialize();
 }
 
