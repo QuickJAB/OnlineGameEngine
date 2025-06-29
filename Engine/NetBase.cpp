@@ -56,7 +56,7 @@ void NetBase::cleanup()
     // Cleanup all the unused incoming packet data
     while (!m_incomingPacketData.empty())
     {
-        enet_packet_destroy(m_incomingPacketData.front());
+        enet_packet_destroy(&m_incomingPacketData.front());
         m_incomingPacketData.pop();
     }
 
@@ -76,7 +76,11 @@ void NetBase::onReceivePacket()
     // NOTE TO FUTURE SELF: This function should be expanded to partially process the packet data and instantly send out
     // any data that is just being relayed through the server to other players e.g. text chat messages
 
+    // Copy the packet to the incoming queue
     queueIncomingPacketData(m_event.packet);
+
+    // Destroy the original packet copy so a new packet can be receieved
+    enet_packet_destroy(m_event.packet);
 }
 
 void NetBase::queueIncomingPacketData(ENetPacket* in_packet)
@@ -85,7 +89,7 @@ void NetBase::queueIncomingPacketData(ENetPacket* in_packet)
     m_incomingDataMutex.lock();
 
     // Add the ENet event to the queue of network events for the game thread to process
-    m_incomingPacketData.push(in_packet);
+    m_incomingPacketData.push(*in_packet);
 
     // Unlock the queue so it can be accessed by the game thread again
     m_incomingDataMutex.unlock();

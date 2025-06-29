@@ -39,7 +39,7 @@ protected:
 	std::queue<PacketInfo> m_outgoingPacketData;
 
 	std::mutex m_incomingDataMutex;
-	std::queue<ENetPacket*> m_incomingPacketData;
+	std::queue<ENetPacket> m_incomingPacketData;
 
 	virtual void queueIncomingPacketData(ENetPacket* in_packet);
 
