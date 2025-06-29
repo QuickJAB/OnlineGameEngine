@@ -47,14 +47,14 @@ void Server::onReceiveConnection()
 {
     __super::onReceiveConnection();
 
-    println("Client connected from {}", to_string(m_event.peer->address.host));
+    println("Client connected!");
 }
 
 void Server::onReceiveDisconnection()
 {
     __super::onReceiveDisconnection();
 
-    println("Client disconnected from {}", to_string(m_event.peer->address.host));
+    println("Client disconnected!");
 }
 
 void Server::sendPackets()
