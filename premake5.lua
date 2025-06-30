@@ -1,12 +1,8 @@
-outputdir = "bin/%{cfg.buildcfg}/%{cfg.architecture}"
+outputdir = "%{cfg.buildcfg}/%{cfg.architecture}"
 
 LocalFiles = {
 	Public = "%{prj.location}/src/public",
 	Private = "%{prj.location}/src/private"
-}
-
-ExternalDLLDir = {
-	SDL = "Externals/SDL3/lib/x64" 	-- Fix this if support for other architectures is added
 }
 
 ExternalIncludeDir = {
@@ -16,7 +12,7 @@ ExternalIncludeDir = {
 
 workspace "OnlineGame"
 	architecture "x64"
-	configurations { "Debug", "Release", "Dist" }
+	configurations { "Debug", "Release" }
 
 project "Engine"
 	location "Source/%{prj.name}"
@@ -26,8 +22,8 @@ project "Engine"
 	systemversion "latest"
 	staticruntime "on"
 
-	targetdir	(outputdir .. "/bin/%{prj.name}")
-	objdir		(outputdir .. "/obj/%{prj.name}")
+	targetdir	("bin/" .. outputdir .. "/%{prj.name}")
+	objdir		("obj/" .. outputdir .. "/%{prj.name}")
 
 	files {
 		"%{prj.location}/src/**.h",
@@ -42,7 +38,7 @@ project "Engine"
 	}
 
 	libdirs {
-		"Externals/SDL3/lib/x64", 	-- Fix this if support for other architectures is added
+		"Externals/SDL3/lib/x64",
 		"Externals/enet"
 	}
 
@@ -62,8 +58,8 @@ project "Game"
 	systemversion "latest"
 	staticruntime "on"
 
-	targetdir	(outputdir .. "/bin/%{prj.name}")
-	objdir		(outputdir .. "/obj/%{prj.name}")
+	targetdir	("bin/" .. outputdir .. "/%{prj.name}")
+	objdir		("obj/" .. outputdir .. "/%{prj.name}")
 
 	files {
 		"%{prj.location}/src/**.h",
@@ -94,8 +90,8 @@ project "Server"
 	systemversion "latest"
 	staticruntime "on"
 
-	targetdir	(outputdir .. "/bin/%{prj.name}")
-	objdir		(outputdir .. "/obj/%{prj.name}")
+	targetdir	("bin/" .. outputdir .. "/%{prj.name}")
+	objdir		("obj/" .. outputdir .. "/%{prj.name}")
 
 	files {
 		"%{prj.location}/src/**.h",
@@ -120,7 +116,7 @@ project "Server"
 	}
 
 	postbuildcommands {
-		ok, err = os.copyfile("%{ExternalDLLDir.SDL}", "%{prj.location}")
+		'cmd /c if exist "..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" copy /Y "..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" "%{cfg.targetdir}"'
 	}
 
 project "Client"
@@ -131,8 +127,8 @@ project "Client"
 	systemversion "latest"
 	staticruntime "on"
 
-	targetdir	(outputdir .. "/bin/%{prj.name}")
-	objdir		(outputdir .. "/obj/%{prj.name}")
+	targetdir	("bin/" .. outputdir .. "/%{prj.name}")
+	objdir		("obj/" .. outputdir .. "/%{prj.name}")
 
 	files {
 		"%{prj.location}/src/**.h",
@@ -157,5 +153,5 @@ project "Client"
 	}
 
 	postbuildcommands {
-		ok, err = os.copyfile("%{ExternalDLLDir.SDL}", "%{prj.location}")
+		'cmd /c if exist "..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" copy /Y "..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" "%{cfg.targetdir}"'
 	}
