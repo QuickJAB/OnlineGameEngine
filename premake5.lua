@@ -50,6 +50,14 @@ project "Engine"
 		"winmm"
 	}
 
+	filter "configurations:Debug"
+        symbols "on"
+		optimize "off"
+
+	filter "configurations:Release"
+		symbols "off"
+        optimize "on"
+
 project "Game"
 	location "Source/%{prj.name}"
 	kind "StaticLib"
@@ -81,6 +89,14 @@ project "Game"
 	dependson {
 		"Engine"
 	}
+
+	filter "configurations:Debug"
+        symbols "on"
+		optimize "off"
+
+	filter "configurations:Release"
+		symbols "off"
+        optimize "on"
 
 project "Server"
 	location "Source/%{prj.name}"
@@ -119,6 +135,14 @@ project "Server"
 		'cmd /c if exist "..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" copy /Y "..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" "%{cfg.targetdir}"'
 	}
 
+	filter "configurations:Debug"
+        symbols "on"
+		optimize "off"
+
+	filter "configurations:Release"
+		symbols "off"
+        optimize "on"
+
 project "Client"
 	location "Source/%{prj.name}"
 	kind "ConsoleApp"
@@ -155,3 +179,11 @@ project "Client"
 	postbuildcommands {
 		'cmd /c if exist "..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" copy /Y "..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" "%{cfg.targetdir}"'
 	}
+
+	filter "configurations:Debug"
+        symbols "on"
+		optimize "off"
+
+	filter "configurations:Release"
+		symbols "off"
+        optimize "on"
