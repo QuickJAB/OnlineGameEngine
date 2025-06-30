@@ -24,7 +24,7 @@ public:
 	virtual void update();
 	virtual void cleanup();
 
-	virtual void queueOutgoingPacketData(std::string* in_data, int in_peerIndex = -1,
+	virtual void queueOutgoingPacketData(std::string in_data, int in_peerIndex = -1,
 		NetSettings::NetChannel in_channel = NetSettings::NetChannel::unreliable);
 
 protected:

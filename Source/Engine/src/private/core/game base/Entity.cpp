@@ -1,7 +1,10 @@
 #include "core/game base/Entity.h"
 
-Entity::Entity(float in_x, float in_y, float in_width, float in_height)
+#include <string>
+
+Entity::Entity(std::string in_id, float in_x, float in_y, float in_width, float in_height)
 {
+	m_id = in_id;
 	m_rect = { in_x, in_y, in_width, in_height };
 }
 

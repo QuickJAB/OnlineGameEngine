@@ -83,4 +83,41 @@ void Client::onReceiveDisconnection()
 
 void Client::sendPackets()
 {
+    // Lock the queue so the game thread cannot add to it
+    m_outgoingDataMutex.lock();
+
+    if (m_outgoingPacketData.empty())
+    {
+        // Unlock queue so the game thread can add to it again before early returning
+        m_outgoingDataMutex.unlock();
+        return;
+    }
+
+    // Retrieve the oldest packet info from the queue
+    const PacketInfo pktInf = m_outgoingPacketData.front();
+    m_outgoingPacketData.pop();
+
+    // Unlock queue so the game thread can add to it again
+    m_outgoingDataMutex.unlock();
+
+    // Set the reliability based on the chosen network channel (Default as unreliable)
+    ENetPacketFlag pktFlag = ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT;
+    if (pktInf.channel == NetChannel::reliable)
+    {
+        pktFlag = ENET_PACKET_FLAG_RELIABLE;
+    }
+    else if (pktInf.channel == NetChannel::unreliable)
+    {
+        pktFlag = ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT;
+    }
+
+    // Create packet from the info retrieved from the queue
+    ENetPacket* packet = enet_packet_create(pktInf.data.c_str(), strlen(pktInf.data.c_str()) + 1, pktFlag);
+    if (packet == nullptr)
+    {
+        println("WARNING: Failed to create a packet with the following payload: {}", pktInf.data);
+        return;
+    }
+
+    enet_peer_send(m_peer, static_cast<enet_uint8>(pktInf.channel), packet);
 }

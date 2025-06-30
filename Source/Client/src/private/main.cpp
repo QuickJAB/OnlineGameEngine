@@ -68,6 +68,9 @@ int main()
 		return 1;
 	}
 
+	// Pass a reference to the client network object to the game instance
+	gInst->initNet(client);
+
 	// Create and start the client thread
 	thread clientThread(&Client::update, client);
 

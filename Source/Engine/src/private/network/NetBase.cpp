@@ -81,10 +81,12 @@ void NetBase::onReceiveConnection()
 
 void NetBase::onReceivePacket()
 {
+    println("Received packet data: ({})", (char*)m_event.packet->data);
+
     // NOTE TO FUTURE SELF: This function should be expanded to partially process the packet data and instantly send out
     // any data that is just being relayed through the server to other players e.g. text chat messages
 
-    queueIncomingPacketData(m_event.packet);
+    //queueIncomingPacketData(m_event.packet);
 }
 
 void NetBase::onReceiveDisconnection()
@@ -94,6 +96,8 @@ void NetBase::onReceiveDisconnection()
 
 void NetBase::queueIncomingPacketData(ENetPacket* in_packet)
 {
+    if (in_packet == nullptr) return;
+
     // Lock the queue from being accessed by the game thread
     m_incomingDataMutex.lock();
 
@@ -104,13 +108,13 @@ void NetBase::queueIncomingPacketData(ENetPacket* in_packet)
     m_incomingDataMutex.unlock();
 }
 
-void NetBase::queueOutgoingPacketData(std::string* in_data, int in_peerIndex, NetChannel in_channel)
+void NetBase::queueOutgoingPacketData(std::string in_data, int in_peerIndex, NetChannel in_channel)
 {
     // Lock the queue so it cannot be accessed by other threads
     m_outgoingDataMutex.lock();
 
     // Create and add a new PacketInfo struct to the queue
-    m_outgoingPacketData.push({ *in_data, in_peerIndex, in_channel });
+    m_outgoingPacketData.push({ in_data, in_peerIndex, in_channel });
 
     // Unlock the queue so it can be accessed by other threads again
     m_outgoingDataMutex.unlock();

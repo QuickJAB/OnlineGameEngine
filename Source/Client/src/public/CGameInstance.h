@@ -6,6 +6,8 @@
 
 #include <GGameInstance.h>
 
+class Client;
+
 class CGameInstance : public GGameInstance
 {
 public:
@@ -22,4 +24,6 @@ private:
 	EventHandler* m_eventHndlr = nullptr;
 
 	void onEventQuitGameReceived() { m_shouldQuit = true; }
+
+	Client* getClient();
 };

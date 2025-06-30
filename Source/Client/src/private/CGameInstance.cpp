@@ -2,6 +2,8 @@
 
 #include <print>
 
+#include <network/Client.h>
+
 #include <core/game base/World.h>
 
 #include "CGameMode.h"
@@ -71,7 +73,7 @@ bool CGameInstance::init()
 	}
 
 	// TEMPORARY CODE START
-	Entity* entity = m_world->spawnEntity(100.f, 100.f);
+	Entity* entity = m_world->spawnEntity("player", 100.f, 100.f);
 	CPlayerController* playerController = new CPlayerController("playerController");
 	m_gameMode->registerController(playerController);
 	m_gameMode->setControllerEntity("playerController", entity);
@@ -89,6 +91,13 @@ void CGameInstance::update(float in_dt)
 
 	// Update the game
 	__super::update(in_dt);
+
+	// TEMPORARY CODE START
+	float x, y;
+	m_world->getEntityPos("player", x, y);
+	std::string pkt = "id:player x:" + to_string(x) + " y:" + to_string(y);
+	getClient()->queueOutgoingPacketData(pkt);
+	// TEMPORARY CODE END
 
 	// Pass render data from the world to the renderer
 	vector<const SDL_FRect*> renderData;
@@ -116,4 +125,9 @@ void CGameInstance::cleanup()
 	m_window = nullptr;
 
 	__super::cleanup();
+}
+
+Client* CGameInstance::getClient()
+{
+	return static_cast<Client*>(m_net);
 }

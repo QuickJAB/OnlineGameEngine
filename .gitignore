@@ -2,6 +2,6 @@
 bin/
 obj/
 
-*.sln
+*.sln**
 **.vcxproj
 **.vcxproj.*
