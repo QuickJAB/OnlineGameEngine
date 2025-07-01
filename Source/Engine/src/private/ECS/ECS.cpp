@@ -21,15 +21,6 @@ const uint32_t ECS::createEntity()
 	return entity;
 }
 
-template<typename... Components>
-const uint32_t ECS::createEntity(Components... in_components)
-{
-	// Create the entity using the default method
-	const uint32_t entity = createEntity();
-
-	// TODO: Loop through the provided components and add them to the containers
-}
-
 void ECS::destroyEntity(const uint32_t& in_entity)
 {
 	// Early return if the given id isn't a valid entity
