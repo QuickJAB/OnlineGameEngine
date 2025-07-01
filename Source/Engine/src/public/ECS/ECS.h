@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <queue>
-#include <unordered_set>
+#include <vector>
 
 class ECS
 {
@@ -28,5 +28,5 @@ private:
 	std::queue<const uint32_t> m_freedEntityIds;
 
 	// A store of all current entities
-	std::unordered_set<const uint32_t> m_entities;
+	std::vector<const uint32_t> m_entities;
 };

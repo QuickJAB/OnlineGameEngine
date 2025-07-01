@@ -17,7 +17,7 @@ const uint32_t ECS::createEntity()
 	}
 	
 	// Add the entity to the set and return a copy of it
-	m_entities.insert(entity);
+	m_entities.push_back(entity);
 	return entity;
 }
 
@@ -33,12 +33,13 @@ const uint32_t ECS::createEntity(Components... in_components)
 void ECS::destroyEntity(const uint32_t& in_entity)
 {
 	// Early return if the given id isn't a valid entity
-	if (!m_entities.contains(in_entity)) return;
+	auto entityPtr = std::find(m_entities.begin(), m_entities.end(), in_entity);
+	if (entityPtr == m_entities.end()) return;
 
 	// TODO: Remove all components associate with the entity
-	
-	// Remove the entity from the set
-	m_entities.erase(in_entity);
+
+	// Remove the entity from the vector
+	m_entities.erase(entityPtr);
 	
 	// Add the destroyed entities id to the queue of freed ids for reuse
 	m_freedEntityIds.push(in_entity);
