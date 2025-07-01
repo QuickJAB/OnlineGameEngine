@@ -28,5 +28,5 @@ private:
 	std::queue<const uint32_t> m_freedEntityIds;
 
 	// A store of all current entities
-	std::vector<const uint32_t> m_entities;
+	std::vector<uint32_t> m_entities;
 };
