@@ -28,11 +28,11 @@ public:
 	const uint32_t createEntity();
 
 	// Destroy an entity and all its components
-	void destroyEntity(const uint32_t& in_entity);
+	void destroyEntity(const uint32_t in_entity);
 
 	template <typename T>
 	// Add a component to an entity
-	void addComponent(const uint32_t& in_entity, const std::string& in_componentType, const T& in_component)
+	void addComponent(const uint32_t in_entity, const std::string& in_componentType, const T& in_component)
 	{
 		// Check if a container exists for this component type
 		if (!m_componentContainers.contains(in_componentType))
@@ -45,7 +45,7 @@ public:
 		IComponentContainer* genericContainer = m_componentContainers[in_componentType];
 
 		// Cast it to a pointer to a container of the given type
-		ComponentContainer<T>* componentContainer = dynamic_cast<ComponentContainer<T>*>(genericContainer);
+		ComponentContainer<T>* componentContainer = static_cast<ComponentContainer<T>*>(genericContainer);
 		
 		// Add the given component to the containers vector
 		componentContainer->components.push_back(in_component);

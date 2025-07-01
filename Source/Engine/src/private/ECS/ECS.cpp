@@ -21,7 +21,7 @@ const uint32_t ECS::createEntity()
 	return entity;
 }
 
-void ECS::destroyEntity(const uint32_t& in_entity)
+void ECS::destroyEntity(const uint32_t in_entity)
 {
 	// Early return if the given id isn't a valid entity
 	auto entityPtr = std::find(m_entities.begin(), m_entities.end(), in_entity);
