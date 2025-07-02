@@ -34,33 +34,26 @@ public:
 
 	template <typename T>
 	// Add a component to an entity
-	void addComponent(const uint32_t in_entity, const T& in_component)
+	void addComponent(const uint32_t in_entity)
 	{
-		// Get the components type as a string
-		std::string componentType = typeid(in_component).name();
+		// Try and get a pointer to the container of the given component
+		ComponentContainer<T>* componentContainer = tryGetComponentContainer<T>();
 
 		// Check if a container exists for this component type
-		bool containerExists = m_componentContainers.contains(componentType);
-		if (!containerExists)
+		if (componentContainer == nullptr)
 		{
 			// If it doesn't, create a new ComponentContainer of the given component with an id of the given component type
-			m_componentContainers.insert(std::pair<std::string, IComponentContainer*>(componentType, new ComponentContainer<T>()));
-		}
+			m_componentContainers.insert(std::pair<std::string, IComponentContainer*>(typeid(T).name(), new ComponentContainer<T>()));
 
-		// Get a pointer to a generic container
-		IComponentContainer* genericContainer = m_componentContainers[componentType];
+			// Get a pointer to the newly created container
+			componentContainer = tryGetComponentContainer<T>();
 
-		// Cast it to a pointer to a container of the given type
-		ComponentContainer<T>* componentContainer = static_cast<ComponentContainer<T>*>(genericContainer);
-		
-		// If a new container was created, resize the sparse array to a temporary magic number (This will be replaced soon)
-		if (!containerExists)
-		{
+			// Set a default size of the sparse array to be 100 (THIS IS W.I.P)
 			componentContainer->sparse.resize(100, (size_t)-1);
 		}
 
 		// Add the given component to the dense vector
-		componentContainer->dense.push_back(in_component);
+		componentContainer->dense.push_back(T());
 
 		// Add the memory offset of the component in dense vector to the index of the entity in sparse
 		componentContainer->sparse.insert(componentContainer->sparse.begin() + in_entity, componentContainer->dense.size() - 1);
@@ -70,17 +63,9 @@ public:
 	// Remove a component from an entity
 	void removeComponent(const uint32_t in_entity)
 	{
-		// Get the components type as a string
-		std::string componentType = typeid(T).name();
-
-		// Early return if a container for that component doesn't exist
-		if (!m_componentContainers.contains(componentType)) return;
-
-		// Get a pointer to a generic container
-		IComponentContainer* genericContainer = m_componentContainers[componentType];
-
-		// Cast it to a pointer to a container of the given type
-		ComponentContainer<T>* componentContainer = static_cast<ComponentContainer<T>*>(genericContainer);
+		// Get the container for the given component, return if non exist
+		ComponentContainer<T>* componentContainer = tryGetComponentContainer<T>();
+		if (componentContainer == nullptr) return;
 
 		// Early return if the component container is empty
 		if (componentContainer->dense.empty()) return;
@@ -107,17 +92,9 @@ public:
 	template <typename T>
 	T* getComponent(const uint32_t in_entity)
 	{
-		// Get the components type as a string
-		std::string componentType = typeid(T).name();
-
-		// Early return if a container for that component doesn't exist
-		if (!m_componentContainers.contains(componentType)) return nullptr;
-
-		// Get a pointer to a generic container
-		IComponentContainer* genericContainer = m_componentContainers[componentType];
-
-		// Cast it to a pointer to a container of the given type
-		ComponentContainer<T>* componentContainer = static_cast<ComponentContainer<T>*>(genericContainer);
+		// Get the container for the given component, return if non exist
+		ComponentContainer<T>* componentContainer = tryGetComponentContainer<T>();
+		if (componentContainer == nullptr) return nullptr;
 
 		// Return nullptr if the component container is empty
 		if (componentContainer->dense.empty()) return nullptr;
@@ -144,4 +121,20 @@ private:
 
 	// A map with the component type as the key and a pointer to its container as the value
 	std::unordered_map<std::string, IComponentContainer*> m_componentContainers;
+
+	template <typename T>
+	ComponentContainer<T>* tryGetComponentContainer()
+	{
+		// Get the components type as a string
+		std::string componentType = typeid(T).name();
+
+		// Early return if a container for that component doesn't exist
+		if (!m_componentContainers.contains(componentType)) return nullptr;
+
+		// Get a pointer to a generic container
+		IComponentContainer* genericContainer = m_componentContainers[componentType];
+
+		// Cast it to a pointer to a container of the given type
+		return static_cast<ComponentContainer<T>*>(genericContainer);
+	}
 };
