@@ -15,7 +15,8 @@ struct IComponentContainer
 template <typename T>
 struct ComponentContainer : public IComponentContainer
 {
-	std::vector<T> components;
+	std::vector<T> dense;
+	std::vector<size_t> sparse;
 };
 
 class ECS
@@ -48,7 +49,10 @@ public:
 		ComponentContainer<T>* componentContainer = static_cast<ComponentContainer<T>*>(genericContainer);
 		
 		// Add the given component to the containers vector
-		componentContainer->components.push_back(in_component);
+		componentContainer->dense.push_back(in_component);
+
+		// Add the position of the component in dense to the index of the entity in sparse
+		componentContainer->sparse.insert(componentContainer->sparse.begin() + in_entity, componentContainer->dense.size() - 1);
 	}
 
 private:
