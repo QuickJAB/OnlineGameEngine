@@ -1,6 +1,8 @@
 #pragma once
 
-struct TransformComp
+#include "ECS/component/ComponentBase.h"
+
+struct TransformComp : public ComponentBase
 {
 	float x = 0;
 	float y = 0;
