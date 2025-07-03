@@ -77,10 +77,8 @@ public:
 	{
 		if (std::find(m_entities.begin(), m_entities.end(), in_entity) == m_entities.end()) return;
 
-		// Try and get a pointer to the container of the given component
 		ComponentContainer<T>* componentContainer = getComponentContainer<T>();
 
-		// Check if a container exists for this component type
 		if (componentContainer == nullptr)
 		{
 			componentContainer = createComponentContainer<T>();
@@ -121,10 +119,8 @@ public:
 	}
 
 private:
-	// The id to be given to the next created entity
 	uint32_t m_nextEntityId = 0;
 
-	// Previously used entity ids ready for reassignment
 	std::queue<uint32_t> m_freedEntityIds;
 
 	std::vector<uint32_t> m_entities;
@@ -140,7 +136,7 @@ private:
 
 		if (!m_componentContainers.contains(componentType)) return nullptr;
 
-		// Cast the pointer to the correct type and return a pointer to it
+		// Cast the pointer to the correct type and return
 		return static_cast<ComponentContainer<T>*>(m_componentContainers[componentType]);
 	}
 
@@ -152,7 +148,6 @@ private:
 
 		ComponentContainer<T>* container = new ComponentContainer<T>();
 
-		// Add the new container at key component type to the map
 		m_componentContainers.insert(std::pair<std::string, IComponentContainer*>(componentType, container));
 
 		return container;
