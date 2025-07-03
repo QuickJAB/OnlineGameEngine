@@ -4,6 +4,7 @@
 #include <queue>
 #include <vector>
 #include <unordered_map>
+#include <typeinfo>
 
 struct IComponentContainer
 {
@@ -13,50 +14,52 @@ struct IComponentContainer
 template <typename T>
 struct ComponentContainer : public IComponentContainer
 {
-	// Stores the components in densly packed memory
-	std::vector<T> dense;
+	std::vector<T> components;
 
-	// Stores the memory offset of a component in dense at the index of the owning entity
-	std::vector<size_t> sparse;
+	// Maps entity id to the memory offset of the component in components
+	std::unordered_map<uint32_t, size_t> map;
 
 	template <typename T>
 	void add(const uint32_t in_entity)
 	{
-		dense.push_back(T());
+		if (map.contains(in_entity)) return;
 
-		// Set the index at entity in sparse to the memory offset of the component in dense
-		sparse.insert(sparse.begin() + in_entity, dense.size() - 1);
+		components.push_back(T());
+		map.insert(std::pair<uint32_t, size_t>(in_entity, components.size() - 1));
 	}
 
 	template <typename T>
 	void remove(const uint32_t in_entity)
 	{
-		if (dense.empty()) return;
+		if (components.empty() || !map.contains(in_entity)) return;
 
-		// Get a pointer to the entity in sparse for the component at the back of dense
-		auto it = std::find(sparse.begin(), sparse.end(), dense.size() - 1);
+		// Get the entity id of the component at the back of components
+		uint32_t otherEntity;
+		for (auto& it : map)
+		{
+			if (it.second == components.size() - 1)
+			{
+				otherEntity = it.first;
+				break;
+			}
+		}
 
-		// Swap the component at the back of dense with with one that's being removed
-		iter_swap(dense.begin() + sparse[in_entity], dense.end() - 1);
+		// Set the memory offset of the entity that owns the component at the back of components to the offset of the component thats being removed
+		map[otherEntity] = map[in_entity];
 
-		dense.pop_back();
+		// Swap the component at the back of components with the component thats being removed
+		iter_swap(components.begin() + map[in_entity], components.end() - 1);
 
-		// Update the swapped entities memory offset in sparse to the new value
-		sparse[it - sparse.begin()] = sparse[in_entity];
-
-		sparse[in_entity] = (size_t)-1;
+		components.pop_back();
+		map.erase(in_entity);
 	}
 
 	template <typename T>
 	T* get(const uint32_t in_entity)
 	{
-		if (dense.empty()) return nullptr;
+		if (components.empty() || !map.contains(in_entity)) return nullptr;
 
-		size_t memOffset = sparse[in_entity];
-
-		if (memOffset > dense.size() - 1) return nullptr;
-
-		return &dense[memOffset];
+		return &components[map[in_entity]];
 	}
 };
 
@@ -81,9 +84,6 @@ public:
 		if (componentContainer == nullptr)
 		{
 			componentContainer = createComponentContainer<T>();
-
-			// Set a default size of the sparse array to be 100 (THIS IS W.I.P)
-			componentContainer->sparse.resize(100, (size_t)-1);
 		}
 
 		componentContainer->add<T>(in_entity);
@@ -103,7 +103,7 @@ public:
 	template <typename T>
 	T* getComponent(const uint32_t in_entity)
 	{
-		if (std::find(m_entities.begin(), m_entities.end(), in_entity) == m_entities.end()) return;
+		if (std::find(m_entities.begin(), m_entities.end(), in_entity) == m_entities.end()) return nullptr;
 
 		ComponentContainer<T>* componentContainer = getComponentContainer<T>();
 		if (componentContainer == nullptr) return nullptr;
@@ -117,7 +117,7 @@ public:
 		ComponentContainer<T>* componentContainer = getComponentContainer<T>();
 		if (componentContainer == nullptr) return nullptr;
 
-		return &componentContainer->dense;
+		return &componentContainer->components;
 	}
 
 private:
