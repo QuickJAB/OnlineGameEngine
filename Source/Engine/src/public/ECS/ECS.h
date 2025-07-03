@@ -38,11 +38,8 @@ struct ComponentContainer : public IComponentContainer
 	{
 		if (components.empty() || !map.contains(in_entity)) return;
 
-		// Get the base for the component at the back of components
-		ComponentBase base = static_cast<ComponentBase>(components.back());
-
 		// Set the memory offset of the entity that owns the component at the back of components to the offset of the component thats being removed
-		map[base.owner] = map[in_entity];
+		map[components.back().owner] = map[in_entity];
 
 		// Swap the component at the back of components with the component thats being removed
 		iter_swap(components.begin() + map[in_entity], components.end() - 1);
