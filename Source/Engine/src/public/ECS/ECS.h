@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <typeinfo>
 
+#include "component/ComponentBase.h"
+
 struct IComponentContainer
 {
 	virtual ~IComponentContainer() {}
@@ -24,7 +26,10 @@ struct ComponentContainer : public IComponentContainer
 	{
 		if (map.contains(in_entity)) return;
 
-		components.push_back(T());
+		T component = T();
+		component.owner = in_entity;
+
+		components.push_back(component);
 		map.insert(std::pair<uint32_t, size_t>(in_entity, components.size() - 1));
 	}
 
@@ -33,19 +38,11 @@ struct ComponentContainer : public IComponentContainer
 	{
 		if (components.empty() || !map.contains(in_entity)) return;
 
-		// Get the entity id of the component at the back of components
-		uint32_t otherEntity;
-		for (auto& it : map)
-		{
-			if (it.second == components.size() - 1)
-			{
-				otherEntity = it.first;
-				break;
-			}
-		}
+		// Get the base for the component at the back of components
+		ComponentBase base = static_cast<ComponentBase>(components.back());
 
 		// Set the memory offset of the entity that owns the component at the back of components to the offset of the component thats being removed
-		map[otherEntity] = map[in_entity];
+		map[base.owner] = map[in_entity];
 
 		// Swap the component at the back of components with the component thats being removed
 		iter_swap(components.begin() + map[in_entity], components.end() - 1);
