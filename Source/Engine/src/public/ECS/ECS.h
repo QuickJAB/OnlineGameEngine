@@ -11,6 +11,8 @@
 struct IComponentContainer
 {
 	virtual ~IComponentContainer() {}
+
+	virtual void remove(const uint32_t in_entity) {}
 };
 
 template <typename T>
@@ -33,8 +35,7 @@ struct ComponentContainer : public IComponentContainer
 		map.insert(std::pair<uint32_t, size_t>(in_entity, components.size() - 1));
 	}
 
-	template <typename T>
-	void remove(const uint32_t in_entity)
+	void remove(const uint32_t in_entity) override
 	{
 		if (components.empty() || !map.contains(in_entity)) return;
 
@@ -89,7 +90,7 @@ public:
 		ComponentContainer<T>* componentContainer = getComponentContainer<T>();
 		if (componentContainer == nullptr) return;
 
-		componentContainer->remove<T>(in_entity);
+		componentContainer->remove(in_entity);
 	}
 
 	template <typename T>
