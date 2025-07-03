@@ -72,6 +72,8 @@ public:
 	template <typename T>
 	void addComponent(const uint32_t in_entity)
 	{
+		if (std::find(m_entities.begin(), m_entities.end(), in_entity) == m_entities.end()) return;
+
 		// Try and get a pointer to the container of the given component
 		ComponentContainer<T>* componentContainer = tryGetComponentContainer<T>();
 
@@ -90,6 +92,8 @@ public:
 	template <typename T>
 	void removeComponent(const uint32_t in_entity)
 	{
+		if (std::find(m_entities.begin(), m_entities.end(), in_entity) == m_entities.end()) return;
+
 		ComponentContainer<T>* componentContainer = tryGetComponentContainer<T>();
 		if (componentContainer == nullptr) return;
 
@@ -99,6 +103,8 @@ public:
 	template <typename T>
 	T* getComponent(const uint32_t in_entity)
 	{
+		if (std::find(m_entities.begin(), m_entities.end(), in_entity) == m_entities.end()) return;
+
 		ComponentContainer<T>* componentContainer = tryGetComponentContainer<T>();
 		if (componentContainer == nullptr) return nullptr;
 
