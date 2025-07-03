@@ -113,16 +113,6 @@ public:
 		return &componentContainer->components;
 	}
 
-private:
-	uint32_t m_nextEntityId = 0;
-
-	std::queue<uint32_t> m_freedEntityIds;
-
-	std::vector<uint32_t> m_entities;
-
-	// A map of component type to component container
-	std::unordered_map<std::string, IComponentContainer*> m_componentContainers;
-
 	template <typename T>
 	ComponentContainer<T>* getComponentContainer()
 	{
@@ -134,6 +124,16 @@ private:
 		// Cast the pointer to the correct type and return
 		return static_cast<ComponentContainer<T>*>(m_componentContainers[componentType]);
 	}
+
+private:
+	uint32_t m_nextEntityId = 0;
+
+	std::queue<uint32_t> m_freedEntityIds;
+
+	std::vector<uint32_t> m_entities;
+
+	// A map of component type to component container
+	std::unordered_map<std::string, IComponentContainer*> m_componentContainers;
 
 	template <typename T>
 	ComponentContainer<T>* createComponentContainer()
