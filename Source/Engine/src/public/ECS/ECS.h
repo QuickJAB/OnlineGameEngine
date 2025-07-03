@@ -75,7 +75,7 @@ public:
 		if (std::find(m_entities.begin(), m_entities.end(), in_entity) == m_entities.end()) return;
 
 		// Try and get a pointer to the container of the given component
-		ComponentContainer<T>* componentContainer = tryGetComponentContainer<T>();
+		ComponentContainer<T>* componentContainer = getComponentContainer<T>();
 
 		// Check if a container exists for this component type
 		if (componentContainer == nullptr)
@@ -94,7 +94,7 @@ public:
 	{
 		if (std::find(m_entities.begin(), m_entities.end(), in_entity) == m_entities.end()) return;
 
-		ComponentContainer<T>* componentContainer = tryGetComponentContainer<T>();
+		ComponentContainer<T>* componentContainer = getComponentContainer<T>();
 		if (componentContainer == nullptr) return;
 
 		componentContainer->remove<T>(in_entity);
@@ -105,10 +105,19 @@ public:
 	{
 		if (std::find(m_entities.begin(), m_entities.end(), in_entity) == m_entities.end()) return;
 
-		ComponentContainer<T>* componentContainer = tryGetComponentContainer<T>();
+		ComponentContainer<T>* componentContainer = getComponentContainer<T>();
 		if (componentContainer == nullptr) return nullptr;
 
 		return componentContainer->get<T>(in_entity);
+	}
+
+	template <typename T>
+	std::vector<T>* getComponentArray()
+	{
+		ComponentContainer<T>* componentContainer = getComponentContainer<T>();
+		if (componentContainer == nullptr) return nullptr;
+
+		return &componentContainer->dense;
 	}
 
 private:
@@ -124,7 +133,7 @@ private:
 	std::unordered_map<std::string, IComponentContainer*> m_componentContainers;
 
 	template <typename T>
-	ComponentContainer<T>* tryGetComponentContainer()
+	ComponentContainer<T>* getComponentContainer()
 	{
 		// Get the components type as a string
 		std::string componentType = typeid(T).name();
