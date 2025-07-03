@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ECS/component/ComponentBase.h"
+#include "ComponentBase.h"
 
 struct VelocityComp : public ComponentBase
 {

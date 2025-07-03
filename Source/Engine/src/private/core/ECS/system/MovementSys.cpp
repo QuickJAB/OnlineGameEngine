@@ -1,10 +1,10 @@
-#include "ECS/system/MovementSys.h"
+#include "core/ECS/system/MovementSys.h"
 
 #include <vector>
 
-#include "ECS/ECS.h"
-#include "ECS/component/TransformComp.h"
-#include "ECS/component/VelocityComp.h"
+#include "core/ECS/ECS.h"
+#include "core/ECS/component/TransformComp.h"
+#include "core/ECS/component/VelocityComp.h"
 
 using namespace std;
 

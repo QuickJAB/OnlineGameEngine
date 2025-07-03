@@ -1,4 +1,4 @@
-#include "ECS/ECS.h"
+#include "core/ECS/ECS.h"
 
 const uint32_t ECS::createEntity()
 {
