@@ -59,7 +59,7 @@ project "Engine"
         optimize "on"
 
 project "Game"
-	location "Source/%{prj.name}"
+	location "Source/Demos/ClientServerGame/%{prj.name}"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++23"
@@ -99,7 +99,7 @@ project "Game"
         optimize "on"
 
 project "Server"
-	location "Source/%{prj.name}"
+	location "Source/Demos/ClientServerGame/%{prj.name}"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++23"
@@ -120,7 +120,7 @@ project "Server"
 		"%{ExternalIncludeDir.SDL}",
 		"%{ExternalIncludeDir.enet}",
 		"Source/Engine/src/public",
-		"Source/Game/src/public"
+		"Source/Demos/ClientServerGame/Game/src/public"
 	}
 
 	links {
@@ -144,7 +144,7 @@ project "Server"
         optimize "on"
 
 project "Client"
-	location "Source/%{prj.name}"
+	location "Source/Demos/ClientServerGame/%{prj.name}"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++23"
@@ -165,7 +165,7 @@ project "Client"
 		"%{ExternalIncludeDir.SDL}",
 		"%{ExternalIncludeDir.enet}",
 		"Source/Engine/src/public",
-		"Source/Game/src/public"
+		"Source/Demos/ClientServerGame/Game/src/public"
 	}
 
 	links {
