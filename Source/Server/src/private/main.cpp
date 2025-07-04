@@ -1,12 +1,12 @@
 #pragma once
 
-#include <print>
+#include <core/Engine.h>
 
-using namespace std;
+#include "SGameInstance.h"
 
 int main()
 {
-	println("Server!");
-
+	SGameInstance* gInst = new SGameInstance();
+	Engine* e = new Engine(gInst);
 	return 0;
 }
