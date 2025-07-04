@@ -6,7 +6,7 @@
 
 int main()
 {
-	CGameInstance* gInst = new CGameInstance();
-	Engine* e = new Engine(gInst);
+	Engine* e = new Engine(new CGameInstance());
+	delete e;
 	return 0;
 }

@@ -6,11 +6,8 @@
 class Renderer
 {
 public:
-	Renderer() = default;
-	~Renderer() = default;
-
-	bool init(SDL_Window* in_window);
-	void cleanup();
+	Renderer(SDL_Window* in_window);
+	~Renderer();
 
 	void draw(std::vector<const SDL_FRect*>& in_data);
 

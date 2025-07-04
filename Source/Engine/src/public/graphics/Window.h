@@ -7,10 +7,7 @@ class Window
 {
 public:
 	Window(std::string in_title, int in_width, int in_height);
-	~Window() = default;
-
-	bool init();
-	void cleanup();
+	~Window();
 
 	SDL_Window* getSDLWindow() { return m_wnd; }
 

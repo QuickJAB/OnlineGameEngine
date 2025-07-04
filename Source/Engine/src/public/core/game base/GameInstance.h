@@ -11,8 +11,8 @@ public:
 	bool isRunning() { return m_running; }
 
 protected:
-
+	bool m_running = true;
 
 private:
-	bool m_running = true;
+	
 };
