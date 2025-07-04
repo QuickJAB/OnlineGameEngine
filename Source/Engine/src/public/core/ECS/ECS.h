@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include <typeinfo>
+#include <algorithm>
 
 #include "component/ComponentBase.h"
 
@@ -43,7 +44,7 @@ struct ComponentContainer : public IComponentContainer
 		map[components.back().owner] = map[in_entity];
 
 		// Swap the component at the back of components with the component thats being removed
-		iter_swap(components.begin() + map[in_entity], components.end() - 1);
+		std::iter_swap(components.begin() + map[in_entity], components.end() - 1);
 
 		components.pop_back();
 		map.erase(in_entity);
