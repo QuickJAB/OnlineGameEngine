@@ -9,12 +9,13 @@ This is a hobby project intended for me to learn more about creating the necessa
 ### Requirements
 
 - Premake5
+- Visual Studio 2022
 
 ### Steps
 
 1. Download and install the above requirements
 2. Run generateProjectFiles.bat in the repos root folder
-3. Build the solution using your preferred IDE
+3. Build the solution using VS2022
 
 ### Current confirmed support
 
