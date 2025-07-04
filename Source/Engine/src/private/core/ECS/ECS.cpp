@@ -1,5 +1,7 @@
 #include "core/ECS/ECS.h"
 
+using namespace std;
+
 const uint32_t ECS::createEntity()
 {
 	uint32_t entity;
@@ -32,4 +34,17 @@ void ECS::destroyEntity(const uint32_t in_entity)
 	m_entities.erase(entityPtr);
 	
 	m_freedEntityIds.push(in_entity);
+}
+
+ECS::~ECS()
+{
+	if (m_componentContainers.empty())
+	{
+		return;
+	}
+
+	for (pair<string, IComponentContainer*> pair : m_componentContainers)
+	{
+		delete pair.second;
+	}
 }

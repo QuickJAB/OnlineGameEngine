@@ -57,13 +57,19 @@ struct ComponentContainer : public IComponentContainer
 
 		return &components[map[in_entity]];
 	}
+
+	virtual ~ComponentContainer() override
+	{
+		map.clear();
+		components.clear();
+	}
 };
 
 class ECS
 {
 public:
 	ECS() = default;
-	~ECS() = default;
+	~ECS();
 
 	const uint32_t createEntity();
 	void destroyEntity(const uint32_t in_entity);
