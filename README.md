@@ -6,11 +6,23 @@ This is a hobby project intended for me to learn more about creating the necessa
 
 ## Build instructions
 
-1. Clone the repo
-2. If you do not have premake5 installed then go to Externals/premake/premake5.exe and run it
-3. Go the the root folder and run generateProjectFiles.bat
-4. Build the solution using your prefered method
+### Requirements
 
-## Current support
+- Premake5
+
+### Steps
+
+1. Download and install the above requirements
+2. Run generateProjectFiles.bat in the repos root folder
+3. Build the solution using your preferred IDE
+
+### Current confirmed support
 
 - Windows x64
+
+## External dependencies
+
+All of these dependencies are provided in this repo.
+
+- SDL3: Windowing, rendering, event handling and audio
+- ENet: Socketing
