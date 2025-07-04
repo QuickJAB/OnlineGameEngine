@@ -5,7 +5,7 @@
 class Engine
 {
 public:
-	Engine(GameInstance* in_gameInstance);
+	Engine(GameInstance* in_gameInstance = new GameInstance());
 	~Engine();
 
 private:
