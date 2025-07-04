@@ -22,8 +22,8 @@ project "Engine"
 	systemversion "latest"
 	staticruntime "on"
 
-	targetdir	("bin/" .. outputdir .. "/%{prj.name}")
-	objdir		("obj/" .. outputdir .. "/%{prj.name}")
+	targetdir	("Binaries/bin/" .. outputdir .. "/%{prj.name}")
+	objdir		("Binaries/obj/" .. outputdir .. "/%{prj.name}")
 
 	files {
 		"%{prj.location}/src/**.h",
@@ -66,8 +66,8 @@ project "Game"
 	systemversion "latest"
 	staticruntime "on"
 
-	targetdir	("bin/" .. outputdir .. "/Demos/ClientServerGame/%{prj.name}")
-	objdir		("obj/" .. outputdir .. "/Demos/ClientServerGame/%{prj.name}")
+	targetdir	("Binaries/bin/" .. outputdir .. "/Demos/ClientServerGame/%{prj.name}")
+	objdir		("Binaries/obj/" .. outputdir .. "/Demos/ClientServerGame/%{prj.name}")
 
 	files {
 		"%{prj.location}/src/**.h",
@@ -106,8 +106,8 @@ project "Server"
 	systemversion "latest"
 	staticruntime "on"
 
-	targetdir	("bin/" .. outputdir .. "/Demos/ClientServerGame/%{prj.name}")
-	objdir		("obj/" .. outputdir .. "/Demos/ClientServerGame/%{prj.name}")
+	targetdir	("Binaries/bin/" .. outputdir .. "/Demos/ClientServerGame/%{prj.name}")
+	objdir		("Binaries/obj/" .. outputdir .. "/Demos/ClientServerGame/%{prj.name}")
 
 	files {
 		"%{prj.location}/src/**.h",
@@ -151,8 +151,8 @@ project "Client"
 	systemversion "latest"
 	staticruntime "on"
 
-	targetdir	("bin/" .. outputdir .. "/Demos/ClientServerGame/%{prj.name}")
-	objdir		("obj/" .. outputdir .. "/Demos/ClientServerGame/%{prj.name}")
+	targetdir	("Binaries/bin/" .. outputdir .. "/Demos/ClientServerGame/%{prj.name}")
+	objdir		("Binaries/obj/" .. outputdir .. "/Demos/ClientServerGame/%{prj.name}")
 
 	files {
 		"%{prj.location}/src/**.h",
