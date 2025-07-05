@@ -7,25 +7,6 @@
 CWorld::CWorld() : GWorld()
 {
 	drawSys = new DrawSys(m_ecs);
-
-	// TEST CODE START
-	uint32_t e = m_ecs->createEntity();
-
-	m_ecs->addComponent<TransformComp>(e);
-	TransformComp* t = m_ecs->getComponent<TransformComp>(e);
-	t->x = 100.f;
-	t->y = 100.f;
-	t->width = 100.f;
-	t->height = 100.f;
-
-	m_ecs->addComponent<SpriteComp>(e);
-	SpriteComp* s = m_ecs->getComponent<SpriteComp>(e);
-	s->colour = SDL_Color(255, 0, 0, 255);
-
-	m_ecs->addComponent<VelocityComp>(e);
-	VelocityComp* v = m_ecs->getComponent<VelocityComp>(e);
-	v->speed = 0.5f;
-	// TEST CODE END
 }
 
 CWorld::~CWorld()

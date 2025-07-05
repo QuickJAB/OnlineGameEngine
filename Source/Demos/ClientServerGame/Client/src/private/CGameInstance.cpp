@@ -11,15 +11,6 @@ CGameInstance::CGameInstance()
 
 	m_eventHandler = new EventHandler();
 	m_eventHandler->onEventQuit.bind(this, &CGameInstance::quitGame);
-
-	// TEST CODE START
-	m_world = new CWorld();
-	m_gameMode = new CGameMode();
-
-	CPlayerController* playerController = new CPlayerController(m_eventHandler);
-	playerController->setWorld(m_world);
-	playerController->possess(0);
-	// TEST CODE END
 }
 
 CGameInstance::~CGameInstance()
