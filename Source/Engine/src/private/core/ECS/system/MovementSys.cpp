@@ -10,8 +10,12 @@ using namespace std;
 
 void MovementSys::update(float in_dt)
 {
+	vector<VelocityComp>* velocities = m_ecs->getComponentArray<VelocityComp>();
+
+	if (velocities == nullptr) return;
+
 	ComponentContainer<TransformComp>* transforms = m_ecs->getComponentContainer<TransformComp>();
-	for (const VelocityComp& velocity : *m_ecs->getComponentArray<VelocityComp>())
+	for (const VelocityComp& velocity : *velocities)
 	{
 		TransformComp* transform = transforms->get<TransformComp>(velocity.owner);
 		if (transform == nullptr) return;
