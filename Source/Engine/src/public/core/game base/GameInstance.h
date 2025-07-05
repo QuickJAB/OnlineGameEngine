@@ -1,5 +1,8 @@
 #pragma once
 
+#include "World.h"
+#include "GameMode.h"
+
 class GameInstance
 {
 public:
@@ -13,6 +16,9 @@ public:
 protected:
 	bool m_running = true;
 
+	World* m_world = nullptr;
+	GameMode* m_gameMode = nullptr;
+
 private:
-	
+
 };

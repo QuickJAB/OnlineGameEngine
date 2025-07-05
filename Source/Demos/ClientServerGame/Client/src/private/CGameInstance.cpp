@@ -1,5 +1,7 @@
 #include "CGameInstance.h"
 
+#include "CGameMode.h"
+
 CGameInstance::CGameInstance()
 {
 	m_window = new Window("Online Game Client", 1920, 1080);
@@ -8,10 +10,16 @@ CGameInstance::CGameInstance()
 
 	m_eventHandler = new EventHandler();
 	m_eventHandler->onEventQuit.bind(this, &CGameInstance::quitGame);
+
+	// TEST CODE START
+	m_world = new CWorld();
+	m_gameMode = new CGameMode();
+	// TEST CODE END
 }
 
 CGameInstance::~CGameInstance()
 {
+	m_eventHandler->onEventQuit.unbind();
 	delete m_eventHandler;
 	m_eventHandler = nullptr;
 
@@ -25,4 +33,10 @@ CGameInstance::~CGameInstance()
 void CGameInstance::update(float in_dt)
 {
 	m_eventHandler->pollEvents();
+
+	__super::update(in_dt);
+
+	if (m_world == nullptr || m_gameMode == nullptr) return;
+
+	m_renderer->draw(getWorld()->getSprites());
 }

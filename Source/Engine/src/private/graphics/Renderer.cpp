@@ -15,20 +15,24 @@ Renderer::~Renderer()
 	m_renderer = nullptr;
 }
 
-void Renderer::draw(vector<const SDL_FRect*>& in_data)
+void Renderer::draw(const std::vector<SpriteComp>* in_data)
 {
 	// Clear the screen to black
 	SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);
 	SDL_RenderClear(m_renderer);
 
 	// Render given rects from in_data
-	if (!in_data.empty())
+	if (!in_data->empty())
 	{
 		SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
-		for (const SDL_FRect* rect : in_data)
+		for (const SpriteComp& spriteComp : *in_data)
 		{
-			SDL_RenderFillRect(m_renderer, rect);
+			SDL_Color color = spriteComp.colour;
+			SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
+			SDL_RenderFillRect(m_renderer, &spriteComp.rect);
 		}
+
+		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);
 	}
 	
 	// Present rendered world to the window

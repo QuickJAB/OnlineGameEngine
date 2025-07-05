@@ -6,6 +6,8 @@
 
 #include <GGameInstance.h>
 
+#include "CWorld.h"
+
 class CGameInstance : public GGameInstance
 {
 public:
@@ -20,4 +22,6 @@ private:
 	EventHandler* m_eventHandler = nullptr;
 
 	void quitGame() { m_running = false; }
+
+	CWorld* getWorld() { return static_cast<CWorld*>(m_world); }
 };

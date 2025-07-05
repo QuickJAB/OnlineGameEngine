@@ -6,7 +6,6 @@ class MovementSys
 {
 public:
 	MovementSys(ECS* in_ecs) : m_ecs(in_ecs) {}
-	~MovementSys() = default;
 
 	void update(float in_dt);
 

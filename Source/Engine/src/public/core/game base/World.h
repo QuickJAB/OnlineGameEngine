@@ -11,8 +11,8 @@ public:
 	virtual void update(float in_dt);
 
 protected:
-
+	ECS* m_ecs = nullptr;
 
 private:
-	ECS* m_ecs = nullptr;
+	
 };
