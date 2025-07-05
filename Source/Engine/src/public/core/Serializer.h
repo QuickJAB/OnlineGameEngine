@@ -5,15 +5,16 @@
 
 /*
 	Example Data
-	uint32_t num = 506;
-	float float1 = 123.456f;
-	float float2 = -987.654f;
+	std::vector<uint32_t> entityId;
+	entityId.push_back(506);
+	std::vector<float> data;
+	data.push_back(123.456f);
+	data.push_back(-987.654f);
 
 	Serialization Example
 	BinarySerializer* bs = new BinarySerializer();
-	std::string bin = bs->serialize(num);
-	bin += bs->serialize(float1);
-	bin += bs->serialize(float2);
+	std::string bin = bs->serialize(entityId);
+	bin += bs->serialize(data);
 	Do something with the binary data...
 
 	Deserialization Example
@@ -27,14 +28,17 @@ class BinarySerializer
 {
 public:
 	template <typename T>
-	std::string serialize(const T& in_data)
+	std::string serialize(const std::vector<T>& in_data)
 	{
 		std::string bin;
 
-		// Loop through each byte of the data and cast it to a char
-		for (int i = 0; i < sizeof(in_data); ++i)
+		for (const T& t : in_data)
 		{
-			bin += reinterpret_cast<const char*>(&in_data)[i];
+			// Loop through each byte of the data and cast it to a char
+			for (int i = 0; i < sizeof(in_data); ++i)
+			{
+				bin += reinterpret_cast<const char*>(&t)[i];
+			}
 		}
 
 		return bin;
