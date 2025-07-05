@@ -15,5 +15,7 @@ GWorld::~GWorld()
 
 void GWorld::update(float in_dt)
 {
+	__super::update(in_dt);
+
 	m_movementSys->update(in_dt);
 }
