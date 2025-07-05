@@ -2,11 +2,11 @@
 
 #include <core/Engine.h>
 
-#include "SGameInstance.h"
+#include <GGameInstance.h>
 
 int main()
 {
-	SGameInstance* gInst = new SGameInstance();
-	Engine* e = new Engine(gInst);
+	Engine* e = new Engine(new GGameInstance());
+	delete e;
 	return 0;
 }
