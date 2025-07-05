@@ -28,7 +28,7 @@ void NetBase::update()
     while (m_running.load())
     {
         // Listen for new network events
-        while (enet_host_service(m_host, &m_event, m_tickTime) > 0)
+        while (enet_host_service(m_host, &m_event, static_cast<enet_uint32>(m_tickTime)) > 0)
         {
             switch (m_event.type)
             {

@@ -50,7 +50,8 @@ bool Client::tryConnect(std::string in_ip, uint32_t in_attemptLength)
 
     // Wait to connect to the server
     println("Connecting to server...");
-    if (enet_host_service(m_host, &m_event, in_attemptLength * 1000.f) > 0 && m_event.type == ENET_EVENT_TYPE_CONNECT)
+    if (enet_host_service(m_host, &m_event, in_attemptLength * static_cast<enet_uint32>(1000.f)) > 0 &&
+        m_event.type == ENET_EVENT_TYPE_CONNECT)
     {
         onReceiveConnection();
         return true;
