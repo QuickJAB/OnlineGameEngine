@@ -1,6 +1,7 @@
 #include "CGameInstance.h"
 
 #include "CGameMode.h"
+#include "CPlayerController.h"
 
 CGameInstance::CGameInstance()
 {
@@ -14,6 +15,10 @@ CGameInstance::CGameInstance()
 	// TEST CODE START
 	m_world = new CWorld();
 	m_gameMode = new CGameMode();
+
+	CPlayerController* playerController = new CPlayerController(m_eventHandler);
+	playerController->setWorld(m_world);
+	playerController->possess(0);
 	// TEST CODE END
 }
 
