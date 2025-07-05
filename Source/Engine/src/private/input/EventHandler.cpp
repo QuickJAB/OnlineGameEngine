@@ -13,4 +13,5 @@ void EventHandler::pollEvents()
 	}
 
 	m_keyStates = SDL_GetKeyboardState(nullptr);
+	onKeyStatesUpdated.broadcast(m_keyStates);
 }

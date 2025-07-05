@@ -15,6 +15,7 @@ public:
 	const bool* getKeyStates() { return m_keyStates; }
 
 	Delegate<void()> onEventQuit;
+	MulticastDelegate<void(const bool*)> onKeyStatesUpdated;
 
 private:
 	SDL_Event m_event;
