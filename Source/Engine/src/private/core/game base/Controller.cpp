@@ -1,6 +1,8 @@
 #include "core/game base/Controller.h"
 
-void Controller::update(float in_dt)
+void Controller::possess(const uint32_t in_entity)
 {
+	if (m_world == nullptr) return;
 
+	m_entity = in_entity;
 }
