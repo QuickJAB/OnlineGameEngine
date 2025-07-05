@@ -131,10 +131,6 @@ project "Server"
 		"Game"
 	}
 
-	postbuildcommands {
-		'cmd /c if exist "..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" copy /Y "..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" "%{cfg.targetdir}"'
-	}
-
 	filter "configurations:Debug"
         symbols "on"
 		optimize "off"
@@ -177,7 +173,7 @@ project "Client"
 	}
 
 	postbuildcommands {
-		'cmd /c if exist "..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" copy /Y "..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" "%{cfg.targetdir}"'
+		'cmd /c if exist "..\\..\\..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" copy /Y "..\\..\\..\\..\\Externals\\SDL3\\lib\\x64\\SDL3.dll" "%{cfg.targetdir}"'
 	}
 
 	filter "configurations:Debug"
