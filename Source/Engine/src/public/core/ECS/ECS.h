@@ -25,11 +25,11 @@ struct ComponentContainer : public IComponentContainer
 	std::unordered_map<uint32_t, size_t> map;
 
 	template <typename T>
-	void add(const uint32_t in_entity)
+	void add(const uint32_t in_entity, const T* in_component = nullptr)
 	{
 		if (map.contains(in_entity)) return;
 
-		T component = T();
+		T component = in_component == nullptr ? T() : *in_component;
 		component.owner = in_entity;
 
 		components.push_back(component);
@@ -75,7 +75,7 @@ public:
 	void destroyEntity(const uint32_t in_entity);
 
 	template <typename T>
-	void addComponent(const uint32_t in_entity)
+	void addComponent(const uint32_t in_entity, const T* in_component = nullptr)
 	{
 		if (std::find(m_entities.begin(), m_entities.end(), in_entity) == m_entities.end()) return;
 
@@ -86,7 +86,7 @@ public:
 			componentContainer = createComponentContainer<T>();
 		}
 
-		componentContainer->add<T>(in_entity);
+		componentContainer->add<T>(in_entity, in_component);
 	}
 
 	template <typename T>
