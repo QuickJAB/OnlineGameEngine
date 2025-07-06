@@ -2,6 +2,11 @@
 
 using namespace std;
 
+GameInstance::GameInstance()
+{
+	m_running.store(true);
+}
+
 void GameInstance::update(float in_dt)
 {
 	if (m_level == nullptr || m_gameMode == nullptr) return;
