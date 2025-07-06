@@ -3,7 +3,7 @@
 #include "CGameMode.h"
 #include "CPlayerController.h"
 
-CGameInstance::CGameInstance()
+CGameInstance::CGameInstance() : GGameInstance()
 {
 	m_window = new Window("Online Game Client", 1920, 1080);
 
@@ -11,6 +11,10 @@ CGameInstance::CGameInstance()
 
 	m_eventHandler = new EventHandler();
 	m_eventHandler->onEventQuit.bind(this, &CGameInstance::quitGame);
+
+	m_level = new CTestLevel();
+	getLevel()->load();
+	m_gameMode = new CGameMode();
 }
 
 CGameInstance::~CGameInstance()
@@ -34,5 +38,5 @@ void CGameInstance::update(float in_dt)
 
 	if (m_level == nullptr || m_gameMode == nullptr) return;
 
-	m_renderer->draw(getWorld()->getSprites());
+	m_renderer->draw(getLevel()->getSprites());
 }

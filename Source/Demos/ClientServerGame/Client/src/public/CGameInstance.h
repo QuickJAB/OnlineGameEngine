@@ -23,5 +23,5 @@ private:
 
 	void quitGame() { m_running = false; }
 
-	CTestLevel* getWorld() { return static_cast<CTestLevel*>(m_level); }
+	CTestLevel* getLevel() { return static_cast<CTestLevel*>(m_level); }
 };
