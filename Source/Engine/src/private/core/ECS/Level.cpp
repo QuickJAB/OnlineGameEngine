@@ -15,5 +15,8 @@ Level::~Level()
 
 void Level::update(float in_dt)
 {
+}
 
+void Level::load()
+{
 }

@@ -22,6 +22,11 @@ void CTestLevel::update(float in_dt)
 	drawSys->update();
 }
 
+void CTestLevel::load()
+{
+	__super::load();
+}
+
 std::vector<SpriteComp>* CTestLevel::getSprites()
 {
 	return m_ecs->getComponentArray<SpriteComp>();

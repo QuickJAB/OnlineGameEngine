@@ -12,6 +12,8 @@ public:
 
 	virtual void update(float in_dt) override;
 
-private:
+protected:
 	MovementSys* m_movementSys = nullptr;
+	
+	virtual void load() override;
 };

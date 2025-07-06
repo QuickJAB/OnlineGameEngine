@@ -9,6 +9,7 @@ public:
 	~Level();
 
 	virtual void update(float in_dt);
+	virtual void load();
 
 	template <typename T>
 	T* getComponent(const uint32_t in_entity)

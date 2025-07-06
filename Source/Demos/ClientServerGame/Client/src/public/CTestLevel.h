@@ -16,6 +16,8 @@ public:
 
 	void update(float in_dt) override;
 
+	void load() override;
+
 	std::vector<SpriteComp>* getSprites();
 
 private:
