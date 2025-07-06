@@ -1,24 +1,30 @@
 #include "GTestLevel.h"
 
 #include <core/ECS/system/MovementSys.h>
+#include <core/ECS/system/CollisionSys.h>
 #include <core/ECS/component/TransformComp.h>
 #include <core/ECS/component/ColliderComp.h>
 
 GTestLevel::GTestLevel() : Level()
 {
 	m_movementSys = new MovementSys(m_ecs);
+	m_collisionSys = new CollisionSys(m_ecs);
 }
 
 GTestLevel::~GTestLevel()
 {
 	delete m_movementSys;
 	m_movementSys = nullptr;
+
+	delete m_collisionSys;
+	m_collisionSys = nullptr;
 }
 
 void GTestLevel::update(float in_dt)
 {
 	__super::update(in_dt);
 
+	m_collisionSys->update(in_dt);
 	m_movementSys->update(in_dt);
 }
 

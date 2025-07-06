@@ -3,6 +3,7 @@
 #include <core/ECS/Level.h>
 
 class MovementSys;
+class CollisionSys;
 
 class GTestLevel : public Level
 {
@@ -14,6 +15,7 @@ public:
 
 protected:
 	MovementSys* m_movementSys = nullptr;
+	CollisionSys* m_collisionSys = nullptr;
 	
 	virtual void load() override;
 };
