@@ -132,6 +132,8 @@ public:
 		return static_cast<ComponentContainer<T>*>(m_componentContainers[componentType]);
 	}
 
+	const std::vector<uint32_t>* getEntities() const { return &m_entities; }
+
 private:
 	uint32_t m_nextEntityId = 0;
 
