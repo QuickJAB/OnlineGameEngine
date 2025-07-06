@@ -1,19 +1,19 @@
-#include "GWorld.h"
+#include "GTestLevel.h"
 
 #include <core/ECS/system/MovementSys.h>
 
-GWorld::GWorld() : World()
+GTestLevel::GTestLevel() : Level()
 {
 	m_movementSys = new MovementSys(m_ecs);
 }
 
-GWorld::~GWorld()
+GTestLevel::~GTestLevel()
 {
 	delete m_movementSys;
 	m_movementSys = nullptr;
 }
 
-void GWorld::update(float in_dt)
+void GTestLevel::update(float in_dt)
 {
 	__super::update(in_dt);
 

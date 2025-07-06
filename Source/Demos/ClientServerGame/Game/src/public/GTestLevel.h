@@ -1,14 +1,14 @@
 #pragma once
 
-#include <core/game base/World.h>
+#include <core/ECS/Level.h>
 
 class MovementSys;
 
-class GWorld : public World
+class GTestLevel : public Level
 {
 public:
-	GWorld();
-	~GWorld();
+	GTestLevel();
+	~GTestLevel();
 
 	virtual void update(float in_dt) override;
 

@@ -1,28 +1,28 @@
-#include "CWorld.h"
+#include "CTestLevel.h"
 
 #include <core/ECS/component/TransformComp.h>
 #include <core/ECS/component/SpriteComp.h>
 #include <core/ECS/component/VelocityComp.h>
 
-CWorld::CWorld() : GWorld()
+CTestLevel::CTestLevel() : GTestLevel()
 {
 	drawSys = new DrawSys(m_ecs);
 }
 
-CWorld::~CWorld()
+CTestLevel::~CTestLevel()
 {
 	delete drawSys;
 	drawSys = nullptr;
 }
 
-void CWorld::update(float in_dt)
+void CTestLevel::update(float in_dt)
 {
 	__super::update(in_dt);
 
 	drawSys->update();
 }
 
-std::vector<SpriteComp>* CWorld::getSprites()
+std::vector<SpriteComp>* CTestLevel::getSprites()
 {
 	return m_ecs->getComponentArray<SpriteComp>();
 }

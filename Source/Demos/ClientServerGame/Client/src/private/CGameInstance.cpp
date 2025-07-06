@@ -32,7 +32,7 @@ void CGameInstance::update(float in_dt)
 
 	__super::update(in_dt);
 
-	if (m_world == nullptr || m_gameMode == nullptr) return;
+	if (m_level == nullptr || m_gameMode == nullptr) return;
 
 	m_renderer->draw(getWorld()->getSprites());
 }

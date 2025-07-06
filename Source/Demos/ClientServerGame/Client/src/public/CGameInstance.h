@@ -6,7 +6,7 @@
 
 #include <GGameInstance.h>
 
-#include "CWorld.h"
+#include "CTestLevel.h"
 
 class CGameInstance : public GGameInstance
 {
@@ -23,5 +23,5 @@ private:
 
 	void quitGame() { m_running = false; }
 
-	CWorld* getWorld() { return static_cast<CWorld*>(m_world); }
+	CTestLevel* getWorld() { return static_cast<CTestLevel*>(m_level); }
 };

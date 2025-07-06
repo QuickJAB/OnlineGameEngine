@@ -2,11 +2,11 @@
 
 #include "core/ECS/ECS.h"
 
-class World
+class Level
 {
 public:
-	World();
-	~World();
+	Level();
+	~Level();
 
 	virtual void update(float in_dt);
 

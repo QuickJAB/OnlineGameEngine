@@ -2,7 +2,7 @@
 
 void Controller::possess(const uint32_t in_entity)
 {
-	if (m_world == nullptr) return;
+	if (m_level == nullptr) return;
 
 	m_entity = in_entity;
 }

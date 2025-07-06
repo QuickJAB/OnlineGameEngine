@@ -1,6 +1,6 @@
 #pragma once
 
-#include "World.h"
+#include "core/ECS/Level.h"
 #include "GameMode.h"
 
 class GameInstance
@@ -16,7 +16,7 @@ public:
 protected:
 	bool m_running = true;
 
-	World* m_world = nullptr;
+	Level* m_level = nullptr;
 	GameMode* m_gameMode = nullptr;
 
 private:

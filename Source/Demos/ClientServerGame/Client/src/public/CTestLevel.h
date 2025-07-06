@@ -4,15 +4,15 @@
 
 #include <core/ECS/system/DrawSys.h>
 
-#include <GWorld.h>
+#include <GTestLevel.h>
 
 struct SpriteComp;
 
-class CWorld : public GWorld
+class CTestLevel : public GTestLevel
 {
 public:
-	CWorld();
-	~CWorld();
+	CTestLevel();
+	~CTestLevel();
 
 	void update(float in_dt) override;
 
