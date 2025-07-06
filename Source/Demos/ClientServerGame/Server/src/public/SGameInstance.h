@@ -11,8 +11,6 @@ public:
 	SGameInstance();
 	~SGameInstance();
 
-	virtual void update(float in_dt) override;
-
 private:
 	Server* m_server = nullptr;
 	std::thread* networkThread = nullptr;
