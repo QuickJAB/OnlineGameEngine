@@ -5,6 +5,6 @@
 class GGameInstance : public GameInstance
 {
 public:
-	GGameInstance() = default;
+	GGameInstance() : GameInstance() {}
 	~GGameInstance() = default;
 };
