@@ -8,5 +8,5 @@
 struct SpriteComp : public ComponentBase
 {
 	SDL_FRect rect;
-	SDL_Color colour;
+	SDL_Color colour = { 255, 255, 255, 255 };
 };
