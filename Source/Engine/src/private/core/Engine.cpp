@@ -7,11 +7,7 @@ using namespace std;
 Engine::Engine(GameInstance* in_gameInstance) :
 	m_gameInstance(in_gameInstance)
 {
-	if (in_gameInstance == nullptr)
-	{
-		return;
-	}
-
+	if (in_gameInstance == nullptr) return;
 	run();
 }
 
