@@ -11,10 +11,6 @@ CGameInstance::CGameInstance() : GGameInstance()
 
 	m_eventHandler = new EventHandler();
 	m_eventHandler->onEventQuit.bind(this, &CGameInstance::quitGame);
-
-	m_level = new CTestLevel();
-	getLevel()->load();
-	m_gameMode = new CGameMode();
 }
 
 CGameInstance::~CGameInstance()
@@ -28,15 +24,4 @@ CGameInstance::~CGameInstance()
 
 	delete m_window;
 	m_window = nullptr;
-}
-
-void CGameInstance::update(float in_dt)
-{
-	m_eventHandler->pollEvents();
-
-	__super::update(in_dt);
-
-	if (m_level == nullptr || m_gameMode == nullptr) return;
-
-	m_renderer->draw(getLevel()->getSprites());
 }

@@ -14,14 +14,10 @@ public:
 	CGameInstance();
 	~CGameInstance();
 
-	void update(float in_dt) override;
-
 private:
 	Window* m_window = nullptr;
 	Renderer* m_renderer = nullptr;
 	EventHandler* m_eventHandler = nullptr;
 
 	void quitGame() { m_running = false; }
-
-	CTestLevel* getLevel() { return static_cast<CTestLevel*>(m_level); }
 };
