@@ -4,7 +4,7 @@
 
 using namespace std;
 
-SGameInstance::SGameInstance() : GGameInstance()
+SGameInstance::SGameInstance() : GameInstance()
 {
 	m_server = new Server(m_running);
 	m_server->init(0.f);

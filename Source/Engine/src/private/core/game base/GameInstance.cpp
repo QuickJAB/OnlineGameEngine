@@ -7,10 +7,19 @@ GameInstance::GameInstance()
 	m_running.store(true);
 }
 
+GameInstance::~GameInstance()
+{
+	delete m_stateMachine;
+	m_stateMachine = nullptr;
+}
+
 void GameInstance::update(float in_dt)
 {
-	if (m_level == nullptr || m_gameMode == nullptr) return;
+	if (m_stateMachine == nullptr)
+	{
+		quitGame();
+		return;
+	}
 
-	m_gameMode->update(in_dt);
-	m_level->update(in_dt);
+	m_stateMachine->update(in_dt);
 }

@@ -1,11 +1,12 @@
 #pragma once
 
-#include <GGameInstance.h>
 #include <thread>
+
+#include <core/game base/GameInstance.h>
 
 class Server;
 
-class SGameInstance : public GGameInstance
+class SGameInstance : public GameInstance
 {
 public:
 	SGameInstance();

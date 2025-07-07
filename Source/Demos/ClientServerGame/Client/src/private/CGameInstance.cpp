@@ -3,14 +3,14 @@
 #include "CGameMode.h"
 #include "CPlayerController.h"
 
-CGameInstance::CGameInstance() : GGameInstance()
+CGameInstance::CGameInstance() : GameInstance()
 {
 	m_window = new Window("Online Game Client", 1920, 1080);
 
 	m_renderer = new Renderer(m_window->getSDLWindow());
 
 	m_eventHandler = new EventHandler();
-	m_eventHandler->onEventQuit.bind(this, &CGameInstance::quitGame);
+	m_eventHandler->onEventQuit.bind(static_cast<GameInstance*>(this), &GameInstance::quitGame);
 }
 
 CGameInstance::~CGameInstance()

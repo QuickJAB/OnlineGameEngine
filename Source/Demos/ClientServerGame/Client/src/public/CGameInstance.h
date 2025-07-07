@@ -3,12 +3,11 @@
 #include <graphics/Window.h>
 #include <graphics/Renderer.h>
 #include <input/EventHandler.h>
-
-#include <GGameInstance.h>
+#include <core/game base/GameInstance.h>
 
 #include "CTestLevel.h"
 
-class CGameInstance : public GGameInstance
+class CGameInstance : public GameInstance
 {
 public:
 	CGameInstance();
@@ -18,6 +17,4 @@ private:
 	Window* m_window = nullptr;
 	Renderer* m_renderer = nullptr;
 	EventHandler* m_eventHandler = nullptr;
-
-	void quitGame() { m_running = false; }
 };
