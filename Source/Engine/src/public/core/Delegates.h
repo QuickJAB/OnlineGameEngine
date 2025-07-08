@@ -69,11 +69,7 @@ public:
 		// Return the default constructed Ret if the bound function is invalid
 		if (!isBound())
 		{
-			// If the return type is not void then return the default constructed value of Ret
-			if constexpr (!std::is_void_v<Ret>) return Ret{};
-
-			// If the return type is void then just early return from broadcast
-			return;
+			return Ret{};
 		}
 
 		// Execute the bound function
