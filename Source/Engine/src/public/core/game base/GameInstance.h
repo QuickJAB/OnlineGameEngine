@@ -21,6 +21,5 @@ public:
 protected:
 	std::atomic<bool> m_running;
 
-private:
 	StateMachine* m_stateMachine = nullptr;
 };
