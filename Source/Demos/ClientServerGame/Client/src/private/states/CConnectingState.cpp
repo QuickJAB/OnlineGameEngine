@@ -17,7 +17,7 @@ string CConnectingState::update(float)
     if (!m_connected)
     {
         println("Connecting...");
-        if (m_client->tryConnect(m_ip, m_port, 1))
+        if (m_client->tryConnect(m_ip, m_port))
         {
             m_connected = true;
         }
