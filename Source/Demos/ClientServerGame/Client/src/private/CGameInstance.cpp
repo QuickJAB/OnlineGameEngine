@@ -7,6 +7,8 @@ using namespace std;
 
 CGameInstance::CGameInstance() : GameInstance()
 {
+	m_client = new Client(m_running, 0, 0, 0);
+
 	unordered_map<string, State*> states;
 
 	states.insert(pair<string, State*>("Menu", new CMenuState()));
@@ -15,6 +17,7 @@ CGameInstance::CGameInstance() : GameInstance()
 	states.insert(pair<string, State*>("Connecting", new CConnectingState()));
 	static_cast<CConnectingState*>(states["Connecting"])->onRequestIP.bind(this, &CGameInstance::getIP);
 	static_cast<CConnectingState*>(states["Connecting"])->onRequestPort.bind(this, &CGameInstance::getPort);
+	static_cast<CConnectingState*>(states["Connecting"])->onRequestClient.bind(this, &CGameInstance::getClient);
 	
 	m_stateMachine = new StateMachine(states, "Menu");
 }

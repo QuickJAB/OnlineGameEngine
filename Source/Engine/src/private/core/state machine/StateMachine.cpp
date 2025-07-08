@@ -2,7 +2,7 @@
 
 using namespace std;
 
-StateMachine::StateMachine(const std::unordered_map<std::string, State*> in_states, std::string in_startState) :
+StateMachine::StateMachine(const unordered_map<string, State*> in_states, string in_startState) :
 	m_states(in_states), m_currentState(in_startState)
 {
 	m_states[m_currentState]->enter();
@@ -10,7 +10,7 @@ StateMachine::StateMachine(const std::unordered_map<std::string, State*> in_stat
 
 void StateMachine::update(float in_dt)
 {
-	std::string nextState = m_states[m_currentState]->update(in_dt);
+	string nextState = m_states[m_currentState]->update(in_dt);
 	if (nextState != "")
 	{
 		m_states[m_currentState]->exit();

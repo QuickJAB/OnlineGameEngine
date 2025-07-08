@@ -12,6 +12,6 @@ public:
 	Delegate<void(std::string, uint16_t)> onConnectionDetailsSet;
 
 private:
-	std::string m_ipAddress = "";
-	uint16_t m_port = 0;
+	std::string m_ipAddress;
+	uint16_t m_port;
 };

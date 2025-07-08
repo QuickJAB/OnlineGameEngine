@@ -13,12 +13,21 @@ void CMenuState::enter()
 
 string CMenuState::update(float)
 {
-	system("cls");
+	print("\033[2J\033[1;1H"); // Clears the terminal
 	println("OnlineGame Client");
+	
 	print("Please enter the server IPv4 address >> ");
 	cin >> m_ipAddress;
+
 	print("Please enter the port >> ");
 	cin >> m_port;
+	if (cin.fail())
+	{
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');
+		return "";
+	}
+
 	onConnectionDetailsSet.broadcast(m_ipAddress, m_port);
 	return "Connecting";
 }
