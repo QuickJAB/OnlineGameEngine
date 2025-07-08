@@ -1,33 +1,35 @@
 #include "network/NetBase.h"
 
-#include <print>
-
 using namespace std;
-using namespace NetSettings;
 
-bool NetBase::init(float in_tickTime)
+NetBase::NetBase(std::atomic<bool>& in_running, float in_tickTime) : 
+    m_running(in_running), m_tickTime(in_tickTime)
 {
-    println("Initializing network...");
+    enet_initialize();
+}
 
-    // Initialize ENet
-    if (enet_initialize() != 0)
+NetBase::~NetBase()
+{
+    while (!m_incomingPacketData.empty())
     {
-        println("ERROR: Failed to initalize ENet!");
-        return false;
+        enet_packet_destroy(&m_incomingPacketData.front());
+        m_incomingPacketData.pop();
     }
 
-    m_tickTime = in_tickTime;
+    while (!m_outgoingPacketData.empty())
+    {
+        m_outgoingPacketData.pop();
+    }
 
-    println("Network initialized!");
+    enet_host_destroy(m_host);
 
-    return true;
+    enet_deinitialize();
 }
 
 void NetBase::update()
 {
     while (m_running.load())
     {
-        // Listen for new network events
         while (enet_host_service(m_host, &m_event, static_cast<enet_uint32>(m_tickTime)) > 0)
         {
             switch (m_event.type)
@@ -46,32 +48,10 @@ void NetBase::update()
             }
         }
 
-        // Destroy the received packet
         enet_packet_destroy(m_event.packet);
 
-        // Send network packets
         sendPackets();
     }
-}
-
-void NetBase::cleanup()
-{
-    // Cleanup all the unused incoming packet data
-    while (!m_incomingPacketData.empty())
-    {
-        enet_packet_destroy(&m_incomingPacketData.front());
-        m_incomingPacketData.pop();
-    }
-
-    // Cleanup all the unused outgoing packet data
-    while (!m_outgoingPacketData.empty())
-    {
-        m_outgoingPacketData.pop();
-    }
-
-    enet_host_destroy(m_host);
-
-    enet_deinitialize();
 }
 
 void NetBase::onReceiveConnection()
@@ -81,12 +61,16 @@ void NetBase::onReceiveConnection()
 
 void NetBase::onReceivePacket()
 {
-    println("Received packet data: ({})", (char*)m_event.packet->data);
+    if (shouldQueuePacket(m_event.packet))
+    {
+        queueIncomingPacketData(m_event.packet);
+    }
+}
 
-    // NOTE TO FUTURE SELF: This function should be expanded to partially process the packet data and instantly send out
-    // any data that is just being relayed through the server to other players e.g. text chat messages
-
-    //queueIncomingPacketData(m_event.packet);
+bool NetBase::shouldQueuePacket(ENetPacket* in_packet)
+{
+    // Add pre-processesing of packets in overriden function
+    return true;
 }
 
 void NetBase::onReceiveDisconnection()
@@ -98,24 +82,25 @@ void NetBase::queueIncomingPacketData(ENetPacket* in_packet)
 {
     if (in_packet == nullptr) return;
 
-    // Lock the queue from being accessed by the game thread
     m_incomingDataMutex.lock();
-
-    // Add the ENet event to the queue of network events for the game thread to process
+    
     m_incomingPacketData.push(*in_packet);
-
-    // Unlock the queue so it can be accessed by the game thread again
+    
     m_incomingDataMutex.unlock();
 }
 
-void NetBase::queueOutgoingPacketData(std::string in_data, int in_peerIndex, NetChannel in_channel)
+void NetBase::queueOutgoingPacketData(std::string in_data, int in_peerIndex)
 {
-    // Lock the queue so it cannot be accessed by other threads
+    if (in_data == "") return;
+
     m_outgoingDataMutex.lock();
 
-    // Create and add a new PacketInfo struct to the queue
-    m_outgoingPacketData.push({ in_data, in_peerIndex, in_channel });
+    m_outgoingPacketData.push({ in_data, in_peerIndex });
 
-    // Unlock the queue so it can be accessed by other threads again
     m_outgoingDataMutex.unlock();
+}
+
+void NetBase::sendPackets()
+{
+    // STUB
 }

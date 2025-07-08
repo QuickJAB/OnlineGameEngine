@@ -6,8 +6,7 @@ using namespace std;
 
 SGameInstance::SGameInstance() : GameInstance()
 {
-	m_server = new Server(m_running);
-	m_server->init(0.f);
+	m_server = new Server(m_running, 0.f, 19, 2, 0, 0);
 
 	thread network(&Server::update, m_server);
 	network.detach();
@@ -20,7 +19,6 @@ SGameInstance::~SGameInstance()
 	delete networkThread;
 	networkThread = nullptr;
 
-	m_server->cleanup();
 	delete m_server;
 	m_server = nullptr;
 }

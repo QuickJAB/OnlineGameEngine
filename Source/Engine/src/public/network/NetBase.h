@@ -5,27 +5,21 @@
 #include <queue>
 #include <enet/enet.h>
 
-#include "NetworkSettings.h"
-
 struct PacketInfo
 {
 	std::string data;
-	int peerIndex;						// Set to -1 to send the packet to all peers
-	NetSettings::NetChannel channel;
+	int peerIndex;
 };
 
 class NetBase
 {
 public:
-	NetBase(std::atomic<bool>& in_running) : m_running(in_running) {}
-	~NetBase() = default;
+	NetBase(std::atomic<bool>& in_running, float in_tickTime);
+	~NetBase();
 
-	virtual bool init(float in_tickTime);
 	virtual void update();
-	virtual void cleanup();
 
-	virtual void queueOutgoingPacketData(std::string in_data, int in_peerIndex = -1,
-		NetSettings::NetChannel in_channel = NetSettings::NetChannel::unreliable);
+	virtual void queueOutgoingPacketData(std::string in_data, int in_peerIndex = -1);
 
 protected:
 	std::atomic<bool>& m_running;
@@ -41,11 +35,16 @@ protected:
 	std::mutex m_incomingDataMutex;
 	std::queue<ENetPacket> m_incomingPacketData;
 
-	virtual void queueIncomingPacketData(ENetPacket* in_packet);
+	void queueIncomingPacketData(ENetPacket* in_packet);
 
 	virtual void onReceiveConnection();
-	virtual void onReceivePacket();
+
+	virtual bool shouldQueuePacket(ENetPacket* in_packet);
+	
 	virtual void onReceiveDisconnection();
 
-	virtual void sendPackets() {}
+	virtual void sendPackets();
+
+private:
+	void onReceivePacket();
 };

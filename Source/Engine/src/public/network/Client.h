@@ -5,19 +5,13 @@
 class Client : public NetBase
 {
 public:
-	Client(std::atomic<bool>& in_running) : NetBase(in_running) {}
-	~Client() = default;
+	Client(std::atomic<bool>& in_running, float in_tickTime, enet_uint32 in_inBandwidth, enet_uint32 in_outBandwidth);
+	~Client();
 
-	bool init(float in_tickTime) override;
-	void cleanup() override;
-
-	bool tryConnect(std::string in_ip, uint32_t in_attemptLength = 30);
+	bool tryConnect(std::string in_ip, enet_uint16 in_port, uint32_t in_attemptLength = 30);
 
 private:
 	ENetPeer* m_peer = nullptr;
-
-	void onReceiveConnection() override;
-	void onReceiveDisconnection() override;
 
 	void sendPackets() override;
 };
