@@ -1,15 +1,22 @@
 #include "CGameInstance.h"
 
-#include "CPlayerController.h"
+#include "states/CMenuState.h"
+#include "states/CConnectingState.h"
+
+using namespace std;
 
 CGameInstance::CGameInstance() : GameInstance()
 {
-	m_window = new Window("Online Game Client", 1920, 1080);
+	unordered_map<string, State*> states;
 
-	m_renderer = new Renderer(m_window->getSDLWindow());
+	states.insert(pair<string, State*>("Menu", new CMenuState()));
+	static_cast<CMenuState*>(states["Menu"])->onConnectionDetailsSet.bind(this, &CGameInstance::setIPAndPort);
 
-	m_eventHandler = new EventHandler();
-	m_eventHandler->onEventQuit.bind(static_cast<GameInstance*>(this), &GameInstance::quitGame);
+	states.insert(pair<string, State*>("Connecting", new CConnectingState()));
+	static_cast<CConnectingState*>(states["Connecting"])->onRequestIP.bind(this, &CGameInstance::getIP);
+	static_cast<CConnectingState*>(states["Connecting"])->onRequestPort.bind(this, &CGameInstance::getPort);
+	
+	m_stateMachine = new StateMachine(states, "Menu");
 }
 
 CGameInstance::~CGameInstance()
@@ -23,4 +30,20 @@ CGameInstance::~CGameInstance()
 
 	delete m_window;
 	m_window = nullptr;
+}
+
+void CGameInstance::setIPAndPort(std::string in_ip, uint16_t in_port)
+{
+	m_ip = in_ip;
+	m_port = in_port;
+}
+
+void CGameInstance::initWindow()
+{
+	m_window = new Window("OnlineGame Client", 1920, 1080);
+
+	m_renderer = new Renderer(m_window->getSDLWindow());
+
+	m_eventHandler = new EventHandler();
+	m_eventHandler->onEventQuit.bind(static_cast<GameInstance*>(this), &GameInstance::quitGame);
 }
