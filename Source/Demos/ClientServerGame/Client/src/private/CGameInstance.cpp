@@ -1,6 +1,5 @@
 #include "CGameInstance.h"
 
-#include "CGameMode.h"
 #include "CPlayerController.h"
 
 CGameInstance::CGameInstance() : GameInstance()
