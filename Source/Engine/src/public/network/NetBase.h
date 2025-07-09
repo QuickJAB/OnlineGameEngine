@@ -17,9 +17,11 @@ public:
 	NetBase(std::atomic<bool>& in_running, float in_tickTime);
 	~NetBase();
 
-	virtual void update();
+	void update();
 
 	virtual void queueOutgoingPacketData(std::string in_data, int in_peerIndex = -1);
+
+	std::queue<ENetPacket> getIncomingPacketData();
 
 protected:
 	std::atomic<bool>& m_running;
@@ -35,16 +37,10 @@ protected:
 	std::mutex m_incomingDataMutex;
 	std::queue<ENetPacket> m_incomingPacketData;
 
-	void queueIncomingPacketData(ENetPacket* in_packet);
-
-	virtual void onReceiveConnection();
-
 	virtual bool shouldQueuePacket(ENetPacket* in_packet);
-	
-	virtual void onReceiveDisconnection();
 
 	virtual void sendPackets();
 
 private:
-	void onReceivePacket();
+	void queueIncomingPacketData(ENetPacket* in_packet);
 };

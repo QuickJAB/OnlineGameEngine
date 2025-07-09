@@ -1,5 +1,9 @@
 #include "network/Client.h"
 
+#include <iostream>
+#include <stdio.h>
+#include <print>
+
 using namespace std;
 
 Client::Client(std::atomic<bool>& in_running, float in_tickTime,
@@ -26,7 +30,6 @@ bool Client::tryConnect(std::string in_ip, enet_uint16 in_port, uint32_t in_atte
     if (enet_host_service(m_host, &m_event, in_attemptLength * static_cast<enet_uint32>(1000.f)) > 0 &&
         m_event.type == ENET_EVENT_TYPE_CONNECT)
     {
-        onReceiveConnection();
         return true;
     }
 
@@ -35,6 +38,23 @@ bool Client::tryConnect(std::string in_ip, enet_uint16 in_port, uint32_t in_atte
     enet_packet_destroy(m_event.packet);
 
     return false;
+}
+
+bool Client::shouldQueuePacket(ENetPacket* in_packet)
+{
+    //if (sscanf_s((char*)in_packet->data, "", ))
+    //{
+
+    //}
+
+    if (static_cast<string>((const char*)in_packet->data).contains("ping"))
+    {
+        println("{}", (const char*)in_packet->data);
+        queueOutgoingPacketData("pong");
+        return false;
+    }
+
+    return __super::shouldQueuePacket(in_packet);
 }
 
 void Client::sendPackets()

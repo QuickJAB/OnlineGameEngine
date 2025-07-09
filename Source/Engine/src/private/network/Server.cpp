@@ -1,5 +1,7 @@
 #include "network/Server.h"
 
+#include <print>
+
 using namespace std;
 
 Server::Server(std::atomic<bool>& in_running, float in_tickTime, enet_uint16 in_port,

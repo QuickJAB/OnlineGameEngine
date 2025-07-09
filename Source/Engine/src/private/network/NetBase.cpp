@@ -35,13 +35,9 @@ void NetBase::update()
             switch (m_event.type)
             {
             case ENET_EVENT_TYPE_CONNECT:
-                onReceiveConnection();
-                break;
-            case ENET_EVENT_TYPE_RECEIVE:
-                onReceivePacket();
-                break;
             case ENET_EVENT_TYPE_DISCONNECT:
-                onReceiveDisconnection();
+            case ENET_EVENT_TYPE_RECEIVE:
+                queueIncomingPacketData(m_event.packet);
                 break;
             case ENET_EVENT_TYPE_NONE:
                 break;
@@ -54,33 +50,15 @@ void NetBase::update()
     }
 }
 
-void NetBase::onReceiveConnection()
-{
-    queueIncomingPacketData(m_event.packet);
-}
-
-void NetBase::onReceivePacket()
-{
-    if (shouldQueuePacket(m_event.packet))
-    {
-        queueIncomingPacketData(m_event.packet);
-    }
-}
-
 bool NetBase::shouldQueuePacket(ENetPacket* in_packet)
 {
     // Add pre-processesing of packets in overriden function
     return true;
 }
 
-void NetBase::onReceiveDisconnection()
-{
-    queueIncomingPacketData(m_event.packet);
-}
-
 void NetBase::queueIncomingPacketData(ENetPacket* in_packet)
 {
-    if (in_packet == nullptr) return;
+    if (in_packet == nullptr || !shouldQueuePacket(in_packet)) return;
 
     m_incomingDataMutex.lock();
     
@@ -89,7 +67,7 @@ void NetBase::queueIncomingPacketData(ENetPacket* in_packet)
     m_incomingDataMutex.unlock();
 }
 
-void NetBase::queueOutgoingPacketData(std::string in_data, int in_peerIndex)
+void NetBase::queueOutgoingPacketData(string in_data, int in_peerIndex)
 {
     if (in_data == "") return;
 
@@ -98,6 +76,28 @@ void NetBase::queueOutgoingPacketData(std::string in_data, int in_peerIndex)
     m_outgoingPacketData.push({ in_data, in_peerIndex });
 
     m_outgoingDataMutex.unlock();
+}
+
+queue<ENetPacket> NetBase::getIncomingPacketData()
+{
+    m_incomingDataMutex.lock();
+
+    if (m_incomingPacketData.empty())
+    {
+        m_incomingDataMutex.unlock();
+        return queue<ENetPacket>();
+    }
+
+    queue<ENetPacket> queue = m_incomingPacketData;
+
+    while (!m_incomingPacketData.empty())
+    {
+        m_incomingPacketData.pop();
+    }
+
+    m_incomingDataMutex.unlock();
+
+    return queue;
 }
 
 void NetBase::sendPackets()

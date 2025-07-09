@@ -10,6 +10,9 @@ public:
 
 	bool tryConnect(std::string in_ip, enet_uint16 in_port, uint32_t in_attemptLength = 30);
 
+protected:
+	virtual bool shouldQueuePacket(ENetPacket* in_packet) override;
+
 private:
 	ENetPeer* m_peer = nullptr;
 

@@ -14,5 +14,5 @@ public:
 
 private:
 	Server* m_server = nullptr;
-	std::thread* networkThread = nullptr;
+	std::thread* m_networkThread = nullptr;
 };

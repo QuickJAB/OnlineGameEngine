@@ -19,7 +19,10 @@ string CConnectingState::update(float)
         println("Connecting...");
         if (m_client->tryConnect(m_ip, m_port))
         {
+            println("Connected!");
+            println("Waiting for other players to join...");
             m_connected = true;
+            onConnectionEstablished.broadcast();
         }
         else
         {
@@ -27,5 +30,5 @@ string CConnectingState::update(float)
         }
     }
 
-    return "Menu";
+    return "";
 }

@@ -20,7 +20,11 @@ private:
 	Window* m_window = nullptr;
 	Renderer* m_renderer = nullptr;
 	EventHandler* m_eventHandler = nullptr;
+
 	Client* m_client = nullptr;
+	std::thread* m_networkThread = nullptr;
 
 	void initWindow();
+
+	void startNetworkThread();
 };

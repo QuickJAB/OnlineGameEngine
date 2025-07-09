@@ -14,6 +14,7 @@ public:
 	Delegate<std::string()> onRequestIP;
 	Delegate<uint16_t()> onRequestPort;
 	Delegate<Client*()> onRequestClient;
+	Delegate<void()> onConnectionEstablished;
 
 private:
 	std::string m_ip;

@@ -19,6 +19,7 @@ CGameInstance::CGameInstance() : GameInstance()
 	connecting->onRequestIP.bind(menu, &CMenuState::getIP);
 	connecting->onRequestPort.bind(menu, &CMenuState::getPort);
 	connecting->onRequestClient.bind(this, &CGameInstance::getClient);
+	connecting->onConnectionEstablished.bind(this, &CGameInstance::startNetworkThread);
 	
 	m_stateMachine = new StateMachine(states, "Menu");
 }
@@ -34,6 +35,13 @@ CGameInstance::~CGameInstance()
 
 	delete m_window;
 	m_window = nullptr;
+
+	m_networkThread->join();
+	delete m_networkThread;
+	m_networkThread = nullptr;
+
+	delete m_client;
+	m_client = nullptr;
 }
 
 void CGameInstance::initWindow()
@@ -44,4 +52,11 @@ void CGameInstance::initWindow()
 
 	m_eventHandler = new EventHandler();
 	m_eventHandler->onEventQuit.bind(static_cast<GameInstance*>(this), &GameInstance::quitGame);
+}
+
+void CGameInstance::startNetworkThread()
+{
+	thread network(&Client::update, m_client);
+	network.detach();
+	m_networkThread = &network;
 }
