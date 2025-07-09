@@ -11,13 +11,14 @@ CGameInstance::CGameInstance() : GameInstance()
 
 	unordered_map<string, State*> states;
 
-	states.insert(pair<string, State*>("Menu", new CMenuState()));
-	static_cast<CMenuState*>(states["Menu"])->onConnectionDetailsSet.bind(this, &CGameInstance::setIPAndPort);
+	CMenuState* menu = new CMenuState();
+	states.insert(pair<string, State*>("Menu", menu));
 
-	states.insert(pair<string, State*>("Connecting", new CConnectingState()));
-	static_cast<CConnectingState*>(states["Connecting"])->onRequestIP.bind(this, &CGameInstance::getIP);
-	static_cast<CConnectingState*>(states["Connecting"])->onRequestPort.bind(this, &CGameInstance::getPort);
-	static_cast<CConnectingState*>(states["Connecting"])->onRequestClient.bind(this, &CGameInstance::getClient);
+	CConnectingState* connecting = new CConnectingState();
+	states.insert(pair<string, State*>("Connecting", connecting));
+	connecting->onRequestIP.bind(menu, &CMenuState::getIP);
+	connecting->onRequestPort.bind(menu, &CMenuState::getPort);
+	connecting->onRequestClient.bind(this, &CGameInstance::getClient);
 	
 	m_stateMachine = new StateMachine(states, "Menu");
 }
@@ -33,12 +34,6 @@ CGameInstance::~CGameInstance()
 
 	delete m_window;
 	m_window = nullptr;
-}
-
-void CGameInstance::setIPAndPort(std::string in_ip, uint16_t in_port)
-{
-	m_ip = in_ip;
-	m_port = in_port;
 }
 
 void CGameInstance::initWindow()

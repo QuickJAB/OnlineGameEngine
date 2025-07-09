@@ -9,7 +9,8 @@ public:
 	virtual void enter() override;
 	virtual std::string update(float) override;
 
-	Delegate<void(std::string, uint16_t)> onConnectionDetailsSet;
+	std::string getIP() const { return m_ipAddress; }
+	uint16_t getPort() const { return m_port; }
 
 private:
 	std::string m_ipAddress;

@@ -28,6 +28,5 @@ string CMenuState::update(float)
 		return "";
 	}
 
-	onConnectionDetailsSet.broadcast(m_ipAddress, m_port);
 	return "Connecting";
 }
