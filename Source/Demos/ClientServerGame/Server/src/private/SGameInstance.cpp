@@ -3,6 +3,7 @@
 #include <network/Server.h>
 
 #include "states/SWaitingForPlayersState.h"
+#include "states/SPlayingState.h"
 
 using namespace std;
 
@@ -14,6 +15,9 @@ SGameInstance::SGameInstance() : GameInstance()
 
 	SWaitingForPlayersState* waitingForPlayers = new SWaitingForPlayersState(m_server);
 	states.insert(pair<string, State*>("WaitingForPlayers", waitingForPlayers));
+
+	SPlayingState* playing = new SPlayingState();
+	states.insert(pair<string, State*>("Playing", playing));
 
 	m_stateMachine = new StateMachine(states, "WaitingForPlayers");
 

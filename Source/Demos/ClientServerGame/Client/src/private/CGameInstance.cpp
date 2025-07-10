@@ -2,6 +2,7 @@
 
 #include "states/CMenuState.h"
 #include "states/CConnectingState.h"
+#include "states/CPlayingState.h"
 
 using namespace std;
 
@@ -20,7 +21,14 @@ CGameInstance::CGameInstance() : GameInstance()
 	connecting->onRequestPort.bind(menu, &CMenuState::getPort);
 	connecting->onRequestClient.bind(this, &CGameInstance::getClient);
 	connecting->onConnectionEstablished.bind(this, &CGameInstance::startNetworkThread);
+	connecting->onPlayerNumberReceived.bind(this, &CGameInstance::setPlayerNum);
+	connecting->onGameStarted.bind(this, &CGameInstance::serverStartedGame);
 	
+	CPlayingState* playing = new CPlayingState();
+	states.insert(pair<string, State*>("Playing", playing));
+	playing->requestRenderer.bind(this, &CGameInstance::getRenderer);
+	playing->requestEventHandler.bind(this, &CGameInstance::getEventHandler);
+
 	m_stateMachine = new StateMachine(states, "Menu");
 }
 
@@ -59,4 +67,10 @@ void CGameInstance::startNetworkThread()
 	thread network(&Client::update, m_client);
 	network.detach();
 	m_networkThread = &network;
+}
+
+void CGameInstance::serverStartedGame(long long in_startTime)
+{
+	m_gameStateTime = in_startTime;
+	initWindow();
 }
