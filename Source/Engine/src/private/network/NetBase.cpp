@@ -1,5 +1,7 @@
 #include "network/NetBase.h"
 
+#include <chrono>
+
 using namespace std;
 
 NetBase::NetBase(std::atomic<bool>& in_running, float in_tickTime) : 
@@ -98,6 +100,11 @@ queue<ENetPacket> NetBase::getIncomingPacketData()
     m_incomingDataMutex.unlock();
 
     return queue;
+}
+
+long long NetBase::getClockTime()
+{
+    return chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
 }
 
 void NetBase::sendPackets()

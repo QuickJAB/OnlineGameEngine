@@ -23,6 +23,8 @@ public:
 
 	std::queue<ENetPacket> getIncomingPacketData();
 
+	long long getClockTime();
+
 protected:
 	std::atomic<bool>& m_running;
 	float m_tickTime = 0.f;
