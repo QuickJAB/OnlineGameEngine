@@ -11,6 +11,8 @@ Server::Server(std::atomic<bool>& in_running, float in_tickTime, enet_uint16 in_
     m_address.host = ENET_HOST_ANY;
     m_address.port = in_port;
 
+    m_maxPlayers = static_cast<int>(in_maxConnections);
+
     m_host = enet_host_create(&m_address, in_maxConnections, 1, in_inBandwidth, in_outBandwidth);
 }
 
