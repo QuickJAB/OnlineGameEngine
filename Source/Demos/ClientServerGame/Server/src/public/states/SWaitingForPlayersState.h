@@ -1,6 +1,7 @@
 #pragma once
 
 #include <core/state machine/State.h>
+#include <network/Server.h>
 
 class Server;
 
@@ -13,4 +14,6 @@ public:
 
 private:
 	Server* m_server = nullptr;
+
+	void newClientConnected();
 };
