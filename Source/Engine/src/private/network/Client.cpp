@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <stdio.h>
-#include <print>
 
 using namespace std;
 
@@ -38,23 +37,6 @@ bool Client::tryConnect(std::string in_ip, enet_uint16 in_port, uint32_t in_atte
     enet_packet_destroy(m_event.packet);
 
     return false;
-}
-
-bool Client::shouldQueuePacket(ENetPacket* in_packet)
-{
-    //if (sscanf_s((char*)in_packet->data, "", ))
-    //{
-
-    //}
-
-    if (static_cast<string>((const char*)in_packet->data).contains("ping"))
-    {
-        println("{}", (const char*)in_packet->data);
-        queueOutgoingPacketData("pong");
-        return false;
-    }
-
-    return __super::shouldQueuePacket(in_packet);
 }
 
 void Client::sendPackets()
