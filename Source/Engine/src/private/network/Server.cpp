@@ -75,10 +75,16 @@ void Server::pingClients()
     queueOutgoingPacketData(data);
 }
 
-void Server::updateTimOffset(std::string in_data)
+void Server::updateTimOffset(string in_data)
 {
-    // Calculate the time offset between the client and server
-    // Update it in an array
+    long long pingSentTime, pingReceivedTime;
+    long long pongReceivedTime = getClockTime();
+
+    string format = to_string(pong) + "t%lldpt%lld";
+    sscanf_s(in_data.c_str(), format.c_str(), &pingReceivedTime, &pingSentTime);
+
+    const long long deltaTime = (pongReceivedTime - pingSentTime) * 0.5f;
+    const long long offset = pingReceivedTime - (pingSentTime + deltaTime);
 }
 
 bool Server::shouldQueuePacket(ENetPacket* in_packet)

@@ -63,7 +63,7 @@ void Client::sendPackets()
 void Client::pongServer(string in_pingData)
 {
     const string format = to_string(ping) + "t%lld";
-    float pingTime;
+    long long pingTime;
     sscanf_s(in_pingData.c_str(), format.c_str(), &pingTime);
 
     string data = to_string(pong) + 't' + to_string(getClockTime()) + "pt" + to_string(pingTime);

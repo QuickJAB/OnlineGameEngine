@@ -23,6 +23,8 @@ private:
 
 	uint32_t m_maxPlayers = 0;
 
-	long long m_pingDelay = 30000.f;	// Time in milli
+	long long m_pingDelay = 5000.f;	// Time in milli
 	long long m_lastPingTime = 0.f;
+
+	const uint8_t m_MAX_PING_COUNT = 10;
 };
