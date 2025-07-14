@@ -48,6 +48,8 @@ void NetBase::update()
 
         enet_packet_destroy(m_event.packet);
 
+        onNetUpdate.broadcast();
+
         sendPackets();
     }
 }

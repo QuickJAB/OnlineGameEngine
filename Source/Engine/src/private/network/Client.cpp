@@ -59,3 +59,30 @@ void Client::sendPackets()
 
     enet_peer_send(m_peer, 0, packet);
 }
+
+void Client::pongServer(string in_pingData)
+{
+    const string format = to_string(ping) + "t%lld";
+    float pingTime;
+    sscanf_s(in_pingData.c_str(), format.c_str(), &pingTime);
+
+    string data = to_string(pong) + 't' + to_string(getClockTime()) + "pt" + to_string(pingTime);
+    queueOutgoingPacketData(data);
+}
+
+bool Client::shouldQueuePacket(ENetPacket* in_packet)
+{
+    string data = (const char*)in_packet->data;
+
+    int serverCommand;
+    if (sscanf_s(data.c_str(), "%i", &serverCommand) > 0)
+    {
+        if (serverCommand == ping)
+        {
+            pongServer(data);
+            return false;
+        }
+    }
+
+    return true;
+}

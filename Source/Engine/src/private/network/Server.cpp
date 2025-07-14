@@ -1,7 +1,5 @@
 #include "network/Server.h"
 
-#include <print>
-
 using namespace std;
 
 Server::Server(std::atomic<bool>& in_running, float in_tickTime, enet_uint16 in_port,
@@ -13,11 +11,15 @@ Server::Server(std::atomic<bool>& in_running, float in_tickTime, enet_uint16 in_
 
     m_maxPlayers = static_cast<int>(in_maxConnections);
 
+    onNetUpdate.add(this, &Server::pingClients);
+
     m_host = enet_host_create(&m_address, in_maxConnections, 1, in_inBandwidth, in_outBandwidth);
 }
 
 Server::~Server()
 {
+    onNetUpdate.unbindAllFromOwner(this);
+
     if (m_host->connectedPeers > 0)
     {
         for (int i = static_cast<int>(m_host->connectedPeers) - 1; i > -1; --i)
@@ -59,4 +61,39 @@ void Server::sendPackets()
     {
         enet_peer_send(&m_host->peers[pktInf.peerIndex], 0, packet);
     }
+}
+
+void Server::pingClients()
+{
+    long long clockTime = getClockTime();
+
+    if (clockTime < m_lastPingTime + m_pingDelay) return;
+
+    m_lastPingTime = clockTime;
+
+    string data = to_string(ping) + 't' + to_string(clockTime);
+    queueOutgoingPacketData(data);
+}
+
+void Server::updateTimOffset(std::string in_data)
+{
+    // Calculate the time offset between the client and server
+    // Update it in an array
+}
+
+bool Server::shouldQueuePacket(ENetPacket* in_packet)
+{
+    string data = (const char*)in_packet->data;
+
+    int clientCommand;
+    if (sscanf_s(data.c_str(), "%i", &clientCommand) > 0)
+    {
+        if (clientCommand == pong)
+        {
+            updateTimOffset(data);
+            return false;
+        }
+    }
+
+    return true;
 }

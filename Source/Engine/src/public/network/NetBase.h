@@ -5,10 +5,22 @@
 #include <queue>
 #include <enet/enet.h>
 
+#include "core/Delegates.h"
+
 struct PacketInfo
 {
 	std::string data;
 	int peerIndex;
+};
+
+enum ServerCommand
+{
+	ping
+};
+
+enum ClientCommand
+{
+	pong
 };
 
 class NetBase
@@ -38,6 +50,8 @@ protected:
 
 	std::mutex m_incomingDataMutex;
 	std::queue<ENetPacket> m_incomingPacketData;
+
+	MulticastDelegate<void()> onNetUpdate;
 
 	virtual bool shouldQueuePacket(ENetPacket* in_packet);
 

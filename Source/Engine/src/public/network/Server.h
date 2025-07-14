@@ -16,5 +16,13 @@ public:
 private:
 	void sendPackets() override;
 
+	void pingClients();
+	void updateTimOffset(std::string in_data);
+
+	virtual bool shouldQueuePacket(ENetPacket* in_packet) override;
+
 	uint32_t m_maxPlayers = 0;
+
+	long long m_pingDelay = 30000.f;	// Time in milli
+	long long m_lastPingTime = 0.f;
 };
