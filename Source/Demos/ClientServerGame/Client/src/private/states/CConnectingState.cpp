@@ -39,14 +39,11 @@ string CConnectingState::update(float)
 
         int pktType = -1;
         const char* data = (const char*)pkt.data;
-        sscanf_s(data, "%i", &pktType);
-        switch (pktType)
+
+        if (sscanf_s(data, "%i", &pktType) > 0 && pktType == ServerCommand::startGame)
         {
-        case 1:
             startGame(data);
             return "Playing";
-        default:
-            break;
         }
     }
 
@@ -56,6 +53,7 @@ string CConnectingState::update(float)
 void CConnectingState::startGame(const char* in_data)
 {
     long long startTime = -1;
-    sscanf_s(in_data, "1t%lld", &startTime);
+    string format = to_string(ServerCommand::startGame) + "t%lld";
+    sscanf_s(in_data, format.c_str(), &startTime);
     onGameStarted.broadcast(startTime);
 }
