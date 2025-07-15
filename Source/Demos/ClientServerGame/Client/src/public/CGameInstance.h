@@ -26,15 +26,11 @@ private:
 	Client* m_client = nullptr;
 	std::thread* m_networkThread = nullptr;
 
-	int m_playerNum = -1;
-
 	long long m_gameStateTime = 0;
 
 	void initWindow();
 
 	void startNetworkThread();
-
-	void setPlayerNum(int in_playerNum) { m_playerNum = in_playerNum; }
 
 	void serverStartedGame(long long in_startTime);
 };

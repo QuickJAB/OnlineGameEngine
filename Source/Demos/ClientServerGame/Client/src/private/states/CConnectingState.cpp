@@ -42,9 +42,6 @@ string CConnectingState::update(float)
         sscanf_s(data, "%i", &pktType);
         switch (pktType)
         {
-        case 0:
-            setPlayerNum(data);
-            break;
         case 1:
             startGame(data);
             return "Playing";
@@ -54,13 +51,6 @@ string CConnectingState::update(float)
     }
 
     return "";
-}
-
-void CConnectingState::setPlayerNum(const char* data)
-{
-    int playerNum = -1;
-    sscanf_s(data, "0p%i", &playerNum);
-    onPlayerNumberReceived.broadcast(playerNum);
 }
 
 void CConnectingState::startGame(const char* in_data)

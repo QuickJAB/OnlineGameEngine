@@ -15,7 +15,6 @@ public:
 	Delegate<uint16_t()> onRequestPort;
 	Delegate<Client*()> onRequestClient;
 	Delegate<void()> onConnectionEstablished;
-	Delegate<void(int)> onPlayerNumberReceived;
 	Delegate<void(long long)> onGameStarted;
 
 private:
@@ -24,6 +23,5 @@ private:
 	Client* m_client;
 	bool m_connected = false;
 
-	void setPlayerNum(const char* in_data);
 	void startGame(const char* in_data);
 };

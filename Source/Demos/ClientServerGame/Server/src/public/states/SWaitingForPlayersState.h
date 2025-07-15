@@ -14,6 +14,4 @@ public:
 
 private:
 	Server* m_server = nullptr;
-
-	void newClientConnected();
 };

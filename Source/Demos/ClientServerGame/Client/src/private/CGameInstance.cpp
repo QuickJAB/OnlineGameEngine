@@ -21,7 +21,6 @@ CGameInstance::CGameInstance() : GameInstance()
 	connecting->onRequestPort.bind(menu, &CMenuState::getPort);
 	connecting->onRequestClient.bind(this, &CGameInstance::getClient);
 	connecting->onConnectionEstablished.bind(this, &CGameInstance::startNetworkThread);
-	connecting->onPlayerNumberReceived.bind(this, &CGameInstance::setPlayerNum);
 	connecting->onGameStarted.bind(this, &CGameInstance::serverStartedGame);
 	
 	CPlayingState* playing = new CPlayingState();
