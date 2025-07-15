@@ -15,6 +15,7 @@ struct PacketInfo
 
 enum ServerCommand
 {
+	handshake,
 	ping
 };
 
@@ -56,6 +57,10 @@ protected:
 	virtual bool shouldQueuePacket(ENetPacket* in_packet);
 
 	virtual void sendPackets();
+
+	virtual void onConnected(ENetPacket* in_packet);
+
+	virtual void onDisconnected(ENetPacket* in_packet);
 
 private:
 	void queueIncomingPacketData(ENetPacket* in_packet);

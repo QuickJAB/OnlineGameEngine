@@ -13,7 +13,11 @@ public:
 private:
 	ENetPeer* m_peer = nullptr;
 
+	uint32_t m_playerId = 0;
+
 	void sendPackets() override;
+
+	void processHandshake(std::string in_data);
 
 	void pongServer(std::string in_pingData);
 

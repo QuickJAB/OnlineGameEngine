@@ -1,6 +1,14 @@
 #pragma once
 
+#include <unordered_map>
+
 #include "NetBase.h"
+
+struct ClientTimeOffset
+{
+	long long average;
+	std::queue<long long> previous;
+};
 
 class Server : public NetBase
 {
@@ -13,18 +21,23 @@ public:
 
 	int getMaxPlayers() const { return m_maxPlayers; }
 
+protected:
+	virtual void onConnected(ENetPacket* in_packet) override;
+
 private:
 	void sendPackets() override;
 
 	void pingClients();
-	void updateTimOffset(std::string in_data);
+	void updateTimeOffset(std::string in_data);
 
 	virtual bool shouldQueuePacket(ENetPacket* in_packet) override;
 
+	uint32_t m_nextPlayerId = 0;
 	uint32_t m_maxPlayers = 0;
 
 	long long m_pingDelay = 5000.f;	// Time in milli
 	long long m_lastPingTime = 0.f;
 
-	const uint8_t m_MAX_PING_COUNT = 10;
+	const size_t m_MAX_OFFSETS = 10;
+	std::unordered_map<uint32_t, ClientTimeOffset> m_offsets;
 };

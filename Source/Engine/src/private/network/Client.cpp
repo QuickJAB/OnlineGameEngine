@@ -60,13 +60,19 @@ void Client::sendPackets()
     enet_peer_send(m_peer, 0, packet);
 }
 
+void Client::processHandshake(std::string in_data)
+{
+    string format = to_string(handshake) + "id%i";
+    sscanf_s(in_data.c_str(), format.c_str(), &m_playerId);
+}
+
 void Client::pongServer(string in_pingData)
 {
     const string format = to_string(ping) + "t%lld";
     long long pingTime;
     sscanf_s(in_pingData.c_str(), format.c_str(), &pingTime);
 
-    string data = to_string(pong) + 't' + to_string(getClockTime()) + "pt" + to_string(pingTime);
+    string data = to_string(pong) + "id" + to_string(m_playerId) + 't' + to_string(getClockTime()) + "pt" + to_string(pingTime);
     queueOutgoingPacketData(data);
 }
 
@@ -77,8 +83,12 @@ bool Client::shouldQueuePacket(ENetPacket* in_packet)
     int serverCommand;
     if (sscanf_s(data.c_str(), "%i", &serverCommand) > 0)
     {
-        if (serverCommand == ping)
+        switch (serverCommand)
         {
+        case handshake:
+            processHandshake(data);
+            return false;
+        case ping:
             pongServer(data);
             return false;
         }

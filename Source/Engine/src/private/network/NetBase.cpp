@@ -37,7 +37,11 @@ void NetBase::update()
             switch (m_event.type)
             {
             case ENET_EVENT_TYPE_CONNECT:
+                onConnected(m_event.packet);
+                break;
             case ENET_EVENT_TYPE_DISCONNECT:
+                onDisconnected(m_event.packet);
+                break;
             case ENET_EVENT_TYPE_RECEIVE:
                 queueIncomingPacketData(m_event.packet);
                 break;
@@ -112,4 +116,12 @@ long long NetBase::getClockTime()
 void NetBase::sendPackets()
 {
     // STUB
+}
+
+void NetBase::onConnected(ENetPacket* in_packet)
+{
+}
+
+void NetBase::onDisconnected(ENetPacket* in_packet)
+{
 }

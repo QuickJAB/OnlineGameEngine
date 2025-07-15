@@ -29,6 +29,13 @@ Server::~Server()
     }
 }
 
+void Server::onConnected(ENetPacket*)
+{
+    string data = to_string(handshake) + "id" + to_string(m_nextPlayerId);
+    ++m_nextPlayerId;
+    queueOutgoingPacketData(data, m_host->connectedPeers - 1);
+}
+
 void Server::sendPackets()
 {
     m_outgoingDataMutex.lock();
@@ -75,16 +82,42 @@ void Server::pingClients()
     queueOutgoingPacketData(data);
 }
 
-void Server::updateTimOffset(string in_data)
+void Server::updateTimeOffset(string in_data)
 {
+    uint32_t playerId;
     long long pingSentTime, pingReceivedTime;
     long long pongReceivedTime = getClockTime();
 
-    string format = to_string(pong) + "t%lldpt%lld";
-    sscanf_s(in_data.c_str(), format.c_str(), &pingReceivedTime, &pingSentTime);
+    string format = to_string(pong) + "id%it%lldpt%lld";
+    sscanf_s(in_data.c_str(), format.c_str(), &playerId , &pingReceivedTime, &pingSentTime);
 
     const long long deltaTime = (pongReceivedTime - pingSentTime) * 0.5f;
-    const long long offset = pingReceivedTime - (pingSentTime + deltaTime);
+    const long long newOffset = pingReceivedTime - (pingSentTime + deltaTime);
+
+    auto offsetIt = m_offsets.find(playerId);
+    if (offsetIt == m_offsets.end())
+    {
+        ClientTimeOffset offset;
+        offset.previous.push(newOffset);
+        offset.average = newOffset;
+        m_offsets.insert(pair<long long, ClientTimeOffset>(playerId, offset));
+    }
+    else
+    {
+        ClientTimeOffset* offset = &(*offsetIt).second;
+
+        if (offset->previous.size() > m_MAX_OFFSETS) offset->previous.pop();
+        offset->previous.push(newOffset);
+
+        queue<long long> offsets = offset->previous;
+        long long acum = 0;
+        for (int i = 0; i < offsets.size(); ++i)
+        {
+            acum += offsets.front();
+            offsets.pop();
+        }
+        offset->average = acum / offset->previous.size();
+    }
 }
 
 bool Server::shouldQueuePacket(ENetPacket* in_packet)
@@ -96,7 +129,7 @@ bool Server::shouldQueuePacket(ENetPacket* in_packet)
     {
         if (clientCommand == pong)
         {
-            updateTimOffset(data);
+            updateTimeOffset(data);
             return false;
         }
     }
