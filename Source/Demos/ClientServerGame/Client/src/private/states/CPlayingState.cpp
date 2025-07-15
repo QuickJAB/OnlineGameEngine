@@ -5,6 +5,8 @@
 
 #include "CTestLevel.h"
 
+using namespace std;
+
 void CPlayingState::enter()
 {
 	m_renderer = requestRenderer.broadcast();
@@ -14,7 +16,7 @@ void CPlayingState::enter()
 	m_level->load();
 }
 
-std::string CPlayingState::update(float in_dt)
+string CPlayingState::update(float in_dt)
 {
 	m_eventHandler->pollEvents();
 	m_level->update(in_dt);
