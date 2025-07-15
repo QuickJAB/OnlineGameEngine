@@ -33,7 +33,7 @@ void Server::onConnected(ENetPacket*)
 {
     string data = to_string(handshake) + "id" + to_string(m_nextPlayerId);
     ++m_nextPlayerId;
-    queueOutgoingPacketData(data, m_host->connectedPeers - 1);
+    queueOutgoingPacketData(data, static_cast<int>(m_host->connectedPeers) - 1);
 }
 
 void Server::sendPackets()
@@ -91,8 +91,8 @@ void Server::updateTimeOffset(string in_data)
     string format = to_string(pong) + "id%it%lldpt%lld";
     sscanf_s(in_data.c_str(), format.c_str(), &playerId , &pingReceivedTime, &pingSentTime);
 
-    const long long deltaTime = (pongReceivedTime - pingSentTime) * 0.5f;
-    const long long newOffset = pingReceivedTime - (pingSentTime + deltaTime);
+    const float deltaTime = (pongReceivedTime - pingSentTime) * 0.5f;
+    const long long newOffset = pingReceivedTime - (pingSentTime + static_cast<long long>(deltaTime));
 
     auto offsetIt = m_offsets.find(playerId);
     if (offsetIt == m_offsets.end())
@@ -100,7 +100,7 @@ void Server::updateTimeOffset(string in_data)
         ClientTimeOffset offset;
         offset.previous.push(newOffset);
         offset.average = newOffset;
-        m_offsets.insert(pair<long long, ClientTimeOffset>(playerId, offset));
+        m_offsets.insert(pair<uint32_t, ClientTimeOffset>(playerId, offset));
     }
     else
     {

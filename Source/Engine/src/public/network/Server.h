@@ -35,8 +35,8 @@ private:
 	uint32_t m_nextPlayerId = 0;
 	uint32_t m_maxPlayers = 0;
 
-	long long m_pingDelay = 5000.f;	// Time in milli
-	long long m_lastPingTime = 0.f;
+	long long m_pingDelay = 5000;	// Time in milli
+	long long m_lastPingTime = 0;
 
 	const size_t m_MAX_OFFSETS = 10;
 	std::unordered_map<uint32_t, ClientTimeOffset> m_offsets;
