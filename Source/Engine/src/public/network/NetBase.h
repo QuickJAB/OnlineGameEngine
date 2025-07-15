@@ -16,12 +16,16 @@ struct PacketInfo
 enum ServerCommand
 {
 	handshake,
-	ping
+	ping,
+	startGame,
+	gameState,
+	endGame
 };
 
 enum ClientCommand
 {
-	pong
+	pong,
+	inputState
 };
 
 class NetBase
