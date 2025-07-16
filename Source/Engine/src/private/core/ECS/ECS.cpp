@@ -4,46 +4,46 @@ using namespace std;
 
 const uint32_t ECS::createEntity()
 {
-	uint32_t entity;
+	uint32_t uEntity;
 
-	if (!m_freedEntityIds.empty())
+	if (!m_qFreedEntityIds.empty())
 	{
-		entity = m_freedEntityIds.front();
-		m_freedEntityIds.pop();
+		uEntity = m_qFreedEntityIds.front();
+		m_qFreedEntityIds.pop();
 	}
 	else
 	{
-		entity = m_nextEntityId;
-		++m_nextEntityId;
+		uEntity = m_uNextEntityId;
+		++m_uNextEntityId;
 	}
 	
-	m_entities.push_back(entity);
-	return entity;
+	m_vEntities.push_back(uEntity);
+	return uEntity;
 }
 
-void ECS::destroyEntity(const uint32_t in_entity)
+void ECS::destroyEntity(const uint32_t i_uEntity)
 {
-	auto entityPtr = std::find(m_entities.begin(), m_entities.end(), in_entity);
-	if (entityPtr == m_entities.end()) return;
+	auto pEntity = std::find(m_vEntities.begin(), m_vEntities.end(), i_uEntity);
+	if (pEntity == m_vEntities.end()) return;
 
-	for (auto pair : m_componentContainers)
+	for (auto pair : m_umComponentContainers)
 	{
-		pair.second->remove(in_entity);
+		pair.second->remove(i_uEntity);
 	}
 
-	m_entities.erase(entityPtr);
+	m_vEntities.erase(pEntity);
 	
-	m_freedEntityIds.push(in_entity);
+	m_qFreedEntityIds.push(i_uEntity);
 }
 
 ECS::~ECS()
 {
-	if (m_componentContainers.empty())
+	if (m_umComponentContainers.empty())
 	{
 		return;
 	}
 
-	for (pair<string, IComponentContainer*> pair : m_componentContainers)
+	for (pair<string, IComponentContainer*> pair : m_umComponentContainers)
 	{
 		delete pair.second;
 	}

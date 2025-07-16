@@ -5,22 +5,26 @@
 class Client : public NetBase
 {
 public:
-	Client(std::atomic<bool>& in_running, float in_tickTime, enet_uint32 in_inBandwidth, enet_uint32 in_outBandwidth);
+protected:
+private:
+	ENetPeer* m_pPeer = nullptr;
+
+	uint32_t m_uPlayerId = 0;
+
+public:
+	Client(std::atomic<bool>& i_bRunning, float i_fTickTime, enet_uint32 i_uInBandwidth, enet_uint32 i_uOutBandwidth);
 	~Client();
 
-	bool tryConnect(std::string in_ip, enet_uint16 in_port, uint32_t in_attemptLength = 30);
+	bool tryConnect(std::string i_sIp, enet_uint16 i_uPort, uint32_t i_uAttemptLength = 30);
 
+protected:
 private:
-	ENetPeer* m_peer = nullptr;
-
-	uint32_t m_playerId = 0;
-
 	void sendPackets() override;
 
-	void processHandshake(std::string in_data);
+	void processHandshake(std::string i_sData);
 
-	void pongServer(std::string in_pingData);
+	void pongServer(std::string i_sPingData);
 
-	virtual bool shouldQueuePacket(ENetPacket* in_packet) override;
+	virtual bool shouldQueuePacket(ENetPacket* i_pPacket) override;
 };
 

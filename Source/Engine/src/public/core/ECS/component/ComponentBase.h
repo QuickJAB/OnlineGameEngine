@@ -4,5 +4,5 @@
 
 struct ComponentBase
 {
-	uint32_t owner;
+	uint32_t uOwner;
 };

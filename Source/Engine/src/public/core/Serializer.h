@@ -28,44 +28,44 @@ class BinarySerializer
 {
 public:
 	template <typename T>
-	std::string serialize(const std::vector<T>& in_data)
+	std::string serialize(const std::vector<T>& i_rvData)
 	{
-		std::string bin;
+		std::string sBin;
 
-		for (const T& t : in_data)
+		for (const T& rT : i_rvData)
 		{
-			// Loop through each byte of the data and cast it to a char
-			for (int i = 0; i < sizeof(in_data); ++i)
+			for (int i = 0; i < sizeof(i_rvData); ++i)
 			{
-				bin += reinterpret_cast<const char*>(&t)[i];
+				sBin += reinterpret_cast<const char*>(&rT)[i];
 			}
 		}
 
-		return bin;
+		return sBin;
 	}
 
 	template <typename T>
-	std::vector<T> deserialize(std::string& in_bin, size_t in_numValues = 0)
+	std::vector<T> deserialize(std::string& i_rsBin, size_t i_uNumValues = 0)
 	{
-		std::vector<T> values;
+		std::vector<T> vValues;
 		T value;
 
-		if (in_numValues == 0)
+		if (i_uNumValues == 0)
 		{
-			in_numValues = in_bin.size() / sizeof(T);
+			i_uNumValues = i_rsBin.size() / sizeof(T);
 		}
 
-		for (size_t i = 0; i < in_numValues; ++i)
+		for (size_t i = 0; i < i_uNumValues; ++i)
 		{
-			// Copy the bytes from the chars into a variable of the correct type
-			std::memcpy(&value, in_bin.data(), sizeof(T));
+			std::memcpy(&value, i_rsBin.data(), sizeof(T));
 
-			values.push_back(value);
+			vValues.push_back(value);
 
-			// Remove the value from the binary
-			in_bin.erase(0, sizeof(T));
+			i_rsBin.erase(0, sizeof(T));
 		}
 
-		return values;
+		return vValues;
 	}
+
+protected:
+private:
 };

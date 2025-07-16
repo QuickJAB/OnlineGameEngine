@@ -2,31 +2,31 @@
 
 using namespace std;
 
-StateMachine::StateMachine(const unordered_map<string, State*> in_states, string in_startState) :
-	m_states(in_states), m_currentState(in_startState)
+StateMachine::StateMachine(const unordered_map<string, State*> i_cumStates, string i_sStartState) :
+	m_umStates(i_cumStates), m_sCurrentState(i_sStartState)
 {
-	m_states[m_currentState]->enter();
+	m_umStates[m_sCurrentState]->enter();
 }
 
-void StateMachine::update(float in_dt)
+void StateMachine::update(float i_fDt)
 {
-	string nextState = m_states[m_currentState]->update(in_dt);
-	if (nextState != "")
+	string sNextState = m_umStates[m_sCurrentState]->update(i_fDt);
+	if (sNextState != "")
 	{
-		m_states[m_currentState]->exit();
-		m_currentState = nextState;
-		m_states[m_currentState]->enter();
+		m_umStates[m_sCurrentState]->exit();
+		m_sCurrentState = sNextState;
+		m_umStates[m_sCurrentState]->enter();
 	}
 }
 
 StateMachine::~StateMachine()
 {
-	m_states[m_currentState]->exit();
-	m_currentState = -1;
+	m_umStates[m_sCurrentState]->exit();
+	m_sCurrentState = "";
 
-	for (auto it = m_states.begin(); it != m_states.end(); ++it)
+	for (auto pIt = m_umStates.begin(); pIt != m_umStates.end(); ++pIt)
 	{
-		delete it->second;
+		delete pIt->second;
 	}
-	m_states.clear();
+	m_umStates.clear();
 }

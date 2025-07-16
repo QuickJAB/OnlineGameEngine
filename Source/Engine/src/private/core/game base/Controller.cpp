@@ -1,8 +1,8 @@
 #include "core/game base/Controller.h"
 
-void Controller::possess(const uint32_t in_entity)
+void Controller::possess(const uint32_t i_uEntity)
 {
-	if (m_level == nullptr) return;
+	if (m_pLevel == nullptr) return;
 
-	m_entity = in_entity;
+	m_uEntity = i_uEntity;
 }

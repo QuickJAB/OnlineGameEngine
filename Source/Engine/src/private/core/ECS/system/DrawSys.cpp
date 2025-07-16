@@ -7,19 +7,19 @@ using namespace std;
 
 void DrawSys::update()
 {
-	vector<SpriteComp>* sprites = m_ecs->getComponentArray<SpriteComp>();
+	vector<SpriteComp>* pvSprites = m_pECS->getComponentArray<SpriteComp>();
 
-	if (sprites == nullptr) return;
+	if (pvSprites == nullptr) return;
 
-	ComponentContainer<TransformComp>* transforms = m_ecs->getComponentContainer<TransformComp>();
-	for (SpriteComp& sprite : *sprites)
+	ComponentContainer<TransformComp>* pTransforms = m_pECS->getComponentContainer<TransformComp>();
+	for (SpriteComp& rSprite : *pvSprites)
 	{
-		TransformComp* transform = transforms->get<TransformComp>(sprite.owner);
-		if (transform == nullptr) return;
+		TransformComp* pTransform = pTransforms->get<TransformComp>(rSprite.uOwner);
+		if (pTransform == nullptr) return;
 
-		sprite.rect.x = transform->x;
-		sprite.rect.y = transform->y;
-		sprite.rect.w = transform->width;
-		sprite.rect.h = transform->height;
+		rSprite.rect.x = pTransform->fX;
+		rSprite.rect.y = pTransform->fY;
+		rSprite.rect.w = pTransform->fWidth;
+		rSprite.rect.h = pTransform->fHeight;
 	}
 }

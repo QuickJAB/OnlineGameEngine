@@ -4,8 +4,8 @@
 
 struct TransformComp : public ComponentBase
 {
-	float x = 0;
-	float y = 0;
-	float width = 0;
-	float height = 0;
+	float fX = 0;
+	float fY = 0;
+	float fWidth = 0;
+	float fHeight = 0;
 };

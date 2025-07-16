@@ -7,12 +7,17 @@
 class StateMachine
 {
 public:
-	StateMachine(const std::unordered_map<std::string, State*> in_states, std::string in_startState);
+protected:
+private:
+	std::unordered_map<std::string, State*> m_umStates;
+	std::string m_sCurrentState;
+
+public:
+	StateMachine(const std::unordered_map<std::string, State*> i_cumStates, std::string i_sStartState);
 	~StateMachine();
 
-	void update(float in_dt);
+	void update(float i_fDt);
 
+protected:
 private:
-	std::unordered_map<std::string, State*> m_states;
-	std::string m_currentState;
 };

@@ -5,12 +5,16 @@
 class Engine
 {
 public:
-	Engine(GameInstance* in_gameInstance = new GameInstance());
+protected:
+private:
+	GameInstance* m_pGameInstance = nullptr;
+
+public:
+	Engine(GameInstance* i_pGameInstance = new GameInstance());
 	~Engine();
 
+protected:
 private:
-	GameInstance* m_gameInstance = nullptr;
-
 	void run();
 };
 

@@ -1,40 +1,35 @@
 #include "graphics/Renderer.h"
 
-#include <print>
-
 using namespace std;
 
-Renderer::Renderer(SDL_Window* in_window)
+Renderer::Renderer(SDL_Window* i_pWindow)
 {
-	m_renderer = SDL_CreateRenderer(in_window, nullptr);
+	m_pRenderer = SDL_CreateRenderer(i_pWindow, nullptr);
 }
 
 Renderer::~Renderer()
 {
-	SDL_DestroyRenderer(m_renderer);
-	m_renderer = nullptr;
+	SDL_DestroyRenderer(m_pRenderer);
+	m_pRenderer = nullptr;
 }
 
-void Renderer::draw(const std::vector<SpriteComp>* in_data)
+void Renderer::draw(const vector<SpriteComp>* i_pvData)
 {
-	// Clear the screen to black
-	SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);
-	SDL_RenderClear(m_renderer);
+	SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, 0);
+	SDL_RenderClear(m_pRenderer);
 
-	// Render given rects from in_data
-	if (!in_data->empty())
+	if (!i_pvData->empty())
 	{
-		SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
-		for (const SpriteComp& spriteComp : *in_data)
+		SDL_SetRenderDrawColor(m_pRenderer, 255, 255, 255, 255);
+		for (const SpriteComp& crSpriteComp : *i_pvData)
 		{
-			SDL_Color color = spriteComp.colour;
-			SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
-			SDL_RenderFillRect(m_renderer, &spriteComp.rect);
+			SDL_Color color = crSpriteComp.colour;
+			SDL_SetRenderDrawColor(m_pRenderer, color.r, color.g, color.b, color.a);
+			SDL_RenderFillRect(m_pRenderer, &crSpriteComp.rect);
 		}
 
-		SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);
+		SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, 0);
 	}
 	
-	// Present rendered world to the window
-	SDL_RenderPresent(m_renderer);
+	SDL_RenderPresent(m_pRenderer);
 }

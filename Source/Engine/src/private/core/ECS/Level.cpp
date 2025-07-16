@@ -4,16 +4,16 @@
 
 Level::Level()
 {
-	m_ecs = new ECS();
+	m_pECS = new ECS();
 }
 
 Level::~Level()
 {
-	delete m_ecs;
-	m_ecs = nullptr;
+	delete m_pECS;
+	m_pECS = nullptr;
 }
 
-void Level::update(float in_dt)
+void Level::update(float i_fDt)
 {
 }
 

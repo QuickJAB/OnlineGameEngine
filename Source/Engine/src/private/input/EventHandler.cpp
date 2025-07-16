@@ -2,16 +2,16 @@
 
 void EventHandler::pollEvents()
 {
-	SDL_PollEvent(&m_event);
-	switch (m_event.type)
+	SDL_PollEvent(&m_Event);
+	switch (m_Event.type)
 	{
 	case SDL_EVENT_QUIT:
-		onEventQuit.broadcast();
+		m_unidOnEventQuit.broadcast();
 		break;
 	default:
 		break;
 	}
 
-	m_keyStates = SDL_GetKeyboardState(nullptr);
-	onKeyStatesUpdated.broadcast(m_keyStates);
+	m_pKeyStates = SDL_GetKeyboardState(nullptr);
+	m_muldOnKeyStatesUpdated.broadcast(m_pKeyStates);
 }

@@ -4,124 +4,123 @@
 
 using namespace std;
 
-NetBase::NetBase(std::atomic<bool>& in_running, float in_tickTime) : 
-    m_running(in_running), m_tickTime(in_tickTime)
+NetBase::NetBase(atomic<bool>& i_bRunning, float i_fTickTime) :
+    m_bRunning(i_bRunning), m_fTickTime(i_fTickTime)
 {
     enet_initialize();
 }
 
 NetBase::~NetBase()
 {
-    while (!m_incomingPacketData.empty())
+    while (!m_qIncomingPacketData.empty())
     {
-        enet_packet_destroy(&m_incomingPacketData.front());
-        m_incomingPacketData.pop();
+        enet_packet_destroy(&m_qIncomingPacketData.front());
+        m_qIncomingPacketData.pop();
     }
 
-    while (!m_outgoingPacketData.empty())
+    while (!m_qOutgoingPacketData.empty())
     {
-        m_outgoingPacketData.pop();
+        m_qOutgoingPacketData.pop();
     }
 
-    enet_host_destroy(m_host);
+    enet_host_destroy(m_pHost);
 
     enet_deinitialize();
 }
 
 void NetBase::update()
 {
-    while (m_running.load())
+    while (m_bRunning.load())
     {
-        while (enet_host_service(m_host, &m_event, static_cast<enet_uint32>(m_tickTime)) > 0)
+        while (enet_host_service(m_pHost, &m_Event, static_cast<enet_uint32>(m_fTickTime)) > 0)
         {
-            switch (m_event.type)
+            switch (m_Event.type)
             {
             case ENET_EVENT_TYPE_CONNECT:
-                onConnected(m_event.packet);
+                onConnected(m_Event.packet);
                 break;
             case ENET_EVENT_TYPE_DISCONNECT:
-                onDisconnected(m_event.packet);
+                onDisconnected(m_Event.packet);
                 break;
             case ENET_EVENT_TYPE_RECEIVE:
-                queueIncomingPacketData(m_event.packet);
+                queueIncomingPacketData(m_Event.packet);
                 break;
             case ENET_EVENT_TYPE_NONE:
                 break;
             }
         }
 
-        enet_packet_destroy(m_event.packet);
+        enet_packet_destroy(m_Event.packet);
 
-        onNetUpdate.broadcast();
+        m_muldOnNetUpdate.broadcast();
 
         sendPackets();
     }
 }
 
-bool NetBase::shouldQueuePacket(ENetPacket* in_packet)
+bool NetBase::shouldQueuePacket(ENetPacket* i_pPacket)
 {
-    // Add pre-processesing of packets in overriden function
     return true;
 }
 
-void NetBase::queueIncomingPacketData(ENetPacket* in_packet)
+void NetBase::queueIncomingPacketData(ENetPacket* i_pPacket)
 {
-    if (in_packet == nullptr || !shouldQueuePacket(in_packet)) return;
+    if (i_pPacket == nullptr || !shouldQueuePacket(i_pPacket)) return;
 
-    m_incomingDataMutex.lock();
+    m_IncomingDataMutex.lock();
     
-    m_incomingPacketData.push(*in_packet);
+    m_qIncomingPacketData.push(*i_pPacket);
     
-    m_incomingDataMutex.unlock();
+    m_IncomingDataMutex.unlock();
 }
 
-void NetBase::queueOutgoingPacketData(string in_data, int in_peerIndex)
+void NetBase::queueOutgoingPacketData(string i_sData, int i_iPeerIndex)
 {
-    if (in_data == "") return;
+    if (i_sData == "") return;
 
-    m_outgoingDataMutex.lock();
+    m_OutgoingDataMutex.lock();
 
-    m_outgoingPacketData.push({ in_data, in_peerIndex });
+    m_qOutgoingPacketData.push({ i_sData, i_iPeerIndex });
 
-    m_outgoingDataMutex.unlock();
+    m_OutgoingDataMutex.unlock();
 }
 
 queue<ENetPacket> NetBase::getIncomingPacketData()
 {
-    m_incomingDataMutex.lock();
+    m_IncomingDataMutex.lock();
 
-    if (m_incomingPacketData.empty())
+    if (m_qIncomingPacketData.empty())
     {
-        m_incomingDataMutex.unlock();
+        m_IncomingDataMutex.unlock();
         return queue<ENetPacket>();
     }
 
-    queue<ENetPacket> queue = m_incomingPacketData;
+    queue<ENetPacket> qQueue = m_qIncomingPacketData;
 
-    while (!m_incomingPacketData.empty())
+    while (!m_qIncomingPacketData.empty())
     {
-        m_incomingPacketData.pop();
+        m_qIncomingPacketData.pop();
     }
 
-    m_incomingDataMutex.unlock();
+    m_IncomingDataMutex.unlock();
 
-    return queue;
+    return qQueue;
 }
 
 long long NetBase::getClockTime()
 {
-    return chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
+    using namespace chrono;
+    return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
 void NetBase::sendPackets()
 {
-    // STUB
 }
 
-void NetBase::onConnected(ENetPacket* in_packet)
+void NetBase::onConnected(ENetPacket* i_pPacket)
 {
 }
 
-void NetBase::onDisconnected(ENetPacket* in_packet)
+void NetBase::onDisconnected(ENetPacket* i_pPacket)
 {
 }

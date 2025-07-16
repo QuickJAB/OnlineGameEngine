@@ -13,147 +13,146 @@ struct IComponentContainer
 {
 	virtual ~IComponentContainer() {}
 
-	virtual void remove(const uint32_t in_entity) {}
+	virtual void remove(const uint32_t i_cuEntity) {}
 };
 
 template <typename T>
 struct ComponentContainer : public IComponentContainer
 {
-	std::vector<T> components;
+	std::vector<T> vComponents;
 
-	// Maps entity id to the memory offset of the component in components
-	std::unordered_map<uint32_t, size_t> map;
+	std::unordered_map<uint32_t, size_t> umMap;
 
 	template <typename T>
-	void add(const uint32_t in_entity, const T* in_component = nullptr)
+	void add(const uint32_t i_cuEntity, const T* i_cpComponent = nullptr)
 	{
-		if (map.contains(in_entity)) return;
+		if (umMap.contains(i_cuEntity)) return;
 
-		T component = in_component == nullptr ? T() : *in_component;
-		component.owner = in_entity;
+		T component = i_cpComponent == nullptr ? T() : *i_cpComponent;
+		component.uOwner = i_cuEntity;
 
-		components.push_back(component);
-		map.insert(std::pair<uint32_t, size_t>(in_entity, components.size() - 1));
+		vComponents.push_back(component);
+		umMap.insert(std::pair<uint32_t, size_t>(i_cuEntity, vComponents.size() - 1));
 	}
 
-	void remove(const uint32_t in_entity) override
+	void remove(const uint32_t i_cuEntity) override
 	{
-		if (components.empty() || !map.contains(in_entity)) return;
+		if (vComponents.empty() || !umMap.contains(i_cuEntity)) return;
 
-		// Set the memory offset of the entity that owns the component at the back of components to the offset of the component thats being removed
-		map[components.back().owner] = map[in_entity];
+		umMap[vComponents.back().owner] = umMap[i_cuEntity];
 
-		// Swap the component at the back of components with the component thats being removed
-		std::iter_swap(components.begin() + map[in_entity], components.end() - 1);
+		std::iter_swap(vComponents.begin() + umMap[i_cuEntity], vComponents.end() - 1);
 
-		components.pop_back();
-		map.erase(in_entity);
+		vComponents.pop_back();
+		umMap.erase(i_cuEntity);
 	}
 
 	template <typename T>
-	T* get(const uint32_t in_entity)
+	T* get(const uint32_t i_cuEntity)
 	{
-		if (components.empty() || !map.contains(in_entity)) return nullptr;
+		if (vComponents.empty() || !umMap.contains(i_cuEntity)) return nullptr;
 
-		return &components[map[in_entity]];
+		return &vComponents[umMap[i_cuEntity]];
 	}
 
 	virtual ~ComponentContainer() override
 	{
-		map.clear();
-		components.clear();
+		umMap.clear();
+		vComponents.clear();
 	}
 };
 
 class ECS
 {
 public:
+protected:
+private:
+	uint32_t m_uNextEntityId = 0;
+
+	std::queue<uint32_t> m_qFreedEntityIds;
+
+	std::vector<uint32_t> m_vEntities;
+
+	std::unordered_map<std::string, IComponentContainer*> m_umComponentContainers;
+
+public:
 	ECS() = default;
 	~ECS();
 
 	const uint32_t createEntity();
-	void destroyEntity(const uint32_t in_entity);
+	void destroyEntity(const uint32_t i_cuEntity);
 
 	template <typename T>
-	void addComponent(const uint32_t in_entity, const T* in_component = nullptr)
+	void addComponent(const uint32_t i_cuEntity, const T* i_cpComponent = nullptr)
 	{
-		if (std::find(m_entities.begin(), m_entities.end(), in_entity) == m_entities.end()) return;
+		if (std::find(m_vEntities.begin(), m_vEntities.end(), i_cuEntity) == m_vEntities.end()) return;
 
-		ComponentContainer<T>* componentContainer = getComponentContainer<T>();
+		ComponentContainer<T>* pComponentContainer = getComponentContainer<T>();
 
-		if (componentContainer == nullptr)
+		if (pComponentContainer == nullptr)
 		{
-			componentContainer = createComponentContainer<T>();
+			pComponentContainer = createComponentContainer<T>();
 		}
 
-		componentContainer->add<T>(in_entity, in_component);
+		pComponentContainer->add<T>(i_cuEntity, i_cpComponent);
 	}
 
 	template <typename T>
-	void removeComponent(const uint32_t in_entity)
+	void removeComponent(const uint32_t i_cuEntity)
 	{
-		if (std::find(m_entities.begin(), m_entities.end(), in_entity) == m_entities.end()) return;
+		if (std::find(m_vEntities.begin(), m_vEntities.end(), i_cuEntity) == m_vEntities.end()) return;
 
-		ComponentContainer<T>* componentContainer = getComponentContainer<T>();
-		if (componentContainer == nullptr) return;
+		ComponentContainer<T>* pComponentContainer = getComponentContainer<T>();
+		if (pComponentContainer == nullptr) return;
 
-		componentContainer->remove(in_entity);
+		pComponentContainer->remove(i_cuEntity);
 	}
 
 	template <typename T>
-	T* getComponent(const uint32_t in_entity)
+	T* getComponent(const uint32_t i_cuEntity)
 	{
-		if (std::find(m_entities.begin(), m_entities.end(), in_entity) == m_entities.end()) return nullptr;
+		if (std::find(m_vEntities.begin(), m_vEntities.end(), i_cuEntity) == m_vEntities.end()) return nullptr;
 
-		ComponentContainer<T>* componentContainer = getComponentContainer<T>();
-		if (componentContainer == nullptr) return nullptr;
+		ComponentContainer<T>* pComponentContainer = getComponentContainer<T>();
+		if (pComponentContainer == nullptr) return nullptr;
 
-		return componentContainer->get<T>(in_entity);
+		return pComponentContainer->get<T>(i_cuEntity);
 	}
 
 	template <typename T>
 	std::vector<T>* getComponentArray()
 	{
-		ComponentContainer<T>* componentContainer = getComponentContainer<T>();
-		if (componentContainer == nullptr) return nullptr;
+		ComponentContainer<T>* pComponentContainer = getComponentContainer<T>();
+		if (pComponentContainer == nullptr) return nullptr;
 
-		return &componentContainer->components;
+		return &pComponentContainer->vComponents;
 	}
 
 	template <typename T>
 	ComponentContainer<T>* getComponentContainer()
 	{
-		// Get the components type as a string
-		std::string componentType = typeid(T).name();
+		std::string sComponentType = typeid(T).name();
 
-		if (!m_componentContainers.contains(componentType)) return nullptr;
+		if (!m_umComponentContainers.contains(sComponentType)) return nullptr;
 
 		// Cast the pointer to the correct type and return
-		return static_cast<ComponentContainer<T>*>(m_componentContainers[componentType]);
+		return static_cast<ComponentContainer<T>*>(m_umComponentContainers[sComponentType]);
 	}
 
-	const std::vector<uint32_t>* getEntities() const { return &m_entities; }
+	const std::vector<uint32_t>* getEntities() const { return &m_vEntities; }
 
+protected:
 private:
-	uint32_t m_nextEntityId = 0;
-
-	std::queue<uint32_t> m_freedEntityIds;
-
-	std::vector<uint32_t> m_entities;
-
-	// A map of component type to component container
-	std::unordered_map<std::string, IComponentContainer*> m_componentContainers;
-
 	template <typename T>
 	ComponentContainer<T>* createComponentContainer()
 	{
 		// Get the components type as a string
-		std::string componentType = typeid(T).name();
+		std::string sComponentType = typeid(T).name();
 
-		ComponentContainer<T>* container = new ComponentContainer<T>();
+		ComponentContainer<T>* pContainer = new ComponentContainer<T>();
 
-		m_componentContainers.insert(std::pair<std::string, IComponentContainer*>(componentType, container));
+		m_umComponentContainers.insert(std::pair<std::string, IComponentContainer*>(sComponentType, pContainer));
 
-		return container;
+		return pContainer;
 	}
 };

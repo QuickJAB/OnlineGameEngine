@@ -5,10 +5,15 @@
 class DrawSys
 {
 public:
-	DrawSys(ECS* in_ecs) : m_ecs(in_ecs) {}
+protected:
+private:
+	ECS* m_pECS = nullptr;
+
+public:
+	DrawSys(ECS* i_pECS) : m_pECS(i_pECS) {}
 
 	void update();
 
+protected:
 private:
-	ECS* m_ecs = nullptr;
 };

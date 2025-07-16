@@ -4,34 +4,34 @@
 
 using namespace std;
 
-Engine::Engine(GameInstance* in_gameInstance) :
-	m_gameInstance(in_gameInstance)
+Engine::Engine(GameInstance* i_pGameInstance) :
+	m_pGameInstance(i_pGameInstance)
 {
-	if (in_gameInstance == nullptr) return;
+	if (m_pGameInstance == nullptr) return;
 	run();
 }
 
 void Engine::run()
 {
-	// Declare timing variables
-	auto lastTick = chrono::high_resolution_clock::now();
-	auto currentTick = chrono::high_resolution_clock::now();
-	float dt = 0.f;
+	using namespace chrono;
 
-	while (m_gameInstance->isRunning())
+	auto lastTick = high_resolution_clock::now();
+	auto currentTick = high_resolution_clock::now();
+	float fDt = 0.f;
+
+	while (m_pGameInstance->isRunning())
 	{
-		// Calculate delta time
-		currentTick = chrono::high_resolution_clock::now();
-		chrono::duration<float, milli> diff = currentTick - lastTick;
-		dt = diff.count();
+		currentTick = high_resolution_clock::now();
+		duration<float, milli> diff = currentTick - lastTick;
+		fDt = diff.count();
 		lastTick = currentTick;
 
-		m_gameInstance->update(dt);
+		m_pGameInstance->update(fDt);
 	}
 }
 
 Engine::~Engine()
 {
-	delete m_gameInstance;
-	m_gameInstance = nullptr;
+	delete m_pGameInstance;
+	m_pGameInstance = nullptr;
 }

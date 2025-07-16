@@ -6,38 +6,42 @@
 
 struct ClientTimeOffset
 {
-	long long average;
-	std::queue<long long> previous;
+	long long llAverage;
+	std::queue<long long> qPrevious;
 };
 
 class Server : public NetBase
 {
 public:
-	Server(std::atomic<bool>& in_running, float in_tickTime, enet_uint16 in_port,
-		size_t in_maxConnections, enet_uint32 in_inBandwidth, enet_uint32 in_outBandwidth);
+protected:
+private:
+	uint32_t m_uNextPlayerId = 0;
+	uint32_t m_uMaxPlayers = 0;
+
+	long long m_llPingDelay = 5000;	// Time in milli
+	long long m_llLastPingTime = 0;
+
+	const size_t m_cullMaxOffsets = 10;
+
+	std::unordered_map<uint32_t, ClientTimeOffset> m_umOffsets;
+
+public:
+	Server(std::atomic<bool>& i_bRunning, float i_fTickTime, enet_uint16 i_uPort,
+		size_t i_ullMaxConnections, enet_uint32 i_uInBandwidth, enet_uint32 i_uOutBandwidth);
 	~Server();
 
-	int getNumConnections() const { return static_cast<int>(m_host->connectedPeers); }
+	int getNumConnections() const { return static_cast<int>(m_pHost->connectedPeers); }
 
-	int getMaxPlayers() const { return m_maxPlayers; }
+	int getMaxPlayers() const { return m_uMaxPlayers; }
 
 protected:
-	virtual void onConnected(ENetPacket* in_packet) override;
+	virtual void onConnected(ENetPacket* i_pPacket) override;
 
 private:
 	void sendPackets() override;
 
 	void pingClients();
-	void updateTimeOffset(std::string in_data);
+	void updateTimeOffset(std::string i_sData);
 
-	virtual bool shouldQueuePacket(ENetPacket* in_packet) override;
-
-	uint32_t m_nextPlayerId = 0;
-	uint32_t m_maxPlayers = 0;
-
-	long long m_pingDelay = 5000;	// Time in milli
-	long long m_lastPingTime = 0;
-
-	const size_t m_MAX_OFFSETS = 10;
-	std::unordered_map<uint32_t, ClientTimeOffset> m_offsets;
+	virtual bool shouldQueuePacket(ENetPacket* i_pPacket) override;
 };

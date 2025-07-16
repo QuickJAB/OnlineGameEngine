@@ -4,7 +4,7 @@ void State::enter()
 {
 }
 
-std::string State::update(float in_dt)
+std::string State::update(float i_fDt)
 {
 	return "";
 }

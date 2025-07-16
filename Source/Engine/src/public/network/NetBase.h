@@ -9,8 +9,8 @@
 
 struct PacketInfo
 {
-	std::string data;
-	int peerIndex;
+	std::string sData;
+	int iPeerIndex;
 };
 
 enum ServerCommand
@@ -31,41 +31,45 @@ enum ClientCommand
 class NetBase
 {
 public:
-	NetBase(std::atomic<bool>& in_running, float in_tickTime);
+protected:
+	std::atomic<bool>& m_bRunning;
+	float m_fTickTime = 0.f;
+
+	ENetHost* m_pHost = nullptr;
+	ENetAddress m_Address = ENetAddress();
+	ENetEvent m_Event = ENetEvent();
+
+	std::mutex m_OutgoingDataMutex;
+	std::queue<PacketInfo> m_qOutgoingPacketData;
+
+	std::mutex m_IncomingDataMutex;
+	std::queue<ENetPacket> m_qIncomingPacketData;
+
+	MulticastDelegate<void()> m_muldOnNetUpdate;
+
+private:
+
+public:
+	NetBase(std::atomic<bool>& i_bRunning, float i_fTickTime);
 	~NetBase();
 
 	void update();
 
-	virtual void queueOutgoingPacketData(std::string in_data, int in_peerIndex = -1);
+	virtual void queueOutgoingPacketData(std::string i_sData, int i_iPeerIndex = -1);
 
 	std::queue<ENetPacket> getIncomingPacketData();
 
 	long long getClockTime();
 
 protected:
-	std::atomic<bool>& m_running;
-	float m_tickTime = 0.f;
-
-	ENetHost* m_host = nullptr;
-	ENetAddress m_address = ENetAddress();
-	ENetEvent m_event = ENetEvent();
-
-	std::mutex m_outgoingDataMutex;
-	std::queue<PacketInfo> m_outgoingPacketData;
-
-	std::mutex m_incomingDataMutex;
-	std::queue<ENetPacket> m_incomingPacketData;
-
-	MulticastDelegate<void()> onNetUpdate;
-
-	virtual bool shouldQueuePacket(ENetPacket* in_packet);
+	virtual bool shouldQueuePacket(ENetPacket* i_pPacket);
 
 	virtual void sendPackets();
 
-	virtual void onConnected(ENetPacket* in_packet);
+	virtual void onConnected(ENetPacket* i_pPacket);
 
-	virtual void onDisconnected(ENetPacket* in_packet);
+	virtual void onDisconnected(ENetPacket* i_pPacket);
 
 private:
-	void queueIncomingPacketData(ENetPacket* in_packet);
+	void queueIncomingPacketData(ENetPacket* i_pPacket);
 };

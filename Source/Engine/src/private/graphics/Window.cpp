@@ -5,20 +5,20 @@
 
 using namespace std;
 
-Window::Window(string in_title, int in_width, int in_height)
+Window::Window(string i_sTitle, int i_iWidth, int i_iHeight)
 {
-	m_title = in_title;
-	m_width = in_width;
-	m_height = in_height;
+	m_sTitle = i_sTitle;
+	m_iWidth = i_iWidth;
+	m_iHeight = i_iHeight;
 
 	SDL_Init(SDL_INIT_VIDEO);
-	m_wnd = SDL_CreateWindow(m_title.c_str(), m_width, m_height, SDL_WINDOW_VULKAN);
+	m_pWnd = SDL_CreateWindow(m_sTitle.c_str(), m_iWidth, m_iHeight, SDL_WINDOW_VULKAN);
 }
 
 Window::~Window()
 {
-	SDL_DestroyWindow(m_wnd);
-	m_wnd = nullptr;
+	SDL_DestroyWindow(m_pWnd);
+	m_pWnd = nullptr;
 
 	SDL_Quit();
 }

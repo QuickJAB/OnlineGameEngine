@@ -7,13 +7,17 @@ struct TransformComp;
 class CollisionSys
 {
 public:
-	CollisionSys(ECS* in_ecs);
+protected:
+private:
+	ECS* m_pECS = nullptr;
+
+public:
+	CollisionSys(ECS* i_pECS);
 	~CollisionSys() = default;
 
-	void update(float in_dt);
+	void update(float i_fDt);
 
+protected:
 private:
-	ECS* m_ecs = nullptr;
-
-	bool checkAABB(const TransformComp* a, const TransformComp* b);
+	bool checkAABB(const TransformComp* cpA, const TransformComp* cpB);
 };

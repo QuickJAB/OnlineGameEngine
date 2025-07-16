@@ -5,91 +5,91 @@
 
 using namespace std;
 
-Client::Client(std::atomic<bool>& in_running, float in_tickTime,
-    enet_uint32 in_inBandwidth, enet_uint32 in_outBandwidth) :
-        NetBase(in_running, in_tickTime)
+Client::Client(atomic<bool>& i_bRunning, float i_fTickTime,
+    enet_uint32 i_uInBandwidth, enet_uint32 i_uOutBandwidth) :
+        NetBase(i_bRunning, i_fTickTime)
 {
-    m_host = enet_host_create(nullptr, 1, 1, in_inBandwidth, in_outBandwidth);
+    m_pHost = enet_host_create(nullptr, 1, 1, i_uInBandwidth, i_uOutBandwidth);
 }
 
 Client::~Client()
 {
-    enet_peer_disconnect_now(m_peer, 0);
-    m_peer = nullptr;
+    enet_peer_disconnect_now(m_pPeer, 0);
+    m_pPeer = nullptr;
 }
 
-bool Client::tryConnect(std::string in_ip, enet_uint16 in_port, uint32_t in_attemptLength)
+bool Client::tryConnect(string i_sIp, enet_uint16 i_uPort, uint32_t i_uAttemptLength)
 {
-    enet_address_set_host(&m_address, in_ip.c_str());
-    m_address.port = in_port;
+    enet_address_set_host(&m_Address, i_sIp.c_str());
+    m_Address.port = i_uPort;
 
-    m_peer = enet_host_connect(m_host, &m_address, 1, 0);
-    if (m_peer == nullptr) return false;
+    m_pPeer = enet_host_connect(m_pHost, &m_Address, 1, 0);
+    if (m_pPeer == nullptr) return false;
 
-    if (enet_host_service(m_host, &m_event, in_attemptLength * static_cast<enet_uint32>(1000.f)) > 0 &&
-        m_event.type == ENET_EVENT_TYPE_CONNECT)
+    if (enet_host_service(m_pHost, &m_Event, i_uAttemptLength * static_cast<enet_uint32>(1000.f)) > 0 &&
+        m_Event.type == ENET_EVENT_TYPE_CONNECT)
     {
         return true;
     }
 
-    enet_peer_reset(m_peer);
+    enet_peer_reset(m_pPeer);
 
-    enet_packet_destroy(m_event.packet);
+    enet_packet_destroy(m_Event.packet);
 
     return false;
 }
 
 void Client::sendPackets()
 {
-    m_outgoingDataMutex.lock();
+    m_OutgoingDataMutex.lock();
 
-    if (m_outgoingPacketData.empty())
+    if (m_qOutgoingPacketData.empty())
     {
-        m_outgoingDataMutex.unlock();
+        m_OutgoingDataMutex.unlock();
         return;
     }
 
-    const PacketInfo pktInf = m_outgoingPacketData.front();
-    m_outgoingPacketData.pop();
+    const PacketInfo cPktInf = m_qOutgoingPacketData.front();
+    m_qOutgoingPacketData.pop();
 
-    m_outgoingDataMutex.unlock();
+    m_OutgoingDataMutex.unlock();
 
-    ENetPacket* packet = enet_packet_create(pktInf.data.c_str(), strlen(pktInf.data.c_str()) + 1, ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT);
-    if (packet == nullptr) return;
+    ENetPacket* pPacket = enet_packet_create(cPktInf.sData.c_str(), strlen(cPktInf.sData.c_str()) + 1, ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT);
+    if (pPacket == nullptr) return;
 
-    enet_peer_send(m_peer, 0, packet);
+    enet_peer_send(m_pPeer, 0, pPacket);
 }
 
-void Client::processHandshake(std::string in_data)
+void Client::processHandshake(string i_sData)
 {
-    string format = to_string(handshake) + "id%i";
-    sscanf_s(in_data.c_str(), format.c_str(), &m_playerId);
+    string sFormat = to_string(handshake) + "id%i";
+    sscanf_s(i_sData.c_str(), sFormat.c_str(), &m_uPlayerId);
 }
 
-void Client::pongServer(string in_pingData)
+void Client::pongServer(string i_sPingData)
 {
-    const string format = to_string(ping) + "t%lld";
-    long long pingTime;
-    sscanf_s(in_pingData.c_str(), format.c_str(), &pingTime);
+    const string sFormat = to_string(ping) + "t%lld";
+    long long llPingTime;
+    sscanf_s(i_sPingData.c_str(), sFormat.c_str(), &llPingTime);
 
-    string data = to_string(pong) + "id" + to_string(m_playerId) + 't' + to_string(getClockTime()) + "pt" + to_string(pingTime);
-    queueOutgoingPacketData(data);
+    string sData = to_string(pong) + "id" + to_string(m_uPlayerId) + 't' + to_string(getClockTime()) + "pt" + to_string(llPingTime);
+    queueOutgoingPacketData(sData);
 }
 
-bool Client::shouldQueuePacket(ENetPacket* in_packet)
+bool Client::shouldQueuePacket(ENetPacket* i_pPacket)
 {
-    string data = (const char*)in_packet->data;
+    string sData = (const char*)i_pPacket->data;
 
-    int serverCommand;
-    if (sscanf_s(data.c_str(), "%i", &serverCommand) > 0)
+    int iServerCommand;
+    if (sscanf_s(sData.c_str(), "%i", &iServerCommand) > 0)
     {
-        switch (serverCommand)
+        switch (iServerCommand)
         {
         case handshake:
-            processHandshake(data);
+            processHandshake(sData);
             return false;
         case ping:
-            pongServer(data);
+            pongServer(sData);
             return false;
         }
     }

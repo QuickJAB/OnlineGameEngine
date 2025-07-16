@@ -7,18 +7,21 @@ class Level;
 class Controller
 {
 public:
-	Controller() = default;
-
-	void setWorld(Level* in_world) { m_level = in_world; }
-
-	void possess(const uint32_t in_entity);
-	void depossess() { m_entity = (uint32_t)-1; }
-
 protected:
-	uint32_t m_entity = (uint32_t)-1;
+	uint32_t m_uEntity = (uint32_t)-1;
 
-	Level* m_level = nullptr;
+	Level* m_pLevel = nullptr;
 
 private:
 
+public:
+	Controller() = default;
+
+	void setLevel(Level* i_pLevel) { m_pLevel = i_pLevel; }
+
+	void possess(const uint32_t i_uEntity);
+	void depossess() { m_uEntity = (uint32_t)-1; }
+
+protected:
+private:
 };

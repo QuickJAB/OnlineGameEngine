@@ -4,22 +4,22 @@ using namespace std;
 
 GameInstance::GameInstance()
 {
-	m_running.store(true);
+	m_bRunning.store(true);
 }
 
 GameInstance::~GameInstance()
 {
-	delete m_stateMachine;
-	m_stateMachine = nullptr;
+	delete m_pStateMachine;
+	m_pStateMachine = nullptr;
 }
 
-void GameInstance::update(float in_dt)
+void GameInstance::update(float i_fDt)
 {
-	if (m_stateMachine == nullptr)
+	if (m_pStateMachine == nullptr)
 	{
 		quitGame();
 		return;
 	}
 
-	m_stateMachine->update(in_dt);
+	m_pStateMachine->update(i_fDt);
 }

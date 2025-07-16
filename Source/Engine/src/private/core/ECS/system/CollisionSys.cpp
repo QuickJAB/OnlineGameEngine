@@ -8,39 +8,39 @@
 
 using namespace std;
 
-CollisionSys::CollisionSys(ECS* in_ecs) : 
-	m_ecs(in_ecs)
+CollisionSys::CollisionSys(ECS* i_pECS) : 
+	m_pECS(i_pECS)
 {
 }
 
-void CollisionSys::update(float in_dt)
+void CollisionSys::update(float i_fDt)
 {
-	vector<ColliderComp>* colliders = m_ecs->getComponentArray<ColliderComp>();
-	ComponentContainer<TransformComp>* transforms = m_ecs->getComponentContainer<TransformComp>();
+	vector<ColliderComp>* pvColliders = m_pECS->getComponentArray<ColliderComp>();
+	ComponentContainer<TransformComp>* pTransforms = m_pECS->getComponentContainer<TransformComp>();
 
-	if (colliders == nullptr || transforms == nullptr) return;
+	if (pvColliders == nullptr || pTransforms == nullptr) return;
 
-	for (auto i = colliders->begin(); i != colliders->end(); ++i)
+	for (auto pI = pvColliders->begin(); pI != pvColliders->end(); ++pI)
 	{
-		if (i->isStatic) continue;
+		if (pI->bIsStatic) continue;
 
-		for (auto j = colliders->begin(); j != colliders->end(); ++j)
+		for (auto pJ = pvColliders->begin(); pJ != pvColliders->end(); ++pJ)
 		{
-			if (i == j) continue;
+			if (pI == pJ) continue;
 
-			if (checkAABB(transforms->get<TransformComp>(i->owner), transforms->get<TransformComp>(j->owner)))
+			if (checkAABB(pTransforms->get<TransformComp>(pI->uOwner), pTransforms->get<TransformComp>(pJ->uOwner)))
 			{
-				i->onCollided.broadcast();
-				j->onCollided.broadcast();
+				pI->unidOnCollided.broadcast();
+				pJ->unidOnCollided.broadcast();
 			}
 		}
 	}
 }
 
-bool CollisionSys::checkAABB(const TransformComp* a, const TransformComp* b)
+bool CollisionSys::checkAABB(const TransformComp* cpA, const TransformComp* cpB)
 {
-	return	(a->x >= b->x && a->x <= b->x + b->width && a->y >= b->y && a->y <= b->y + b->height) ||
-			(a->x + a->width >= b->x && a->x + a->width <= b->x + b->width && a->y >= b->y && a->y <= b->y + b->height) ||
-			(a->x >= b->x && a->x <= b->x + b->width && a->y + a->height >= b->y && a->y + a->height <= b->y + b->height) ||
-			(a->x + a->width >= b->x && a->x + a->width <= b->x + b->width && a->y + a->height >= b->y && a->y + a->height <= b->y + b->height);
+	return	(cpA->fX >= cpB->fX && cpA->fX <= cpB->fX + cpB->fWidth && cpA->fY >= cpB->fY && cpA->fY <= cpB->fY + cpB->fHeight) ||
+			(cpA->fX + cpA->fWidth >= cpB->fX && cpA->fX + cpA->fWidth <= cpB->fX + cpB->fWidth && cpA->fY >= cpB->fY && cpA->fY <= cpB->fY + cpB->fHeight) ||
+			(cpA->fX >= cpB->fX && cpA->fX <= cpB->fX + cpB->fWidth && cpA->fY + cpA->fHeight >= cpB->fY && cpA->fY + cpA->fHeight <= cpB->fY + cpB->fHeight) ||
+			(cpA->fX + cpA->fWidth >= cpB->fX && cpA->fX + cpA->fWidth <= cpB->fX + cpB->fWidth && cpA->fY + cpA->fHeight >= cpB->y && cpA->fY + cpA->fHeight <= cpB->fY + cpB->fHeight);
 }

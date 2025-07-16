@@ -5,7 +5,7 @@
 
 struct ColliderComp : public ComponentBase
 {
-	bool isStatic = true;
+	bool bIsStatic = true;
 
-	Delegate<void()> onCollided;
+	Delegate<void()> unidOnCollided;
 };

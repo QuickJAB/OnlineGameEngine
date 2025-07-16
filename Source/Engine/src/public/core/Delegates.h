@@ -2,183 +2,141 @@
 
 #include <functional>
 
-// Generalised template declaration
 template<typename T>
 class Delegate;
 
-// Specialised template definition
 template<typename Ret, typename... Args>
 class Delegate<Ret(Args...)>
 {
+public:
+protected:
 private:
-	// The function this delegate is storing and calling, initialized as nullptr to ensure isBound returns false initally
-	std::function<Ret(Args...)> m_func = nullptr;
+	std::function<Ret(Args...)> m_pFunc = nullptr;
 
 public:
 	template<typename Owner>
-	// Bind for setting m_func as a member function
-	// in_owner		A pointer to the instance of the class that owns the given method (in_method)
-	// in_method	A pointer to the method you wish to set m_func too
-	void bind(Owner* in_owner, Ret(Owner::* in_method)(Args...))
+	void bind(Owner* i_pOwner, Ret(Owner::* i_pMethod)(Args...))
 	{
-		// Early return and force unbind if the given owner is invalid
-		if (in_owner == nullptr)
+		if (i_pOwner == nullptr)
 		{
 			unbind();
 			return;
 		}
 
-		// Lambda that returns owner->method(args);
-		m_func = [in_owner, in_method](Args... args)->Ret {
-			// (in_owner->*in_method) represents in_owner->method
-			// std::forward is used to retain the lvalue and rvalue states of the given arguments when passing it into the function
-				return (in_owner->*in_method)(std::forward<Args>(args)...);
+		m_pFunc = [i_pOwner, i_pMethod](Args... args)->Ret
+			{
+				return (i_pOwner->*i_pMethod)(std::forward<Args>(args)...);
 			};
 	}
 
 	template<typename Owner>
-	// Bind for setting m_func as a const member function
-	// in_owner		A const pointer to the instance of the class that owns the given method (in_method)
-	// in_method	A pointer to the const method you wish to set m_func too
-	void bind(const Owner* in_owner, Ret(Owner::* in_method)(Args...) const)
+	void bind(const Owner* i_pOwner, Ret(Owner::* i_pMethod)(Args...) const)
 	{
-		// Early return and force unbind if the given owner is invalid
-		if (in_owner == nullptr)
+		if (i_pOwner == nullptr)
 		{
 			unbind();
 			return;
 		}
 
-		// Lambda that returns owner->method(args);
-		m_func = [in_owner, in_method](Args... args)->Ret {
-			// (in_owner->*in_method) represents in_owner->method
-			// std::forward is used to retain the lvalue and rvalue states of the given arguments when passing it into the function
-				return (in_owner->*in_method)(std::forward<Args>(args)...);
+		m_func = [i_pOwner, i_pMethod](Args... args)->Ret
+			{
+				return (i_pOwner->*i_pMethod)(std::forward<Args>(args)...);
 			};
 	}
 	
-	// Reset m_func to a nullptr
-	void unbind() { m_func = nullptr; }
+	void unbind() { m_pFunc = nullptr; }
 	
-	// Check if m_func exists
-	bool isBound() const { return static_cast<bool>(m_func); }
+	bool isBound() const { return static_cast<bool>(m_pFunc); }
 
-	// Calls m_func if it's bound
-	Ret broadcast(Args... in_args) const
+	Ret broadcast(Args... i_Args) const
 	{
-		// Return the default constructed Ret if the bound function is invalid
 		if (!isBound())
 		{
 			return Ret{};
 		}
 
-		// Execute the bound function
-		return m_func(std::forward<Args>(in_args)...);
+		return m_pFunc(std::forward<Args>(i_Args)...);
 	}
+
+protected:
+private:
 };
 
-
-
-
-
-// Generalised template declaration
 template<typename T>
 class MulticastDelegate;
 
-// Specialised template definition
 template<typename... Args>
 class MulticastDelegate<void(Args...)>
 {
+public:
+protected:
 private:
-	// A struct to link the owning instance to the function for future removal logic
 	struct OwnerFunctionPair
 	{
-		// void* is used because the array of this struct cannot be tempalted
-		void* owner = nullptr;
-		std::function<void(Args...)> func;
+		void* pOwner = nullptr;
+		std::function<void(Args...)> pFunc;
 
-		OwnerFunctionPair(void* in_owner, std::function<void(Args...)> in_func)
+		OwnerFunctionPair(void* i_pOwner, std::function<void(Args...)> i_pFunc)
 		{
-			owner = in_owner;
-			func = in_func;
+			pOwner = i_pOwner;
+			pFunc = i_pFunc;
 		}
 	};
 
-	// The array of owner-function pairs this delegate is storing and calling
-	std::vector<OwnerFunctionPair> m_functions;
-
-	// Clear all the bound functions related to a specific object from the m_functions vector
-	void unbindAllFromOwner(void* in_owner)
-	{
-		// Early return if there are no bound functions or the passed object is invalid
-		if (m_functions.empty() || in_owner == nullptr) return;
-
-		// Use the stl remove_if to pass a lambda to erase so we can remove the pairs in-place
-		m_functions.erase(std::remove_if(m_functions.begin(), m_functions.end(),
-			[in_owner](const OwnerFunctionPair& pair) {
-				return pair.owner == in_owner;
-			}),
-			m_functions.end()
-		);
-	}
+	std::vector<OwnerFunctionPair> m_vFunctions;
 
 public:
 	template<typename Owner>
-	// Add a method to the vector of stored functions
-	// in_owner		A pointer to the instance of the class that owns the given method (in_method)
-	// in_method	A reference to the method you wish to set m_func too
-	void add(Owner* in_owner, void(Owner::* in_method)(Args...))
+	void add(Owner* i_pOwner, void(Owner::* i_pMethod)(Args...))
 	{
-		// Early return if in invalid object was passed
-		if (in_owner == nullptr) return;
+		if (i_pOwner == nullptr) return;
 
-		// Lambda that returns owner->method(args);
-		std::function<void(Args...)> func = [in_owner, in_method](Args... args) {
-				// (in_owner->*in_method) represents in_owner->method
-				// std::forward is used to retain the lvalue and rvalue states of the given arguments when passing it into the function
-				return (in_owner->*in_method)(std::forward<Args>(args)...);
+		std::function<void(Args...)> pFunc = [i_pOwner, i_pMethod](Args... args) {
+				return (i_pOwner->*i_pMethod)(std::forward<Args>(args)...);
 			};
 
-		m_functions.push_back(OwnerFunctionPair(static_cast<void*>(in_owner), std::move(func)));
+		m_vFunctions.push_back(OwnerFunctionPair(static_cast<void*>(i_pOwner), std::move(pFunc)));
 	}
 
 	template<typename Owner>
-	// Add a const method to the vector of stored functions
-	// in_owner		A const pointer to the instance of the class that owns the given method (in_method)
-	// in_method	A reference to the const method you wish to set m_func too
-	void add(const Owner* in_owner, void(Owner::* in_method)(Args...) const)
+	void add(const Owner* i_pOwner, void(Owner::* i_pMethod)(Args...) const)
 	{
-		// Early return if in invalid object was passed
-		if (in_owner == nullptr) return;
+		if (i_pOwner == nullptr) return;
 
-		// Lambda that returns owner->method(args);
-		std::function<void(Args...)> func = [in_owner, in_method](Args... args) {
-				// (in_owner->*in_method) represents in_owner->method
-				// std::forward is used to retain the lvalue and rvalue states of the given arguments when passing it into the function
-				return (in_owner->*in_method)(std::forward<Args>(args)...);
+		std::function<void(Args...)> pFunc = [i_pOwner, in_method](Args... args) {
+				return (i_pOwner->*in_method)(std::forward<Args>(args)...);
 			};
 
-		m_functions.push_back(OwnerFunctionPair(static_cast<void*>(in_owner), std::move(func)));
+		m_vFunctions.push_back(OwnerFunctionPair(static_cast<void*>(i_pOwner), std::move(pFunc)));
 	}
 
-	// QoL publically exposed function so the user doesn't have to cast the object to void*
 	template<typename Owner>
-	void unbindAllFromOwner(Owner* in_owner)
+	void unbindAllFromOwner(Owner* i_pOwner)
 	{
-		unbindAllFromOwner(static_cast<void*>(in_owner));
+		unbindAllFromOwner(static_cast<void*>(i_pOwner));
 	}
 
-	// Calls m_func if it's bound
-	void broadcast(Args... in_args) const
+	void broadcast(Args... i_Args) const
 	{
-		// Early return if there are no bound functions
-		if (m_functions.empty()) return;
+		if (m_vFunctions.empty()) return;
 
-		for (const OwnerFunctionPair& pair : m_functions)
+		for (const OwnerFunctionPair& crPair : m_vFunctions)
 		{
-			// Execute the function
-			// std::forward is used to retain the lvalue and rvalue states of the given arguments when passing it into the function
-			pair.func(std::forward<Args>(in_args)...);
+			crPair.func(std::forward<Args>(i_Args)...);
 		}
+	}
+
+protected:
+private:
+	void unbindAllFromOwner(void* i_pOwner)
+	{
+		if (m_vFunctions.empty() || i_pOwner == nullptr) return;
+
+		m_vFunctions.erase(std::remove_if(m_vFunctions.begin(), m_vFunctions.end(),
+			[i_pOwner](const OwnerFunctionPair& crPair) {
+				return crPair.pOwner == i_pOwner;
+			}),
+			m_vFunctions.end()
+		);
 	}
 };

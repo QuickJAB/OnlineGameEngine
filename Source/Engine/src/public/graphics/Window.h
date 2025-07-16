@@ -6,15 +6,20 @@
 class Window
 {
 public:
-	Window(std::string in_title, int in_width, int in_height);
+protected:
+private:
+	std::string m_sTitle = "Game Window";
+	int m_iWidth = 800;
+	int m_iHeight = 600;
+
+	SDL_Window* m_pWnd = nullptr;
+
+public:
+	Window(std::string i_sTitle, int i_iWidth, int i_iHeight);
 	~Window();
 
-	SDL_Window* getSDLWindow() { return m_wnd; }
+	SDL_Window* getSDLWindow() { return m_pWnd; }
 
+protected:
 private:
-	std::string m_title = "Game Window";
-	int m_width = 800;
-	int m_height = 600;
-
-	SDL_Window* m_wnd = nullptr;
 };

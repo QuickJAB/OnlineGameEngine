@@ -8,17 +8,23 @@
 class GameInstance
 {
 public:
+protected:
+	std::atomic<bool> m_bRunning;
+
+	StateMachine* m_pStateMachine = nullptr;
+
+private:
+
+public:
 	GameInstance();
 	~GameInstance();
 
-	void update(float in_dt);
+	void update(float i_fDt);
 
-	bool isRunning() { return m_running.load(); }
+	bool isRunning() { return m_bRunning.load(); }
 
-	void quitGame() { m_running.store(false); }
+	void quitGame() { m_bRunning.store(false); }
 
 protected:
-	std::atomic<bool> m_running;
-
-	StateMachine* m_stateMachine = nullptr;
+private:
 };

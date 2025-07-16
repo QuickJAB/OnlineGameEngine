@@ -5,10 +5,15 @@ class ECS;
 class MovementSys
 {
 public:
-	MovementSys(ECS* in_ecs) : m_ecs(in_ecs) {}
-
-	void update(float in_dt);
-
+protected:
 private:
-	ECS* m_ecs = nullptr;
+	ECS* m_pECS = nullptr;
+
+public:
+	MovementSys(ECS* i_pECS) : m_pECS(i_pECS) {}
+
+	void update(float i_fDt);
+	
+protected:
+private:
 };

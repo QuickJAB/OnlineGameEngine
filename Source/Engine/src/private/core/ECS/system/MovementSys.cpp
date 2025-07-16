@@ -8,19 +8,19 @@
 
 using namespace std;
 
-void MovementSys::update(float in_dt)
+void MovementSys::update(float i_fDt)
 {
-	vector<VelocityComp>* velocities = m_ecs->getComponentArray<VelocityComp>();
+	vector<VelocityComp>* pvVelocities = m_pECS->getComponentArray<VelocityComp>();
 
-	if (velocities == nullptr) return;
+	if (pvVelocities == nullptr) return;
 
-	ComponentContainer<TransformComp>* transforms = m_ecs->getComponentContainer<TransformComp>();
-	for (const VelocityComp& velocity : *velocities)
+	ComponentContainer<TransformComp>* pTransforms = m_pECS->getComponentContainer<TransformComp>();
+	for (const VelocityComp& crVelocity : *pvVelocities)
 	{
-		TransformComp* transform = transforms->get<TransformComp>(velocity.owner);
-		if (transform == nullptr) return;
+		TransformComp* pTransform = pTransforms->get<TransformComp>(crVelocity.uOwner);
+		if (pTransform == nullptr) return;
 
-		transform->x += velocity.xDir * velocity.speed * in_dt;
-		transform->y += velocity.yDir * velocity.speed * in_dt;
+		pTransform->fX += crVelocity.fXDir * crVelocity.fSpeed * i_fDt;
+		pTransform->fY += crVelocity.fYDir * crVelocity.fSpeed * i_fDt;
 	}
 }

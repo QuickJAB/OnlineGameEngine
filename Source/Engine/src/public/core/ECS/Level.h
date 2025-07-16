@@ -5,21 +5,24 @@
 class Level
 {
 public:
+protected:
+	ECS* m_pECS = nullptr;
+
+private:
+
+public:
 	Level();
 	~Level();
 
-	virtual void update(float in_dt);
+	virtual void update(float i_fDt);
 	virtual void load();
 
 	template <typename T>
-	T* getComponent(const uint32_t in_entity)
+	T* getComponent(const uint32_t i_uEntity)
 	{
-		return m_ecs->getComponent<T>(in_entity);
+		return m_pECS->getComponent<T>(i_uEntity);
 	}
 
 protected:
-	ECS* m_ecs = nullptr;
-
 private:
-	
 };

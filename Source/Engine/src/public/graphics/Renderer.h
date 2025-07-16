@@ -8,12 +8,17 @@
 class Renderer
 {
 public:
-	Renderer(SDL_Window* in_window);
+protected:
+private:
+	SDL_Renderer* m_pRenderer;
+
+public:
+	Renderer(SDL_Window* i_pWindow);
 	~Renderer();
 
-	void draw(const std::vector<SpriteComp>* in_data);
+	void draw(const std::vector<SpriteComp>* i_pvData);
 
+protected:
 private:
-	SDL_Renderer* m_renderer;
 };
 
