@@ -6,7 +6,7 @@
 
 int main()
 {
-	Engine* e = new Engine(new SGameInstance());
-	delete e;
+	Engine* pE = new Engine(new SGameInstance());
+	delete pE;
 	return 0;
 }

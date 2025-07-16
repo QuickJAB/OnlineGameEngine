@@ -2,17 +2,17 @@
 
 using namespace std;
 
-SWaitingForPlayersState::SWaitingForPlayersState(Server* in_server) :
-    m_server(in_server)
+SWaitingForPlayersState::SWaitingForPlayersState(Server* i_pServer) :
+    m_pServer(i_pServer)
 {  
 }
 
 string SWaitingForPlayersState::update(float)
 {
-    if (m_server->getNumConnections() == m_server->getMaxPlayers())
+    if (m_pServer->getNumConnections() == m_pServer->getMaxPlayers())
     {
-        string data = to_string(ServerCommand::startGame) + "t" + to_string(m_server->getClockTime());
-        m_server->queueOutgoingPacketData(data);
+        string sData = to_string(ServerCommand::startGame) + "t" + to_string(m_pServer->getClockTime());
+        m_pServer->queueOutgoingPacketData(sData);
         return "Playing";
     }
 

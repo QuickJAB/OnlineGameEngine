@@ -8,10 +8,15 @@ class Server;
 class SWaitingForPlayersState : public State
 {
 public:
-	SWaitingForPlayersState(Server* in_server);
+protected:
+private:
+	Server* m_pServer = nullptr;
+
+public:
+	SWaitingForPlayersState(Server* i_pServer);
 
 	virtual std::string update(float) override;
 
+protected:
 private:
-	Server* m_server = nullptr;
 };

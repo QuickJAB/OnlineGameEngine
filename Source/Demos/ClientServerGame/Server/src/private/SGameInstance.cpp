@@ -9,29 +9,29 @@ using namespace std;
 
 SGameInstance::SGameInstance() : GameInstance()
 {
-	m_server = new Server(m_running, 0.f, 19, 2, 0, 0);
+	m_pServer = new Server(m_bRunning, 0.f, 19, 2, 0, 0);
 
-	unordered_map<string, State*> states;
+	unordered_map<string, State*> umStates;
 
-	SWaitingForPlayersState* waitingForPlayers = new SWaitingForPlayersState(m_server);
-	states.insert(pair<string, State*>("WaitingForPlayers", waitingForPlayers));
+	SWaitingForPlayersState* pWaitingForPlayers = new SWaitingForPlayersState(m_pServer);
+	umStates.insert(pair<string, State*>("WaitingForPlayers", pWaitingForPlayers));
 
-	SPlayingState* playing = new SPlayingState();
-	states.insert(pair<string, State*>("Playing", playing));
+	SPlayingState* pPlaying = new SPlayingState();
+	umStates.insert(pair<string, State*>("Playing", pPlaying));
 
-	m_stateMachine = new StateMachine(states, "WaitingForPlayers");
+	m_pStateMachine = new StateMachine(umStates, "WaitingForPlayers");
 
-	thread network(&Server::update, m_server);
+	thread network(&Server::update, m_pServer);
 	network.detach();
-	m_networkThread = &network;
+	m_pNetworkThread = &network;
 }
 
 SGameInstance::~SGameInstance()
 {
-	m_networkThread->join();
-	delete m_networkThread;
-	m_networkThread = nullptr;
+	m_pNetworkThread->join();
+	delete m_pNetworkThread;
+	m_pNetworkThread = nullptr;
 
-	delete m_server;
-	m_server = nullptr;
+	delete m_pServer;
+	m_pServer = nullptr;
 }

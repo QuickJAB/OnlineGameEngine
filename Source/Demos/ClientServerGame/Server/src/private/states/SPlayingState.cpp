@@ -6,17 +6,17 @@ using namespace std;
 
 void SPlayingState::enter()
 {
-	m_level = new GTestLevel();
-	m_level->load();
+	m_pLevel = new GTestLevel();
+	m_pLevel->load();
 }
 
-string SPlayingState::update(float in_dt)
+string SPlayingState::update(float i_fDt)
 {
 	return "";
 }
 
 void SPlayingState::exit()
 {
-	delete m_level;
-	m_level = nullptr;
+	delete m_pLevel;
+	m_pLevel = nullptr;
 }
