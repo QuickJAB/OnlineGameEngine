@@ -39,7 +39,7 @@ struct ComponentContainer : public IComponentContainer
 	{
 		if (vComponents.empty() || !umMap.contains(i_cuEntity)) return;
 
-		umMap[vComponents.back().owner] = umMap[i_cuEntity];
+		umMap[vComponents.back().uOwner] = umMap[i_cuEntity];
 
 		std::iter_swap(vComponents.begin() + umMap[i_cuEntity], vComponents.end() - 1);
 

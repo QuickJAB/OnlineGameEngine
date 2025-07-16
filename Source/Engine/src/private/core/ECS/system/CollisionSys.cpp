@@ -42,5 +42,5 @@ bool CollisionSys::checkAABB(const TransformComp* cpA, const TransformComp* cpB)
 	return	(cpA->fX >= cpB->fX && cpA->fX <= cpB->fX + cpB->fWidth && cpA->fY >= cpB->fY && cpA->fY <= cpB->fY + cpB->fHeight) ||
 			(cpA->fX + cpA->fWidth >= cpB->fX && cpA->fX + cpA->fWidth <= cpB->fX + cpB->fWidth && cpA->fY >= cpB->fY && cpA->fY <= cpB->fY + cpB->fHeight) ||
 			(cpA->fX >= cpB->fX && cpA->fX <= cpB->fX + cpB->fWidth && cpA->fY + cpA->fHeight >= cpB->fY && cpA->fY + cpA->fHeight <= cpB->fY + cpB->fHeight) ||
-			(cpA->fX + cpA->fWidth >= cpB->fX && cpA->fX + cpA->fWidth <= cpB->fX + cpB->fWidth && cpA->fY + cpA->fHeight >= cpB->y && cpA->fY + cpA->fHeight <= cpB->fY + cpB->fHeight);
+			(cpA->fX + cpA->fWidth >= cpB->fX && cpA->fX + cpA->fWidth <= cpB->fX + cpB->fWidth && cpA->fY + cpA->fHeight >= cpB->fY && cpA->fY + cpA->fHeight <= cpB->fY + cpB->fHeight);
 }

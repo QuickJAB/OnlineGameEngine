@@ -38,7 +38,7 @@ public:
 			return;
 		}
 
-		m_func = [i_pOwner, i_pMethod](Args... args)->Ret
+		m_pFunc = [i_pOwner, i_pMethod](Args... args)->Ret
 			{
 				return (i_pOwner->*i_pMethod)(std::forward<Args>(args)...);
 			};
@@ -103,8 +103,8 @@ public:
 	{
 		if (i_pOwner == nullptr) return;
 
-		std::function<void(Args...)> pFunc = [i_pOwner, in_method](Args... args) {
-				return (i_pOwner->*in_method)(std::forward<Args>(args)...);
+		std::function<void(Args...)> pFunc = [i_pOwner, i_pMethod](Args... args) {
+				return (i_pOwner->*i_pMethod)(std::forward<Args>(args)...);
 			};
 
 		m_vFunctions.push_back(OwnerFunctionPair(static_cast<void*>(i_pOwner), std::move(pFunc)));
@@ -122,7 +122,7 @@ public:
 
 		for (const OwnerFunctionPair& crPair : m_vFunctions)
 		{
-			crPair.func(std::forward<Args>(i_Args)...);
+			crPair.pFunc(std::forward<Args>(i_Args)...);
 		}
 	}
 
