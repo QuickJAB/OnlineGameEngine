@@ -6,23 +6,23 @@ using namespace std;
 
 void CConnectingState::enter()
 {
-    m_connected = false;
-    m_ip = onRequestIP.broadcast();
-    m_port = onRequestPort.broadcast();
-    m_client = onRequestClient.broadcast();
+    m_bConnected = false;
+    m_sIp = m_unidOnRequestIP.broadcast();
+    m_uPort = m_unidOnRequestPort.broadcast();
+    m_pClient = m_unidOnRequestClient.broadcast();
 }
 
 string CConnectingState::update(float)
 {
-    if (!m_connected)
+    if (!m_bConnected)
     {
         println("Connecting...");
-        if (m_client->tryConnect(m_ip, m_port))
+        if (m_pClient->tryConnect(m_sIp, m_uPort))
         {
             println("Connected!");
             println("Waiting for other players to join...");
-            m_connected = true;
-            onConnectionEstablished.broadcast();
+            m_bConnected = true;
+            m_unidOnConnectionEstablished.broadcast();
         }
         else
         {
@@ -30,7 +30,7 @@ string CConnectingState::update(float)
         }
     }
 
-    queue<ENetPacket> pkts = m_client->getIncomingPacketData();
+    queue<ENetPacket> pkts = m_pClient->getIncomingPacketData();
 
     while (!pkts.empty())
     {
@@ -50,10 +50,10 @@ string CConnectingState::update(float)
     return "";
 }
 
-void CConnectingState::startGame(const char* in_data)
+void CConnectingState::startGame(const char* i_cpData)
 {
-    long long startTime = -1;
-    string format = to_string(ServerCommand::startGame) + "t%lld";
-    sscanf_s(in_data, format.c_str(), &startTime);
-    onGameStarted.broadcast(startTime);
+    long long llStartTime = -1;
+    string sFormat = to_string(ServerCommand::startGame) + "t%lld";
+    sscanf_s(i_cpData, sFormat.c_str(), &llStartTime);
+    m_unidOnGameStarted.broadcast(llStartTime);
 }

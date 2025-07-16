@@ -7,10 +7,9 @@
 class EventHandler final
 {
 public:
-protected:
 	Delegate<void()> m_unidOnEventQuit;
 	MulticastDelegate<void(const bool*)> m_muldOnKeyStatesUpdated;
-
+protected:
 private:
 	SDL_Event m_Event;
 

@@ -10,34 +10,34 @@ using namespace std;
 
 CTestLevel::CTestLevel() : GTestLevel()
 {
-	drawSys = new DrawSys(m_ecs);
+	m_pDrawSys = new DrawSys(m_pECS);
 }
 
 CTestLevel::~CTestLevel()
 {
-	delete drawSys;
-	drawSys = nullptr;
+	delete m_pDrawSys;
+	m_pDrawSys = nullptr;
 }
 
-void CTestLevel::update(float in_dt)
+void CTestLevel::update(float i_fDt)
 {
-	__super::update(in_dt);
+	__super::update(i_fDt);
 
-	drawSys->update();
+	m_pDrawSys->update();
 }
 
 void CTestLevel::load()
 {
 	__super::load();
 
-	const vector<uint32_t>* entities = m_ecs->getEntities();
-	for (auto it = entities->begin(); it != entities->end(); ++it)
+	const vector<uint32_t>* cpvEntities = m_pECS->getEntities();
+	for (auto pIt = cpvEntities->begin(); pIt != cpvEntities->end(); ++pIt)
 	{
-		m_ecs->addComponent<SpriteComp>(*it);
+		m_pECS->addComponent<SpriteComp>(*pIt);
 	}
 }
 
 std::vector<SpriteComp>* CTestLevel::getSprites()
 {
-	return m_ecs->getComponentArray<SpriteComp>();
+	return m_pECS->getComponentArray<SpriteComp>();
 }

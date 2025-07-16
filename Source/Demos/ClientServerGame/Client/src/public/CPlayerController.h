@@ -7,11 +7,15 @@ class EventHandler;
 class CPlayerController : public Controller
 {
 public:
-	CPlayerController(EventHandler* in_eventHandler);
+protected:
+private:
+	EventHandler* m_pEventHandler = nullptr;
+
+public:
+	CPlayerController(EventHandler* i_pEventHandler);
 	~CPlayerController();
 
+protected:
 private:
-	EventHandler* m_eventHandler = nullptr;
-
-	void onKeyStatesUpdated(const bool* keyStates);
+	void onKeyStatesUpdated(const bool* i_cpKeyStates);
 };

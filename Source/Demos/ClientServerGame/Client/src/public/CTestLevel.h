@@ -11,15 +11,20 @@ struct SpriteComp;
 class CTestLevel : public GTestLevel
 {
 public:
+protected:
+private:
+	DrawSys* m_pDrawSys = nullptr;
+
+public:
 	CTestLevel();
 	~CTestLevel();
 
-	void update(float in_dt) override;
+	void update(float i_fDt) override;
 
 	void load() override;
 
 	std::vector<SpriteComp>* getSprites();
 
+protected:
 private:
-	DrawSys* drawSys = nullptr;
 };

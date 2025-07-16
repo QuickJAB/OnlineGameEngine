@@ -12,16 +12,20 @@ class CTestLevel;
 class CPlayingState : public GPlayingState
 {
 public:
+	Delegate<Renderer* ()> m_unidRequestRenderer;
+	Delegate<EventHandler* ()> m_unidRequestEventHandler;
+
+protected:
+private:
+	Renderer* m_pRenderer = nullptr;
+	EventHandler* m_pEventHandler = nullptr;
+
+public:
 	virtual void enter() override;
-	virtual std::string update(float in_dt) override;
+	virtual std::string update(float i_fDt) override;
 	virtual void exit() override;
 
-	Delegate<Renderer*()> requestRenderer;
-	Delegate<EventHandler*()> requestEventHandler;
-
+protected:
 private:
 	CTestLevel* getLevel();
-
-	Renderer* m_renderer = nullptr;
-	EventHandler* m_eventHandler = nullptr;
 };

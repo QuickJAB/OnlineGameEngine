@@ -7,20 +7,20 @@ using namespace std;
 
 void CMenuState::enter()
 {
-	m_ipAddress = "";
-	m_port = 0;
+	m_sIpAddress = "";
+	m_uPort = 0;
 }
 
 string CMenuState::update(float)
 {
-	print("\033[2J\033[1;1H"); // Clears the terminal
+	print("\033[2J\033[1;1H"); // Voodoo regex shit to "clear" terminal platform independatly
 	println("OnlineGame Client");
 	
 	print("Please enter the server IPv4 address >> ");
-	cin >> m_ipAddress;
+	cin >> m_sIpAddress;
 
 	print("Please enter the port >> ");
-	cin >> m_port;
+	cin >> m_uPort;
 	if (cin.fail())
 	{
 		cin.clear();

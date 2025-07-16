@@ -9,29 +9,29 @@ using namespace std;
 
 void CPlayingState::enter()
 {
-	m_renderer = requestRenderer.broadcast();
-	m_eventHandler = requestEventHandler.broadcast();
+	m_pRenderer = m_unidRequestRenderer.broadcast();
+	m_pEventHandler = m_unidRequestEventHandler.broadcast();
 
-	m_level = new CTestLevel();
+	m_pLevel = new CTestLevel();
 	getLevel()->load();
 }
 
 string CPlayingState::update(float in_dt)
 {
-	m_eventHandler->pollEvents();
-	m_level->update(in_dt);
-	m_renderer->draw(getLevel()->getSprites());
+	m_pEventHandler->pollEvents();
+	m_pLevel->update(in_dt);
+	m_pRenderer->draw(getLevel()->getSprites());
 
 	return "";
 }
 
 void CPlayingState::exit()
 {
-	delete m_level;
-	m_level = nullptr;
+	delete m_pLevel;
+	m_pLevel = nullptr;
 }
 
 CTestLevel* CPlayingState::getLevel()
 {
-	return static_cast<CTestLevel*>(m_level);
+	return static_cast<CTestLevel*>(m_pLevel);
 }

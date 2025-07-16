@@ -11,26 +11,30 @@
 class CGameInstance : public GameInstance
 {
 public:
+protected:
+private:
+	Window* m_pWindow = nullptr;
+	Renderer* m_pRenderer = nullptr;
+	EventHandler* m_pEventHandler = nullptr;
+
+	Client* m_pClient = nullptr;
+	std::thread* m_pNetworkThread = nullptr;
+
+	long long m_llGameStateTime = 0;
+
+public:
 	CGameInstance();
 	~CGameInstance();
 
-	Client* getClient() const { return m_client; }
-	Renderer* getRenderer() const { return m_renderer; }
-	EventHandler* getEventHandler() const { return m_eventHandler; }
+	Client* getClient() const { return m_pClient; }
+	Renderer* getRenderer() const { return m_pRenderer; }
+	EventHandler* getEventHandler() const { return m_pEventHandler; }
 
+protected:
 private:
-	Window* m_window = nullptr;
-	Renderer* m_renderer = nullptr;
-	EventHandler* m_eventHandler = nullptr;
-
-	Client* m_client = nullptr;
-	std::thread* m_networkThread = nullptr;
-
-	long long m_gameStateTime = 0;
-
 	void initWindow();
 
 	void startNetworkThread();
 
-	void serverStartedGame(long long in_startTime);
+	void serverStartedGame(long long i_llStartTime);
 };
