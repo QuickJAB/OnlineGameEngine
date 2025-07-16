@@ -13,9 +13,9 @@ public:
 
 	virtual void update(float in_dt) override;
 
+	virtual void load() override;
+
 protected:
 	MovementSys* m_movementSys = nullptr;
 	CollisionSys* m_collisionSys = nullptr;
-	
-	virtual void load() override;
 };

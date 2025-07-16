@@ -13,14 +13,14 @@ void CPlayingState::enter()
 	m_eventHandler = requestEventHandler.broadcast();
 
 	m_level = new CTestLevel();
-	m_level->load();
+	getLevel()->load();
 }
 
 string CPlayingState::update(float in_dt)
 {
 	m_eventHandler->pollEvents();
 	m_level->update(in_dt);
-	m_renderer->draw(m_level->getSprites());
+	m_renderer->draw(getLevel()->getSprites());
 
 	return "";
 }
@@ -29,4 +29,9 @@ void CPlayingState::exit()
 {
 	delete m_level;
 	m_level = nullptr;
+}
+
+CTestLevel* CPlayingState::getLevel()
+{
+	return static_cast<CTestLevel*>(m_level);
 }

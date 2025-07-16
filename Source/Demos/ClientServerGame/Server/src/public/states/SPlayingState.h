@@ -1,8 +1,8 @@
 #pragma once
 
-#include <core/state machine/State.h>
+#include <states/GPlayingState.h>
 
-class SPlayingState : public State
+class SPlayingState : public GPlayingState
 {
 public:
 	virtual void enter() override;

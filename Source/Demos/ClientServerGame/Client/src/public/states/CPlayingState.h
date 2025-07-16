@@ -1,14 +1,15 @@
 #pragma once
 
-#include <core/state machine/State.h>
 #include <core/Delegates.h>
+
+#include <states/GPlayingState.h>
 
 class Renderer;
 class EventHandler;
 class Level;
 class CTestLevel;
 
-class CPlayingState : public State
+class CPlayingState : public GPlayingState
 {
 public:
 	virtual void enter() override;
@@ -19,8 +20,8 @@ public:
 	Delegate<EventHandler*()> requestEventHandler;
 
 private:
+	CTestLevel* getLevel();
+
 	Renderer* m_renderer = nullptr;
 	EventHandler* m_eventHandler = nullptr;
-
-	CTestLevel* m_level = nullptr;
 };

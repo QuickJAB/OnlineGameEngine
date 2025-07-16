@@ -4,6 +4,7 @@
 
 class GGameState : public GameState
 {
+public:
 	GGameState() = default;
 	~GGameState() = default;
 };

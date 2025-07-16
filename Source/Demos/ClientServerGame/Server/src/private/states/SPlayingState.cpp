@@ -1,19 +1,22 @@
 #include "states/SPlayingState.h"
 
-#include <print>
+#include <GTestLevel.h>
 
 using namespace std;
 
 void SPlayingState::enter()
 {
-	println("Game started");
+	m_level = new GTestLevel();
+	m_level->load();
 }
 
-std::string SPlayingState::update(float in_dt)
+string SPlayingState::update(float in_dt)
 {
 	return "";
 }
 
 void SPlayingState::exit()
 {
+	delete m_level;
+	m_level = nullptr;
 }
