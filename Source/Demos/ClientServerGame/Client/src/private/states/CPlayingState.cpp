@@ -11,9 +11,13 @@ void CPlayingState::enter()
 {
 	m_pRenderer = m_unidRequestRenderer.broadcast();
 	m_pEventHandler = m_unidRequestEventHandler.broadcast();
+	m_uPlayerId = m_unidRequestPlayerId.broadcast();
 
 	m_pLevel = new CTestLevel();
 	getLevel()->load();
+
+	float fX = m_uPlayerId == 0 ? 150.f : 1680.f;
+	getLevel()->spawnPlayer(fX, 490.f, true);
 }
 
 string CPlayingState::update(float in_dt)
