@@ -37,6 +37,17 @@ void CTestLevel::load()
 	}
 }
 
+uint32_t CTestLevel::spawnPlayer(float i_fX, float i_fY, bool i_bIsAlly)
+{
+	uint32_t uPlayerId = __super::spawnPlayer(i_fX, i_fY, i_bIsAlly);
+
+	SpriteComp spriteComp;
+	spriteComp.colour = i_bIsAlly ? SDL_Color(0, 255, 0, 255) : SDL_Color(255, 0, 0, 255);
+	m_pECS->addComponent<SpriteComp>(uPlayerId, &spriteComp);
+
+	return uPlayerId;
+}
+
 std::vector<SpriteComp>* CTestLevel::getSprites()
 {
 	return m_pECS->getComponentArray<SpriteComp>();
