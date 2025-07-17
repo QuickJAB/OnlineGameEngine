@@ -27,6 +27,7 @@ CGameInstance::CGameInstance() : GameInstance()
 	umStates.insert(pair<string, State*>("Playing", pPlaying));
 	pPlaying->m_unidRequestRenderer.bind(this, &CGameInstance::getRenderer);
 	pPlaying->m_unidRequestEventHandler.bind(this, &CGameInstance::getEventHandler);
+	pPlaying->m_unidRequestPlayerId.bind(this, &CGameInstance::getPlayerId);
 
 	m_pStateMachine = new StateMachine(umStates, "Menu");
 }

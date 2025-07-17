@@ -9,7 +9,7 @@ using namespace std;
 
 SGameInstance::SGameInstance() : GameInstance()
 {
-	m_pServer = new Server(m_bRunning, 0.f, 19, 2, 0, 0);
+	m_pServer = new Server(m_bRunning, 0.f, 19, 1, 0, 0);
 
 	unordered_map<string, State*> umStates;
 

@@ -4,7 +4,6 @@
 #include <core/ECS/system/CollisionSys.h>
 #include <core/ECS/component/TransformComp.h>
 #include <core/ECS/component/ColliderComp.h>
-#include <core/ECS/component/VelocityComp.h>
 
 GTestLevel::GTestLevel() : Level()
 {
@@ -83,15 +82,8 @@ uint32_t GTestLevel::spawnPlayer(float i_fX, float i_fY, bool i_bIsAlly)
 {
 	uint32_t uPlayerId = m_pECS->createEntity();
 	
-	TransformComp transformComp = { i_fX, i_fY, 100, 100 };
+	TransformComp transformComp = { uPlayerId, i_fX, i_fY, 100, 100 };
 	m_pECS->addComponent<TransformComp>(uPlayerId, &transformComp);
-	
-	ColliderComp colliderComp;
-	colliderComp.bIsStatic = false;
-	m_pECS->addComponent<ColliderComp>(uPlayerId, &colliderComp);
 
-	VelocityComp velocityComp = { 0.f, 0.f, 10.f };
-	m_pECS->addComponent<VelocityComp>(uPlayerId, &velocityComp);
-
-	return 0;
+	return uPlayerId;
 }
