@@ -29,7 +29,7 @@ public:
 	Client* getClient() const { return m_pClient; }
 	Renderer* getRenderer() const { return m_pRenderer; }
 	EventHandler* getEventHandler() const { return m_pEventHandler; }
-	uint32_t getPlayerId() const { return m_pClient->getPlayerId(); }
+	uint32_t getNetworkId() const { return m_pClient->getNetworkId(); }
 
 protected:
 private:

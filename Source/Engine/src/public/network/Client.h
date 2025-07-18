@@ -17,7 +17,7 @@ public:
 
 	bool tryConnect(std::string i_sIp, enet_uint16 i_uPort, uint32_t i_uAttemptLength = 30);
 
-	uint32_t getPlayerId() const { return m_uPlayerId; }
+	uint32_t getNetworkId() const { return m_uPlayerId; }
 
 protected:
 private:

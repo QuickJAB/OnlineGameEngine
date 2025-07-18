@@ -16,14 +16,14 @@ class CPlayingState : public GPlayingState
 public:
 	Delegate<Renderer*()> m_unidRequestRenderer;
 	Delegate<EventHandler*()> m_unidRequestEventHandler;
-	Delegate<uint32_t()> m_unidRequestPlayerId;
+	Delegate<uint32_t()> m_unidRequestNetworkId;
 
 protected:
 private:
 	Renderer* m_pRenderer = nullptr;
 	EventHandler* m_pEventHandler = nullptr;
 
-	uint32_t m_uPlayerId = 0;
+	uint32_t m_uNetworkId;
 
 public:
 	virtual void enter() override;

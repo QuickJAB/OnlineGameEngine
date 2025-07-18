@@ -8,7 +8,8 @@
 
 using namespace std;
 
-CTestLevel::CTestLevel() : GTestLevel()
+CTestLevel::CTestLevel(const uint32_t i_uNetworkId) : GTestLevel(),
+	m_cuNetworkId(i_uNetworkId)
 {
 	m_pDrawSys = new DrawSys(m_pECS);
 }
@@ -34,6 +35,11 @@ void CTestLevel::load()
 	for (auto pIt = cpvEntities->begin(); pIt != cpvEntities->end(); ++pIt)
 	{
 		m_pECS->addComponent<SpriteComp>(*pIt);
+	}
+
+	for (auto it = m_umNetPlayerId.begin(); it != m_umNetPlayerId.end(); ++it)
+	{
+		getComponent<SpriteComp>(it->second)->colour = it->first == m_cuNetworkId ? m_allyColour : m_enemyColour;
 	}
 }
 

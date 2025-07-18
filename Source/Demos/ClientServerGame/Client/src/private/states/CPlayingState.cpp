@@ -11,9 +11,9 @@ void CPlayingState::enter()
 {
 	m_pRenderer = m_unidRequestRenderer.broadcast();
 	m_pEventHandler = m_unidRequestEventHandler.broadcast();
-	m_uPlayerId = m_unidRequestPlayerId.broadcast();
+	m_uNetworkId = m_unidRequestNetworkId.broadcast();
 
-	m_pLevel = new CTestLevel();
+	m_pLevel = new CTestLevel(m_uNetworkId);
 	getLevel()->load();
 }
 
