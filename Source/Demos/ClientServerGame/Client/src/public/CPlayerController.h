@@ -9,10 +9,10 @@ class CPlayerController : public Controller
 public:
 protected:
 private:
-	EventHandler* m_pEventHandler = nullptr;
+	EventHandler* m_pEventHandler;
 
 public:
-	CPlayerController(EventHandler* i_pEventHandler);
+	CPlayerController(const uint32_t i_cuEntity, Level* i_pLevel, EventHandler* i_pEventHandler);
 	~CPlayerController();
 
 protected:

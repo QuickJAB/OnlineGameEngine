@@ -8,19 +8,13 @@ class Controller
 {
 public:
 protected:
-	uint32_t m_uEntity = (uint32_t)-1;
-
-	Level* m_pLevel = nullptr;
+	const uint32_t m_cuEntity;
+	Level* m_pLevel;
 
 private:
 
 public:
-	Controller() = default;
-
-	void setLevel(Level* i_pLevel) { m_pLevel = i_pLevel; }
-
-	void possess(const uint32_t i_uEntity);
-	void depossess() { m_uEntity = (uint32_t)-1; }
+	Controller(const uint32_t i_cuEntity, Level* i_pLevel);
 
 protected:
 private:

@@ -1,8 +1,8 @@
 #include "core/game base/Controller.h"
 
-void Controller::possess(const uint32_t i_uEntity)
-{
-	if (m_pLevel == nullptr) return;
+#include "core/ECS/Level.h"
 
-	m_uEntity = i_uEntity;
+Controller::Controller(const uint32_t i_cuEntity, Level* i_pLevel) :
+	m_cuEntity(i_cuEntity), m_pLevel(i_pLevel)
+{
 }
