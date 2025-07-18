@@ -4,6 +4,9 @@
 #include <core/ECS/system/CollisionSys.h>
 #include <core/ECS/component/TransformComp.h>
 #include <core/ECS/component/ColliderComp.h>
+#include <core/ECS/component/VelocityComp.h>
+
+using namespace std;
 
 GTestLevel::GTestLevel() : Level()
 {
@@ -76,14 +79,18 @@ void GTestLevel::load()
 	t = { uE, 710, 535, 500, 10 };
 	m_pECS->addComponent<TransformComp>(uE, &t);
 	m_pECS->addComponent<ColliderComp>(uE);
-}
 
-uint32_t GTestLevel::spawnPlayer(float i_fX, float i_fY, bool i_bIsAlly)
-{
-	uint32_t uPlayerId = m_pECS->createEntity();
-	
-	TransformComp transformComp = { uPlayerId, i_fX, i_fY, 100, 100 };
-	m_pECS->addComponent<TransformComp>(uPlayerId, &transformComp);
+	uE = m_pECS->createEntity();
+	t = { uE, 120, 490, 100, 100 };
+	m_pECS->addComponent<TransformComp>(uE, &t);
+	m_pECS->addComponent<ColliderComp>(uE);
+	m_pECS->addComponent<VelocityComp>(uE);
+	m_umNetPlayerId.insert(pair<uint32_t, uint32_t>(0, uE));
 
-	return uPlayerId;
+	uE = m_pECS->createEntity();
+	t = { uE, 1700, 490, 100, 100 };
+	m_pECS->addComponent<TransformComp>(uE, &t);
+	m_pECS->addComponent<ColliderComp>(uE);
+	m_pECS->addComponent<VelocityComp>(uE);
+	m_umNetPlayerId.insert(pair<uint32_t, uint32_t>(1, uE));
 }

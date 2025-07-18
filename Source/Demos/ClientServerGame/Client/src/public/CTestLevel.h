@@ -22,7 +22,6 @@ public:
 	void update(float i_fDt) override;
 
 	void load() override;
-	virtual uint32_t spawnPlayer(float i_fX, float i_fY, bool i_bIsAlly) override;
 
 	std::vector<SpriteComp>* getSprites();
 

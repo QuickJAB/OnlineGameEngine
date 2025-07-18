@@ -8,6 +8,8 @@ public:
 protected:
 	ECS* m_pECS = nullptr;
 
+	std::unordered_map<uint32_t, uint32_t> m_umNetPlayerId;
+
 private:
 
 public:
@@ -22,6 +24,8 @@ public:
 	{
 		return m_pECS->getComponent<T>(i_uEntity);
 	}
+
+	uint32_t getPlayerByNetworkId(const uint32_t i_uNetworkId);
 
 protected:
 private:

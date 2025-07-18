@@ -21,7 +21,6 @@ public:
 	virtual void update(float i_fDt) override;
 
 	virtual void load() override;
-	virtual uint32_t spawnPlayer(float i_fX, float i_fY, bool i_bIsAlly);
 
 protected:
 private:

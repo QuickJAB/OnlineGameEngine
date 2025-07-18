@@ -20,3 +20,8 @@ void Level::update(float i_fDt)
 void Level::load()
 {
 }
+
+uint32_t Level::getPlayerByNetworkId(const uint32_t i_uNetworkId)
+{
+	return m_umNetPlayerId.at(i_uNetworkId);
+}
