@@ -7,15 +7,6 @@
 
 using namespace std;
 
-Server* const SGameInstance::initServer(atomic<bool>& i_bRunning)
-{
-	HostConfig hostConfig;
-	hostConfig.pcAddress = Server::createAddress(19);
-	hostConfig.ullMaxConnections = 2;
-
-	return new Server(i_bRunning, 0.f, hostConfig);
-}
-
 StateMachine* const SGameInstance::initStateMachine(Server* const i_cpServer)
 {
 	unordered_map<string, State*> umStates;
@@ -29,8 +20,9 @@ StateMachine* const SGameInstance::initStateMachine(Server* const i_cpServer)
 	return new StateMachine(umStates, "WaitingForPlayers");
 }
 
-SGameInstance::SGameInstance() : m_cpServer(initServer(m_bRunning)), 
-	GameInstance(initStateMachine(m_cpServer)), m_cpNetworkThread(new thread(&Server::update, m_cpServer))
+SGameInstance::SGameInstance(std::atomic<bool>& i_rbRunning, Server* const i_cpServer) :
+	GameInstance(i_rbRunning, initStateMachine(i_cpServer)), m_cpServer(i_cpServer),
+	m_cpNetworkThread(new thread(&Server::update, m_cpServer))
 {
 	m_cpNetworkThread->detach();
 }

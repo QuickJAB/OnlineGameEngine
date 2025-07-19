@@ -9,21 +9,21 @@ class GameInstance
 {
 public:
 protected:
-	std::atomic<bool> m_bRunning;
+	std::atomic<bool>& m_rbRunning;
 
 	StateMachine* const m_cpStateMachine;
 
 private:
 
 public:
-	GameInstance(StateMachine* const i_cpStateMachine);
+	GameInstance(std::atomic<bool>& i_rbRunning, StateMachine* const i_cpStateMachine);
 	~GameInstance();
 
 	void update(const float i_cfDt);
 
-	bool isRunning() { return m_bRunning.load(); }
+	bool isRunning() { return m_rbRunning.load(); }
 
-	void quitGame() { m_bRunning.store(false); }
+	void quitGame() { m_rbRunning.store(false); }
 
 protected:
 private:

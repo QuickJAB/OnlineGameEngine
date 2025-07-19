@@ -1,5 +1,7 @@
 #pragma once
 
+#include <atomic>
+
 #include <graphics/Window.h>
 #include <graphics/Renderer.h>
 #include <input/EventHandler.h>
@@ -21,7 +23,8 @@ private:
 	std::thread* const m_cpNetworkThread;
 
 public:
-	CGameInstance();
+	CGameInstance(std::atomic<bool>& i_rbRunning, Client* const i_cpClient, Window* const i_cpWnd,
+		Renderer* const i_cpRenderer, EventHandler* const i_cpEventHandler);
 	~CGameInstance();
 
 	const uint32_t getNetworkId() const { return m_cpClient->getNetworkId(); }

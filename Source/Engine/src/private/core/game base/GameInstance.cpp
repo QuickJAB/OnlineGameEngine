@@ -2,10 +2,9 @@
 
 using namespace std;
 
-GameInstance::GameInstance(StateMachine* const i_cpStateMachine) :
-	m_cpStateMachine(i_cpStateMachine)
+GameInstance::GameInstance(std::atomic<bool>& i_rbRunning, StateMachine* const i_cpStateMachine) :
+	m_cpStateMachine(i_cpStateMachine), m_rbRunning(i_rbRunning)
 {
-	m_bRunning.store(true);
 }
 
 GameInstance::~GameInstance()
