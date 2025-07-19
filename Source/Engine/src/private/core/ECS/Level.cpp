@@ -2,26 +2,16 @@
 
 #include "core/ECS/ECS.h"
 
-Level::Level()
+Level::Level() : m_cpECS(new ECS())
 {
-	m_pECS = new ECS();
 }
 
 Level::~Level()
 {
-	delete m_pECS;
-	m_pECS = nullptr;
+	delete m_cpECS;
 }
 
-void Level::update(float i_fDt)
+const uint32_t Level::getPlayerByNetworkId(const uint32_t i_cuNetworkId)
 {
-}
-
-void Level::load()
-{
-}
-
-uint32_t Level::getPlayerByNetworkId(const uint32_t i_uNetworkId)
-{
-	return m_umNetPlayerId.at(i_uNetworkId);
+	return m_umNetPlayerId.at(i_cuNetworkId);
 }

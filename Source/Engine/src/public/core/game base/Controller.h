@@ -9,12 +9,12 @@ class Controller
 public:
 protected:
 	const uint32_t m_cuEntity;
-	Level* m_pLevel;
+	Level* const m_cpLevel;
 
 private:
 
 public:
-	Controller(const uint32_t i_cuEntity, Level* i_pLevel);
+	Controller(const uint32_t i_cuEntity, Level* const i_cpLevel);
 
 protected:
 private:

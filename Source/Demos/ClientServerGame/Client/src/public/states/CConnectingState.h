@@ -10,18 +10,18 @@ class CConnectingState : public State
 public:
 	Delegate<std::string()> m_unidOnRequestIP;
 	Delegate<uint16_t()> m_unidOnRequestPort;
-	Delegate<Client* ()> m_unidOnRequestClient;
-	Delegate<void()> m_unidOnConnectionEstablished;
-	Delegate<void(long long)> m_unidOnGameStarted;
+	Delegate<void()> m_unidOnGameStarted;
 
 protected:
 private:
 	std::string m_sIp;
 	uint16_t m_uPort = 0;
-	Client* m_pClient = nullptr;
+	Client* const m_cpClient;
 	bool m_bConnected = false;
 
 public:
+	CConnectingState(Client* const i_cpClient);
+
 	virtual void enter() override;
 	virtual std::string update(float) override;
 

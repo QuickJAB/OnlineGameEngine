@@ -9,8 +9,8 @@ class GTestLevel : public Level
 {
 public:
 protected:
-	MovementSys* m_pMovementSys = nullptr;
-	CollisionSys* m_pCollisionSys = nullptr;
+	MovementSys* const m_cpMovementSys;
+	CollisionSys* const m_cpCollisionSys;
 
 private:
 
@@ -18,7 +18,7 @@ public:
 	GTestLevel();
 	~GTestLevel();
 
-	virtual void update(float i_fDt) override;
+	virtual void update(const float i_cfDt) override;
 
 	virtual void load() override;
 

@@ -8,89 +8,81 @@
 
 using namespace std;
 
-GTestLevel::GTestLevel() : Level()
+GTestLevel::GTestLevel() : Level(),
+	m_cpMovementSys(new MovementSys(m_cpECS)), m_cpCollisionSys(new CollisionSys(m_cpECS))
 {
-	m_pMovementSys = new MovementSys(m_pECS);
-	m_pCollisionSys = new CollisionSys(m_pECS);
 }
 
 GTestLevel::~GTestLevel()
 {
-	delete m_pMovementSys;
-	m_pMovementSys = nullptr;
-
-	delete m_pCollisionSys;
-	m_pCollisionSys = nullptr;
+	delete m_cpMovementSys;
+	delete m_cpCollisionSys;
 }
 
-void GTestLevel::update(float i_fDt)
+void GTestLevel::update(const float i_cfDt)
 {
-	__super::update(i_fDt);
-
-	m_pCollisionSys->update(i_fDt);
-	m_pMovementSys->update(i_fDt);
+	m_cpCollisionSys->update(i_cfDt);
+	m_cpMovementSys->update(i_cfDt);
 }
 
 void GTestLevel::load()
 {
-	__super::load();
-
-	uint32_t uE = m_pECS->createEntity();
+	uint32_t uE = m_cpECS->createEntity();
 	TransformComp t = { uE, 100, 100, 1720, 10 };
-	m_pECS->addComponent<TransformComp>(uE, &t);
-	m_pECS->addComponent<ColliderComp>(uE);
-	uE = m_pECS->createEntity();
+	m_cpECS->addComponent<TransformComp>(uE, &t);
+	m_cpECS->addComponent<ColliderComp>(uE);
+	uE = m_cpECS->createEntity();
 	t = { uE, 100, 970, 1720, 10 };
-	m_pECS->addComponent<TransformComp>(uE, &t);
-	m_pECS->addComponent<ColliderComp>(uE);
-	uE = m_pECS->createEntity();
+	m_cpECS->addComponent<TransformComp>(uE, &t);
+	m_cpECS->addComponent<ColliderComp>(uE);
+	uE = m_cpECS->createEntity();
 	t = { uE, 100, 110, 10, 860 };
-	m_pECS->addComponent<TransformComp>(uE, &t);
-	m_pECS->addComponent<ColliderComp>(uE);
-	uE = m_pECS->createEntity();
+	m_cpECS->addComponent<TransformComp>(uE, &t);
+	m_cpECS->addComponent<ColliderComp>(uE);
+	uE = m_cpECS->createEntity();
 	t = { uE, 1810, 110, 10, 860 };
-	m_pECS->addComponent<TransformComp>(uE, &t);
-	m_pECS->addComponent<ColliderComp>(uE);
-	uE = m_pECS->createEntity();
+	m_cpECS->addComponent<TransformComp>(uE, &t);
+	m_cpECS->addComponent<ColliderComp>(uE);
+	uE = m_cpECS->createEntity();
 	t = { uE, 260, 430, 10, 250 };
-	m_pECS->addComponent<TransformComp>(uE, &t);
-	m_pECS->addComponent<ColliderComp>(uE);
-	uE = m_pECS->createEntity();
+	m_cpECS->addComponent<TransformComp>(uE, &t);
+	m_cpECS->addComponent<ColliderComp>(uE);
+	uE = m_cpECS->createEntity();
 	t = { uE, 1660, 430, 10, 250 };
-	m_pECS->addComponent<TransformComp>(uE, &t);
-	m_pECS->addComponent<ColliderComp>(uE);
-	uE = m_pECS->createEntity();
+	m_cpECS->addComponent<TransformComp>(uE, &t);
+	m_cpECS->addComponent<ColliderComp>(uE);
+	uE = m_cpECS->createEntity();
 	t = { uE, 410, 555, 10, 250 };
-	m_pECS->addComponent<TransformComp>(uE, &t);
-	m_pECS->addComponent<ColliderComp>(uE);
-	uE = m_pECS->createEntity();
+	m_cpECS->addComponent<TransformComp>(uE, &t);
+	m_cpECS->addComponent<ColliderComp>(uE);
+	uE = m_cpECS->createEntity();
 	t = { uE, 1510, 305, 10, 250 };
-	m_pECS->addComponent<TransformComp>(uE, &t);
-	m_pECS->addComponent<ColliderComp>(uE);
-	uE = m_pECS->createEntity();
+	m_cpECS->addComponent<TransformComp>(uE, &t);
+	m_cpECS->addComponent<ColliderComp>(uE);
+	uE = m_cpECS->createEntity();
 	t = { uE, 560, 305, 10, 375 };
-	m_pECS->addComponent<TransformComp>(uE, &t);
-	m_pECS->addComponent<ColliderComp>(uE);
-	uE = m_pECS->createEntity();
+	m_cpECS->addComponent<TransformComp>(uE, &t);
+	m_cpECS->addComponent<ColliderComp>(uE);
+	uE = m_cpECS->createEntity();
 	t = { uE, 1360, 430, 10, 375 };
-	m_pECS->addComponent<TransformComp>(uE, &t);
-	m_pECS->addComponent<ColliderComp>(uE);
-	uE = m_pECS->createEntity();
+	m_cpECS->addComponent<TransformComp>(uE, &t);
+	m_cpECS->addComponent<ColliderComp>(uE);
+	uE = m_cpECS->createEntity();
 	t = { uE, 710, 535, 500, 10 };
-	m_pECS->addComponent<TransformComp>(uE, &t);
-	m_pECS->addComponent<ColliderComp>(uE);
+	m_cpECS->addComponent<TransformComp>(uE, &t);
+	m_cpECS->addComponent<ColliderComp>(uE);
 
-	uE = m_pECS->createEntity();
+	uE = m_cpECS->createEntity();
 	t = { uE, 120, 490, 100, 100 };
-	m_pECS->addComponent<TransformComp>(uE, &t);
-	m_pECS->addComponent<ColliderComp>(uE);
-	m_pECS->addComponent<VelocityComp>(uE);
+	m_cpECS->addComponent<TransformComp>(uE, &t);
+	m_cpECS->addComponent<ColliderComp>(uE);
+	m_cpECS->addComponent<VelocityComp>(uE);
 	m_umNetPlayerId.insert(pair<uint32_t, uint32_t>(0, uE));
 
-	uE = m_pECS->createEntity();
+	uE = m_cpECS->createEntity();
 	t = { uE, 1700, 490, 100, 100 };
-	m_pECS->addComponent<TransformComp>(uE, &t);
-	m_pECS->addComponent<ColliderComp>(uE);
-	m_pECS->addComponent<VelocityComp>(uE);
+	m_cpECS->addComponent<TransformComp>(uE, &t);
+	m_cpECS->addComponent<ColliderComp>(uE);
+	m_cpECS->addComponent<VelocityComp>(uE);
 	m_umNetPlayerId.insert(pair<uint32_t, uint32_t>(1, uE));
 }

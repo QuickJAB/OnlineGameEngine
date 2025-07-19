@@ -11,15 +11,15 @@ public:
 protected:
 	std::atomic<bool> m_bRunning;
 
-	StateMachine* m_pStateMachine = nullptr;
+	StateMachine* const m_cpStateMachine;
 
 private:
 
 public:
-	GameInstance();
+	GameInstance(StateMachine* const i_cpStateMachine);
 	~GameInstance();
 
-	void update(float i_fDt);
+	void update(const float i_cfDt);
 
 	bool isRunning() { return m_bRunning.load(); }
 

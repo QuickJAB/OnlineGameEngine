@@ -14,21 +14,21 @@ class CTestLevel : public GTestLevel
 public:
 protected:
 private:
-	DrawSys* m_pDrawSys = nullptr;
+	DrawSys* const m_cpDrawSys;
 	const uint32_t m_cuNetworkId;
 
-	const SDL_Color m_allyColour = { 0, 0, 255, 255 };
-	const SDL_Color m_enemyColour = { 255, 0, 0, 255 };
+	const SDL_Color m_cAllyColour = { 0, 0, 255, 255 };
+	const SDL_Color m_cEnemyColour = { 255, 0, 0, 255 };
 
 public:
-	CTestLevel(const uint32_t i_uNetworkId);
+	CTestLevel(const uint32_t i_cuNetworkId);
 	~CTestLevel();
 
-	void update(float i_fDt) override;
+	void update(const float i_cfDt) override;
 
 	void load() override;
 
-	std::vector<SpriteComp>* getSprites();
+	std::vector<SpriteComp>* const getSprites();
 
 protected:
 private:

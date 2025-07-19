@@ -7,6 +7,6 @@
 
 struct SpriteComp : public ComponentBase
 {
-	SDL_FRect rect;
+	SDL_FRect rect = { 0, 0, 0, 0 };
 	SDL_Color colour = { 255, 255, 255, 255 };
 };

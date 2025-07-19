@@ -9,13 +9,14 @@ class GPlayingState : public State
 {
 public:
 protected:
-	GGameState* m_pGameState = nullptr;
-
+	GGameState* const m_cpGameState;
 	GTestLevel* m_pLevel = nullptr;
 
 private:
 
 public:
+	GPlayingState(GGameState* const i_cpGameState);
+
 protected:
 private:
 };

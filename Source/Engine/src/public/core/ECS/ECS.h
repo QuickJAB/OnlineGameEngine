@@ -24,11 +24,11 @@ struct ComponentContainer : public IComponentContainer
 	std::unordered_map<uint32_t, size_t> umMap;
 
 	template <typename T>
-	void add(const uint32_t i_cuEntity, const T* i_cpComponent = nullptr)
+	void add(const uint32_t i_cuEntity, const T* const i_cpcComponent = nullptr)
 	{
 		if (umMap.contains(i_cuEntity)) return;
 
-		T component = i_cpComponent == nullptr ? T() : *i_cpComponent;
+		T component = i_cpcComponent == nullptr ? T() : *i_cpcComponent;
 		component.uOwner = i_cuEntity;
 
 		vComponents.push_back(component);
@@ -83,7 +83,7 @@ public:
 	void destroyEntity(const uint32_t i_cuEntity);
 
 	template <typename T>
-	void addComponent(const uint32_t i_cuEntity, const T* i_cpComponent = nullptr)
+	void addComponent(const uint32_t i_cuEntity, const T* const i_cpcComponent = nullptr)
 	{
 		if (std::find(m_vEntities.begin(), m_vEntities.end(), i_cuEntity) == m_vEntities.end()) return;
 
@@ -94,7 +94,7 @@ public:
 			pComponentContainer = createComponentContainer<T>();
 		}
 
-		pComponentContainer->add<T>(i_cuEntity, i_cpComponent);
+		pComponentContainer->add<T>(i_cuEntity, i_cpcComponent);
 	}
 
 	template <typename T>
@@ -102,57 +102,55 @@ public:
 	{
 		if (std::find(m_vEntities.begin(), m_vEntities.end(), i_cuEntity) == m_vEntities.end()) return;
 
-		ComponentContainer<T>* pComponentContainer = getComponentContainer<T>();
-		if (pComponentContainer == nullptr) return;
+		ComponentContainer<T>* const cpComponentContainer = getComponentContainer<T>();
+		if (cpComponentContainer == nullptr) return;
 
-		pComponentContainer->remove(i_cuEntity);
+		cpComponentContainer->remove(i_cuEntity);
 	}
 
 	template <typename T>
-	T* getComponent(const uint32_t i_cuEntity)
+	T* const getComponent(const uint32_t i_cuEntity)
 	{
 		if (std::find(m_vEntities.begin(), m_vEntities.end(), i_cuEntity) == m_vEntities.end()) return nullptr;
 
-		ComponentContainer<T>* pComponentContainer = getComponentContainer<T>();
-		if (pComponentContainer == nullptr) return nullptr;
+		ComponentContainer<T>* const cpComponentContainer = getComponentContainer<T>();
+		if (cpComponentContainer == nullptr) return nullptr;
 
-		return pComponentContainer->get<T>(i_cuEntity);
+		return cpComponentContainer->get<T>(i_cuEntity);
 	}
 
 	template <typename T>
-	std::vector<T>* getComponentArray()
+	std::vector<T>* const getComponentArray()
 	{
-		ComponentContainer<T>* pComponentContainer = getComponentContainer<T>();
-		if (pComponentContainer == nullptr) return nullptr;
+		ComponentContainer<T>* const cpComponentContainer = getComponentContainer<T>();
+		if (cpComponentContainer == nullptr) return nullptr;
 
-		return &pComponentContainer->vComponents;
+		return &cpComponentContainer->vComponents;
 	}
 
 	template <typename T>
-	ComponentContainer<T>* getComponentContainer()
+	ComponentContainer<T>* const getComponentContainer()
 	{
-		std::string sComponentType = typeid(T).name();
+		const std::string csComponentType = typeid(T).name();
 
-		if (!m_umComponentContainers.contains(sComponentType)) return nullptr;
+		if (!m_umComponentContainers.contains(csComponentType)) return nullptr;
 
-		// Cast the pointer to the correct type and return
-		return static_cast<ComponentContainer<T>*>(m_umComponentContainers[sComponentType]);
+		return static_cast<ComponentContainer<T>*>(m_umComponentContainers[csComponentType]);
 	}
 
-	const std::vector<uint32_t>* getEntities() const { return &m_vEntities; }
+	const std::vector<uint32_t>* const getEntities() const { return &m_vEntities; }
 
 protected:
 private:
 	template <typename T>
-	ComponentContainer<T>* createComponentContainer()
+	ComponentContainer<T>* const createComponentContainer()
 	{
-		// Get the components type as a string
-		std::string sComponentType = typeid(T).name();
+		const std::string csComponentType = typeid(T).name();
 
-		ComponentContainer<T>* pContainer = new ComponentContainer<T>();
+		ComponentContainer<T>* const cpContainer = new ComponentContainer<T>();
 
-		m_umComponentContainers.insert(std::pair<std::string, IComponentContainer*>(sComponentType, pContainer));
+		m_umComponentContainers.insert(std::pair<std::string, IComponentContainer*>(csComponentType, cpContainer));
 
-		return pContainer;
+		return cpContainer;
 	}
 };

@@ -6,71 +6,59 @@
 
 using namespace std;
 
-CGameInstance::CGameInstance() : GameInstance()
+StateMachine* const CGameInstance::initStateMachine(Renderer* const i_cpRenderer,
+	EventHandler* const i_cpEventHandler, Client* const i_cpClient)
 {
-	m_pClient = new Client(m_bRunning, 0.f, HostConfig());
-
 	unordered_map<string, State*> umStates;
 
 	CMenuState* menu = new CMenuState();
 	umStates.insert(pair<string, State*>("Menu", menu));
 
-	CConnectingState* pConnecting = new CConnectingState();
+	CConnectingState* pConnecting = new CConnectingState(i_cpClient);
 	umStates.insert(pair<string, State*>("Connecting", pConnecting));
-	pConnecting->m_unidOnRequestIP.bind(menu, &CMenuState::getIP);
-	pConnecting->m_unidOnRequestPort.bind(menu, &CMenuState::getPort);
-	pConnecting->m_unidOnRequestClient.bind(this, &CGameInstance::getClient);
-	pConnecting->m_unidOnConnectionEstablished.bind(this, &CGameInstance::startNetworkThread);
-	pConnecting->m_unidOnGameStarted.bind(this, &CGameInstance::serverStartedGame);
-	
-	CPlayingState* pPlaying = new CPlayingState();
-	umStates.insert(pair<string, State*>("Playing", pPlaying));
-	pPlaying->m_unidRequestRenderer.bind(this, &CGameInstance::getRenderer);
-	pPlaying->m_unidRequestEventHandler.bind(this, &CGameInstance::getEventHandler);
-	pPlaying->m_unidRequestNetworkId.bind(this, &CGameInstance::getNetworkId);
 
-	m_pStateMachine = new StateMachine(umStates, "Menu");
+	CPlayingState* pPlaying = new CPlayingState(i_cpRenderer, i_cpEventHandler);
+	umStates.insert(pair<string, State*>("Playing", pPlaying));
+
+	return new StateMachine(umStates, "Menu");
+}
+
+CGameInstance::CGameInstance() : m_cpClient(new Client(m_bRunning, 0.f, HostConfig())),
+	m_cpNetworkThread(new thread(&Client::update, m_cpClient)),
+	m_cpWindow(new Window("OnlineGame Client", 1920, 1080)), m_cpRenderer(new Renderer(m_cpWindow->getSDLWindow())),
+	m_cpEventHandler(new EventHandler()), GameInstance(initStateMachine(m_cpRenderer, m_cpEventHandler, m_cpClient))
+{
+	CMenuState* const cpMenu = m_cpStateMachine->getState<CMenuState>("Menu");
+	CConnectingState* const cpConnecting = m_cpStateMachine->getState<CConnectingState>("Connecting");
+	CPlayingState* const cpPlaying = m_cpStateMachine->getState<CPlayingState>("Playing");
+
+	cpConnecting->m_unidOnRequestIP.bind(cpMenu, &CMenuState::getIP);
+	cpConnecting->m_unidOnRequestPort.bind(cpMenu, &CMenuState::getPort);
+	cpConnecting->m_unidOnGameStarted.bind(this, &CGameInstance::serverStartedGame);
+
+	cpPlaying->m_unidRequestNetworkId.bind(this, &CGameInstance::getNetworkId);
+
+	m_cpNetworkThread->detach();
+
+	m_cpEventHandler->m_unidOnEventQuit.bind(static_cast<GameInstance*>(this), &GameInstance::quitGame);
 }
 
 CGameInstance::~CGameInstance()
 {
-	m_pEventHandler->m_unidOnEventQuit.unbind();
-	delete m_pEventHandler;
-	m_pEventHandler = nullptr;
+	m_cpEventHandler->m_unidOnEventQuit.unbind();
+	delete m_cpEventHandler;
 
-	delete m_pRenderer;
-	m_pRenderer = nullptr;
+	delete m_cpRenderer;
 
-	delete m_pWindow;
-	m_pWindow = nullptr;
+	delete m_cpWindow;
 
-	m_pNetworkThread->join();
-	delete m_pNetworkThread;
-	m_pNetworkThread = nullptr;
+	m_cpNetworkThread->join();
+	delete m_cpNetworkThread;
 
-	delete m_pClient;
-	m_pClient = nullptr;
+	delete m_cpClient;
 }
 
-void CGameInstance::initWindow()
+void CGameInstance::serverStartedGame()
 {
-	m_pWindow = new Window("OnlineGame Client", 1920, 1080);
-
-	m_pRenderer = new Renderer(m_pWindow->getSDLWindow());
-
-	m_pEventHandler = new EventHandler();
-	m_pEventHandler->m_unidOnEventQuit.bind(static_cast<GameInstance*>(this), &GameInstance::quitGame);
-}
-
-void CGameInstance::startNetworkThread()
-{
-	thread network(&Client::update, m_pClient);
-	network.detach();
-	m_pNetworkThread = &network;
-}
-
-void CGameInstance::serverStartedGame(long long i_llStartTime)
-{
-	m_llGameStateTime = i_llStartTime;
-	initWindow();
+	
 }

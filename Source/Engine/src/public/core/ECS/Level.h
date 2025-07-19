@@ -6,7 +6,7 @@ class Level
 {
 public:
 protected:
-	ECS* m_pECS = nullptr;
+	ECS* const m_cpECS;
 
 	std::unordered_map<uint32_t, uint32_t> m_umNetPlayerId;
 
@@ -16,16 +16,16 @@ public:
 	Level();
 	~Level();
 
-	virtual void update(float i_fDt);
-	virtual void load();
+	virtual void update(const float i_cfDt) = 0;
+	virtual void load() = 0;
 
 	template <typename T>
-	T* getComponent(const uint32_t i_uEntity)
+	T* const getComponent(const uint32_t i_uEntity)
 	{
-		return m_pECS->getComponent<T>(i_uEntity);
+		return m_cpECS->getComponent<T>(i_uEntity);
 	}
 
-	uint32_t getPlayerByNetworkId(const uint32_t i_uNetworkId);
+	const uint32_t getPlayerByNetworkId(const uint32_t i_cuNetworkId);
 
 protected:
 private:

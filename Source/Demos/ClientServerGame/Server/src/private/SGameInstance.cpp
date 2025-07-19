@@ -7,35 +7,38 @@
 
 using namespace std;
 
-SGameInstance::SGameInstance() : GameInstance()
+Server* const SGameInstance::initServer(atomic<bool>& i_bRunning)
 {
 	HostConfig hostConfig;
 	hostConfig.pcAddress = Server::createAddress(19);
 	hostConfig.ullMaxConnections = 2;
 
-	m_pServer = new Server(m_bRunning, 0.f, hostConfig);
+	return new Server(i_bRunning, 0.f, hostConfig);
+}
 
+StateMachine* const SGameInstance::initStateMachine(Server* const i_cpServer)
+{
 	unordered_map<string, State*> umStates;
 
-	SWaitingForPlayersState* pWaitingForPlayers = new SWaitingForPlayersState(m_pServer);
+	SWaitingForPlayersState* pWaitingForPlayers = new SWaitingForPlayersState(i_cpServer);
 	umStates.insert(pair<string, State*>("WaitingForPlayers", pWaitingForPlayers));
 
 	SPlayingState* pPlaying = new SPlayingState();
 	umStates.insert(pair<string, State*>("Playing", pPlaying));
 
-	m_pStateMachine = new StateMachine(umStates, "WaitingForPlayers");
+	return new StateMachine(umStates, "WaitingForPlayers");
+}
 
-	thread network(&Server::update, m_pServer);
-	network.detach();
-	m_pNetworkThread = &network;
+SGameInstance::SGameInstance() : m_cpServer(initServer(m_bRunning)), 
+	GameInstance(initStateMachine(m_cpServer)), m_cpNetworkThread(new thread(&Server::update, m_cpServer))
+{
+	m_cpNetworkThread->detach();
 }
 
 SGameInstance::~SGameInstance()
 {
-	m_pNetworkThread->join();
-	delete m_pNetworkThread;
-	m_pNetworkThread = nullptr;
+	m_cpNetworkThread->join();
+	delete m_cpNetworkThread;
 
-	delete m_pServer;
-	m_pServer = nullptr;
+	delete m_cpServer;
 }

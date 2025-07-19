@@ -1,6 +1,7 @@
 #pragma once
 
 #include <thread>
+#include <functional>
 
 #include <core/game base/GameInstance.h>
 
@@ -11,8 +12,8 @@ class SGameInstance : public GameInstance
 public:
 protected:
 private:
-	Server* m_pServer = nullptr;
-	std::thread* m_pNetworkThread = nullptr;
+	Server* const m_cpServer;
+	std::thread* const m_cpNetworkThread;
 
 public:
 	SGameInstance();
@@ -20,4 +21,6 @@ public:
 
 protected:
 private:
+	static Server* const initServer(std::atomic<bool>& i_bRunning);
+	static StateMachine* const initStateMachine(Server* const i_cpServer);
 };

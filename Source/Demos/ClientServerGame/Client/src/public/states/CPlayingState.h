@@ -14,18 +14,19 @@ class CTestLevel;
 class CPlayingState : public GPlayingState
 {
 public:
-	Delegate<Renderer*()> m_unidRequestRenderer;
-	Delegate<EventHandler*()> m_unidRequestEventHandler;
-	Delegate<uint32_t()> m_unidRequestNetworkId;
+	Delegate<const uint32_t()> m_unidRequestNetworkId;
 
 protected:
 private:
-	Renderer* m_pRenderer = nullptr;
-	EventHandler* m_pEventHandler = nullptr;
+	Renderer* const m_cpRenderer;
+	EventHandler* const m_cpEventHandler;
 
-	uint32_t m_uNetworkId;
+	uint32_t m_uNetworkId = (uint32_t)-1;
 
 public:
+	CPlayingState(Renderer* const i_cpRenderer, EventHandler* const i_cpEventHandler);
+	~CPlayingState() = default;
+
 	virtual void enter() override;
 	virtual std::string update(float i_fDt) override;
 	virtual void exit() override;

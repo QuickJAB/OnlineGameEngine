@@ -2,24 +2,24 @@
 
 using namespace std;
 
-GameInstance::GameInstance()
+GameInstance::GameInstance(StateMachine* const i_cpStateMachine) :
+	m_cpStateMachine(i_cpStateMachine)
 {
 	m_bRunning.store(true);
 }
 
 GameInstance::~GameInstance()
 {
-	delete m_pStateMachine;
-	m_pStateMachine = nullptr;
+	delete m_cpStateMachine;
 }
 
 void GameInstance::update(float i_fDt)
 {
-	if (m_pStateMachine == nullptr)
+	if (m_cpStateMachine == nullptr)
 	{
 		quitGame();
 		return;
 	}
 
-	m_pStateMachine->update(i_fDt);
+	m_cpStateMachine->update(i_fDt);
 }

@@ -10,12 +10,12 @@ class SWaitingForPlayersState : public State
 public:
 protected:
 private:
-	Server* m_pServer = nullptr;
+	Server* const m_cpServer;
 
 public:
-	SWaitingForPlayersState(Server* i_pServer);
+	SWaitingForPlayersState(Server* const i_cpServer);
 
-	virtual std::string update(float) override;
+	virtual std::string update(const float) override;
 
 protected:
 private:

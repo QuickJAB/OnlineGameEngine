@@ -9,7 +9,13 @@ protected:
 private:
 
 public:
+	SPlayingState();
+	~SPlayingState() = default;
+
 	virtual void enter() override;
-	virtual std::string update(float i_fDt) override;
+	virtual std::string update(const float i_cfDt) override;
 	virtual void exit() override;
+
+protected:
+private:
 };

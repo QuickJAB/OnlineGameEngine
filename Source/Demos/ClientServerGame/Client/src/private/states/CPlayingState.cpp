@@ -3,14 +3,19 @@
 #include <graphics/Renderer.h>
 #include <input/EventHandler.h>
 
+#include <GGameState.h>
+
 #include "CTestLevel.h"
 
 using namespace std;
 
+CPlayingState::CPlayingState(Renderer* const i_cpRenderer, EventHandler* const i_cpEventHandler) :
+	GPlayingState(new GGameState()), m_cpRenderer(i_cpRenderer), m_cpEventHandler(i_cpEventHandler)
+{
+}
+
 void CPlayingState::enter()
 {
-	m_pRenderer = m_unidRequestRenderer.broadcast();
-	m_pEventHandler = m_unidRequestEventHandler.broadcast();
 	m_uNetworkId = m_unidRequestNetworkId.broadcast();
 
 	m_pLevel = new CTestLevel(m_uNetworkId);
@@ -19,9 +24,9 @@ void CPlayingState::enter()
 
 string CPlayingState::update(float in_dt)
 {
-	m_pEventHandler->pollEvents();
+	m_cpEventHandler->pollEvents();
 	m_pLevel->update(in_dt);
-	m_pRenderer->draw(getLevel()->getSprites());
+	m_cpRenderer->draw(getLevel()->getSprites());
 
 	return "";
 }

@@ -18,6 +18,14 @@ public:
 
 	void update(const float i_cfDt);
 
+	template<typename T>
+	T* const getState(const std::string i_csStateName)
+	{
+		if (!m_umStates.contains(i_csStateName)) return nullptr;
+
+		return static_cast<T*>(m_umStates[i_csStateName]);
+	}
+
 protected:
 private:
 };

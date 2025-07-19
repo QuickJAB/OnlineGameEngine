@@ -9,41 +9,39 @@
 using namespace std;
 
 CTestLevel::CTestLevel(const uint32_t i_uNetworkId) : GTestLevel(),
-	m_cuNetworkId(i_uNetworkId)
+	m_cuNetworkId(i_uNetworkId), m_cpDrawSys(new DrawSys(m_cpECS))
 {
-	m_pDrawSys = new DrawSys(m_pECS);
 }
 
 CTestLevel::~CTestLevel()
 {
-	delete m_pDrawSys;
-	m_pDrawSys = nullptr;
+	delete m_cpDrawSys;
 }
 
 void CTestLevel::update(float i_fDt)
 {
 	__super::update(i_fDt);
 
-	m_pDrawSys->update();
+	m_cpDrawSys->update();
 }
 
 void CTestLevel::load()
 {
 	__super::load();
 
-	const vector<uint32_t>* cpvEntities = m_pECS->getEntities();
-	for (auto pIt = cpvEntities->begin(); pIt != cpvEntities->end(); ++pIt)
+	const vector<uint32_t>* const cpcvEntities = m_cpECS->getEntities();
+	for (auto pIt = cpcvEntities->begin(); pIt != cpcvEntities->end(); ++pIt)
 	{
-		m_pECS->addComponent<SpriteComp>(*pIt);
+		m_cpECS->addComponent<SpriteComp>(*pIt);
 	}
 
 	for (auto it = m_umNetPlayerId.begin(); it != m_umNetPlayerId.end(); ++it)
 	{
-		getComponent<SpriteComp>(it->second)->colour = it->first == m_cuNetworkId ? m_allyColour : m_enemyColour;
+		getComponent<SpriteComp>(it->second)->colour = it->first == m_cuNetworkId ? m_cAllyColour : m_cEnemyColour;
 	}
 }
 
-vector<SpriteComp>* CTestLevel::getSprites()
+vector<SpriteComp>* const CTestLevel::getSprites()
 {
-	return m_pECS->getComponentArray<SpriteComp>();
+	return m_cpECS->getComponentArray<SpriteComp>();
 }
