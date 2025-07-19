@@ -10,12 +10,12 @@ class Renderer
 public:
 protected:
 private:
-	SDL_Renderer* m_pRenderer;
+	SDL_Renderer* const m_cpRenderer;
 
 	const SDL_Color m_cClearColour = { 255, 255, 255, 255 };
 
 public:
-	Renderer(SDL_Window* i_pWindow);
+	Renderer(SDL_Window* const i_cpWindow);
 	~Renderer();
 
 	void draw(const std::vector<SpriteComp>* i_cpvData);

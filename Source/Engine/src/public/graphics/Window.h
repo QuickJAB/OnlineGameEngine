@@ -12,13 +12,13 @@ private:
 	int m_iWidth = 800;
 	int m_iHeight = 600;
 
-	SDL_Window* m_pWnd;
+	SDL_Window* m_pWnd = nullptr;
 
 public:
 	Window(const std::string i_csTitle, const int i_ciWidth, const int i_ciHeight);
 	~Window();
 
-	const SDL_Window* getSDLWindow() { return m_pWnd; }
+	SDL_Window* const getSDLWindow() { return m_pWnd; }
 
 protected:
 private:
