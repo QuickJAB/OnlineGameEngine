@@ -8,18 +8,15 @@ class Window
 public:
 protected:
 private:
-	std::string m_sTitle = "Game Window";
-	int m_iWidth = 800;
-	int m_iHeight = 600;
-
-	SDL_Window* m_pWnd = nullptr;
+	SDL_Window* const m_cpWnd;
 
 public:
 	Window(const std::string i_csTitle, const int i_ciWidth, const int i_ciHeight);
 	~Window();
 
-	SDL_Window* const getSDLWindow() { return m_pWnd; }
+	SDL_Window* const getSDLWindow() { return m_cpWnd; }
 
 protected:
 private:
+	static SDL_Window* const initAndCreateWindow(const std::string i_csTitle, const int i_ciWidth, const int i_ciHeight);
 };
