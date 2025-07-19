@@ -10,10 +10,8 @@ ENetAddress* Server::createAddress(const enet_uint16 i_cuPort)
     return address;
 }
 
-Server::Server(atomic<bool>& i_bRunning, const float i_cfTickTime, const enet_uint16 i_cuPort,
-    const size_t i_cullMaxConnections, const enet_uint32 i_cuInBandwidth, const enet_uint32 i_cuOutBandwidth) :
-        NetBase(i_bRunning, i_cfTickTime, createAddress(i_cuPort), i_cullMaxConnections, 1, i_cuInBandwidth, i_cuOutBandwidth),
-        m_cuMaxPlayers(static_cast<int>(i_cullMaxConnections))
+Server::Server(atomic<bool>& i_bRunning, const float i_cfTickTime, const HostConfig& i_crHostConfig) :
+        NetBase(i_bRunning, i_cfTickTime, i_crHostConfig)
 {
     m_muldOnNetUpdate.add(this, &Server::pingClients);
 }

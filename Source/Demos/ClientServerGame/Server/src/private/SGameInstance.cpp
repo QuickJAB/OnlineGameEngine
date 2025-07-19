@@ -9,7 +9,11 @@ using namespace std;
 
 SGameInstance::SGameInstance() : GameInstance()
 {
-	m_pServer = new Server(m_bRunning, 0.f, 19, 1, 0, 0);
+	HostConfig hostConfig;
+	hostConfig.pcAddress = Server::createAddress(19);
+	hostConfig.ullMaxConnections = 2;
+
+	m_pServer = new Server(m_bRunning, 0.f, hostConfig);
 
 	unordered_map<string, State*> umStates;
 

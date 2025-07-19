@@ -5,9 +5,8 @@
 
 using namespace std;
 
-Client::Client(atomic<bool>& i_bRunning, const float i_cfTickTime,
-    const enet_uint32 i_cuInBandwidth, const enet_uint32 i_cuOutBandwidth) :
-    NetBase(i_bRunning, i_cfTickTime, nullptr, 1, 1, i_cuInBandwidth, i_cuOutBandwidth)
+Client::Client(atomic<bool>& i_bRunning, const float i_cfTickTime, const HostConfig& i_crHostConfig) :
+    NetBase(i_bRunning, i_cfTickTime, i_crHostConfig)
 {
 }
 

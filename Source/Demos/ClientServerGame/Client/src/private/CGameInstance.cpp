@@ -8,7 +8,7 @@ using namespace std;
 
 CGameInstance::CGameInstance() : GameInstance()
 {
-	m_pClient = new Client(m_bRunning, 0, 0, 0);
+	m_pClient = new Client(m_bRunning, 0.f, HostConfig());
 
 	unordered_map<string, State*> umStates;
 

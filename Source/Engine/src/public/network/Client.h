@@ -12,8 +12,7 @@ private:
 	uint32_t m_uPlayerId = 0;
 
 public:
-	Client(std::atomic<bool>& i_bRunning, const float i_cfTickTime,
-		const enet_uint32 i_cuInBandwidth, const enet_uint32 i_cuOutBandwidth);
+	Client(std::atomic<bool>& i_bRunning, const float i_cfTickTime, const HostConfig& i_crHostConfig);
 	~Client();
 
 	bool tryConnect(const std::string i_csIp, const enet_uint16 i_cuPort,

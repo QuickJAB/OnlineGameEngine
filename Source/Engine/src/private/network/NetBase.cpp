@@ -4,20 +4,20 @@
 
 using namespace std;
 
-ENetHost* const NetBase::initAndCreateHost(const ENetAddress* i_pcAddress, size_t i_ullMaxConnections,
-    size_t i_ullMaxChannels, enet_uint32 i_uInBadnwidth, enet_uint32 i_uOutBandwidth)
+ENetHost* const NetBase::initAndCreateHost(const HostConfig& i_crHostConfig)
 {
     enet_initialize();
-    return enet_host_create(i_pcAddress, i_ullMaxConnections, i_ullMaxChannels,
-        i_uInBadnwidth, i_uOutBandwidth);
+
+    return enet_host_create(
+        i_crHostConfig.pcAddress,
+        i_crHostConfig.ullMaxConnections,
+        i_crHostConfig.ullMaxChannels,
+        i_crHostConfig.uInBadnwidth,
+        i_crHostConfig.uOutBandwidth);
 }
 
-NetBase::NetBase(std::atomic<bool>& i_bRunning, const float i_cfTickTime, const ENetAddress* i_pcAddress,
-    const size_t i_cullMaxConnections, const size_t i_cullMaxChannels, const enet_uint32 i_cuInBandwidth,
-    const enet_uint32 i_cuOutBandwidth) :
-        m_cpHost(initAndCreateHost(i_pcAddress, i_cullMaxConnections, i_cullMaxChannels, i_cuInBandwidth,
-            i_cuOutBandwidth)),
-        m_bRunning(i_bRunning), m_cfTickTime(i_cfTickTime)
+NetBase::NetBase(std::atomic<bool>& i_bRunning, const float i_cfTickTime, const HostConfig& i_crHostConfig) :
+        m_cpHost(initAndCreateHost(i_crHostConfig)), m_bRunning(i_bRunning), m_cfTickTime(i_cfTickTime)
 {
 }
 

@@ -16,7 +16,6 @@ public:
 protected:
 private:
 	uint32_t m_uNextPlayerId = 0;
-	const uint32_t m_cuMaxPlayers;
 
 	const unsigned long long m_cullPingDelay = 5000;
 	unsigned long long m_ullLastPingTime = 0;
@@ -26,13 +25,14 @@ private:
 	std::unordered_map<uint32_t, ClientTimeOffset> m_umOffsets;
 
 public:
-	Server(std::atomic<bool>& i_bRunning, const float i_cfTickTime, const enet_uint16 i_cuPort,
-		const size_t i_cullMaxConnections, const enet_uint32 i_cuInBandwidth, const enet_uint32 i_cuOutBandwidth);
+	Server(std::atomic<bool>& i_bRunning, const float i_cfTickTime, const HostConfig& i_crHostConfig);
 	~Server();
+
+	static ENetAddress* createAddress(const enet_uint16 i_cuPort);
 
 	int getNumConnections() const { return static_cast<int>(m_cpHost->connectedPeers); }
 
-	int getMaxPlayers() const { return m_cuMaxPlayers; }
+	size_t getMaxPlayers() const { return m_cpHost->peerCount; }
 
 protected:
 	virtual void onConnected(const ENetPacket* const i_cpcPacket) override;
@@ -45,6 +45,4 @@ private:
 	void updateTimeOffset(const std::string i_csData);
 
 	virtual bool shouldQueuePacket(const ENetPacket* const i_cpcPacket) override;
-
-	static ENetAddress* createAddress(const enet_uint16 i_cuPort);
 };

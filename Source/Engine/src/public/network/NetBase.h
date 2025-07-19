@@ -13,6 +13,15 @@ struct PacketInfo
 	int iPeerIndex;
 };
 
+struct HostConfig
+{
+	const ENetAddress* pcAddress = nullptr;
+	size_t ullMaxConnections = 1;
+	size_t ullMaxChannels = 1;
+	enet_uint32 uInBadnwidth = 0;	// 0 is uncapped
+	enet_uint32 uOutBandwidth = 0;	// 0 is uncapped
+};
+
 enum ServerCommand
 {
 	handshake,
@@ -49,9 +58,7 @@ protected:
 private:
 
 public:
-	NetBase(std::atomic<bool>& i_bRunning, const float i_cfTickTime, const ENetAddress* i_pcAddress,
-			const size_t i_cullMaxConnections, const size_t i_cullMaxChannels,
-			const enet_uint32 i_cuInBandwidth, const enet_uint32 i_cuOutBandwidth);
+	NetBase(std::atomic<bool>& i_bRunning, const float i_cfTickTime, const HostConfig& i_crHostConfig);
 	~NetBase();
 
 	void update();
@@ -71,7 +78,5 @@ protected:
 private:
 	void queueIncomingPacketData(const ENetPacket* const i_cpcPacket);
 
-	static ENetHost* const initAndCreateHost(const ENetAddress* i_pcAddress,
-		size_t i_ullMaxConnections, size_t i_ullMaxChannels, enet_uint32 i_uInBadnwidth,
-		enet_uint32 i_uOutBandwidth);
+	static ENetHost* const initAndCreateHost(const HostConfig& i_crHostConfig);
 };
