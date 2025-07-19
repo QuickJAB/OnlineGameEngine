@@ -4,8 +4,8 @@
 
 using namespace std;
 
-NetBase::NetBase(atomic<bool>& i_bRunning, float i_fTickTime) :
-    m_bRunning(i_bRunning), m_fTickTime(i_fTickTime)
+NetBase::NetBase(atomic<bool>& i_bRunning, const float i_cfTickTime) :
+    m_bRunning(i_bRunning), m_cfTickTime(i_cfTickTime)
 {
     enet_initialize();
 }
@@ -32,7 +32,7 @@ void NetBase::update()
 {
     while (m_bRunning.load())
     {
-        while (enet_host_service(m_pHost, &m_Event, static_cast<enet_uint32>(m_fTickTime)) > 0)
+        while (enet_host_service(m_pHost, &m_Event, static_cast<enet_uint32>(m_cfTickTime)) > 0)
         {
             switch (m_Event.type)
             {
@@ -58,29 +58,29 @@ void NetBase::update()
     }
 }
 
-bool NetBase::shouldQueuePacket(ENetPacket* i_pPacket)
+bool NetBase::shouldQueuePacket(const ENetPacket* i_cpPacket)
 {
     return true;
 }
 
-void NetBase::queueIncomingPacketData(ENetPacket* i_pPacket)
+void NetBase::queueIncomingPacketData(const ENetPacket* i_cpPacket)
 {
-    if (i_pPacket == nullptr || !shouldQueuePacket(i_pPacket)) return;
+    if (i_cpPacket == nullptr || !shouldQueuePacket(i_cpPacket)) return;
 
     m_IncomingDataMutex.lock();
     
-    m_qIncomingPacketData.push(*i_pPacket);
+    m_qIncomingPacketData.push(*i_cpPacket);
     
     m_IncomingDataMutex.unlock();
 }
 
-void NetBase::queueOutgoingPacketData(string i_sData, int i_iPeerIndex)
+void NetBase::queueOutgoingPacketData(const string i_csData, const int i_ciPeerIndex)
 {
-    if (i_sData == "") return;
+    if (i_csData == "") return;
 
     m_OutgoingDataMutex.lock();
 
-    m_qOutgoingPacketData.push({ i_sData, i_iPeerIndex });
+    m_qOutgoingPacketData.push({ i_csData, i_ciPeerIndex });
 
     m_OutgoingDataMutex.unlock();
 }
@@ -117,10 +117,10 @@ void NetBase::sendPackets()
 {
 }
 
-void NetBase::onConnected(ENetPacket* i_pPacket)
+void NetBase::onConnected(const ENetPacket* i_cpPacket)
 {
 }
 
-void NetBase::onDisconnected(ENetPacket* i_pPacket)
+void NetBase::onDisconnected(const ENetPacket* i_cpPacket)
 {
 }

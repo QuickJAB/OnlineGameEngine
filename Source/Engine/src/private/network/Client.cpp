@@ -5,11 +5,11 @@
 
 using namespace std;
 
-Client::Client(atomic<bool>& i_bRunning, float i_fTickTime,
-    enet_uint32 i_uInBandwidth, enet_uint32 i_uOutBandwidth) :
-        NetBase(i_bRunning, i_fTickTime)
+Client::Client(atomic<bool>& i_bRunning, const float i_cfTickTime,
+    const enet_uint32 i_cuInBandwidth, const enet_uint32 i_cuOutBandwidth) :
+        NetBase(i_bRunning, i_cfTickTime)
 {
-    m_pHost = enet_host_create(nullptr, 1, 1, i_uInBandwidth, i_uOutBandwidth);
+    m_pHost = enet_host_create(nullptr, 1, 1, i_cuInBandwidth, i_cuOutBandwidth);
 }
 
 Client::~Client()
@@ -18,15 +18,15 @@ Client::~Client()
     m_pPeer = nullptr;
 }
 
-bool Client::tryConnect(string i_sIp, enet_uint16 i_uPort, uint32_t i_uAttemptLength)
+bool Client::tryConnect(const string i_csIp, const enet_uint16 i_cuPort, const uint32_t i_cuAttemptLength)
 {
-    enet_address_set_host(&m_Address, i_sIp.c_str());
-    m_Address.port = i_uPort;
+    enet_address_set_host(&m_Address, i_csIp.c_str());
+    m_Address.port = i_cuPort;
 
     m_pPeer = enet_host_connect(m_pHost, &m_Address, 1, 0);
     if (m_pPeer == nullptr) return false;
 
-    if (enet_host_service(m_pHost, &m_Event, i_uAttemptLength * static_cast<enet_uint32>(1000.f)) > 0 &&
+    if (enet_host_service(m_pHost, &m_Event, i_cuAttemptLength * static_cast<enet_uint32>(1000.f)) > 0 &&
         m_Event.type == ENET_EVENT_TYPE_CONNECT)
     {
         return true;
@@ -66,30 +66,30 @@ void Client::processHandshake(string i_sData)
     sscanf_s(i_sData.c_str(), sFormat.c_str(), &m_uPlayerId);
 }
 
-void Client::pongServer(string i_sPingData)
+void Client::pongServer(const string i_csPingData)
 {
-    const string sFormat = to_string(ping) + "t%lld";
-    long long llPingTime;
-    sscanf_s(i_sPingData.c_str(), sFormat.c_str(), &llPingTime);
+    const string csFormat = to_string(ping) + "t%lld";
+    unsigned long long ullPingTime;
+    sscanf_s(i_csPingData.c_str(), csFormat.c_str(), &ullPingTime);
 
-    string sData = to_string(pong) + "id" + to_string(m_uPlayerId) + 't' + to_string(getClockTime()) + "pt" + to_string(llPingTime);
-    queueOutgoingPacketData(sData);
+    const string csData = to_string(pong) + "id" + to_string(m_uPlayerId) + 't' + to_string(getClockTime()) + "pt" + to_string(ullPingTime);
+    queueOutgoingPacketData(csData);
 }
 
-bool Client::shouldQueuePacket(ENetPacket* i_pPacket)
+bool Client::shouldQueuePacket(const ENetPacket* i_cpPacket)
 {
-    string sData = (const char*)i_pPacket->data;
+    const string csData = (const char*)i_cpPacket->data;
 
     int iServerCommand;
-    if (sscanf_s(sData.c_str(), "%i", &iServerCommand) > 0)
+    if (sscanf_s(csData.c_str(), "%i", &iServerCommand) > 0)
     {
         switch (iServerCommand)
         {
         case handshake:
-            processHandshake(sData);
+            processHandshake(csData);
             return false;
         case ping:
-            pongServer(sData);
+            pongServer(csData);
             return false;
         }
     }

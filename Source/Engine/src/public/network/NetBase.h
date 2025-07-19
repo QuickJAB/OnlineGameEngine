@@ -33,7 +33,7 @@ class NetBase
 public:
 protected:
 	std::atomic<bool>& m_bRunning;
-	float m_fTickTime = 0.f;
+	const float m_cfTickTime = 0.f;
 
 	ENetHost* m_pHost = nullptr;
 	ENetAddress m_Address = ENetAddress();
@@ -50,26 +50,26 @@ protected:
 private:
 
 public:
-	NetBase(std::atomic<bool>& i_bRunning, float i_fTickTime);
+	NetBase(std::atomic<bool>& i_bRunning, const float i_cfTickTime);
 	~NetBase();
 
 	void update();
 
-	virtual void queueOutgoingPacketData(std::string i_sData, int i_iPeerIndex = -1);
+	virtual void queueOutgoingPacketData(const std::string i_csData, const int i_ciPeerIndex = -1);
 
 	std::queue<ENetPacket> getIncomingPacketData();
 
 	long long getClockTime();
 
 protected:
-	virtual bool shouldQueuePacket(ENetPacket* i_pPacket);
+	virtual bool shouldQueuePacket(const ENetPacket* i_cpPacket);
 
 	virtual void sendPackets();
 
-	virtual void onConnected(ENetPacket* i_pPacket);
+	virtual void onConnected(const ENetPacket* i_cpPacket);
 
-	virtual void onDisconnected(ENetPacket* i_pPacket);
+	virtual void onDisconnected(const ENetPacket* i_cpPacket);
 
 private:
-	void queueIncomingPacketData(ENetPacket* i_pPacket);
+	void queueIncomingPacketData(const ENetPacket* i_cpPacket);
 };

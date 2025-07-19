@@ -12,10 +12,12 @@ private:
 	uint32_t m_uPlayerId = 0;
 
 public:
-	Client(std::atomic<bool>& i_bRunning, float i_fTickTime, enet_uint32 i_uInBandwidth, enet_uint32 i_uOutBandwidth);
+	Client(std::atomic<bool>& i_bRunning, const float i_cfTickTime,
+		const enet_uint32 i_cuInBandwidth, const enet_uint32 i_cuOutBandwidth);
 	~Client();
 
-	bool tryConnect(std::string i_sIp, enet_uint16 i_uPort, uint32_t i_uAttemptLength = 30);
+	bool tryConnect(const std::string i_csIp, const enet_uint16 i_cuPort,
+		const uint32_t i_cuAttemptLength = 30);
 
 	uint32_t getNetworkId() const { return m_uPlayerId; }
 
@@ -23,10 +25,10 @@ protected:
 private:
 	void sendPackets() override;
 
-	void processHandshake(std::string i_sData);
+	void processHandshake(const std::string i_csData);
 
-	void pongServer(std::string i_sPingData);
+	void pongServer(const std::string i_csPingData);
 
-	virtual bool shouldQueuePacket(ENetPacket* i_pPacket) override;
+	virtual bool shouldQueuePacket(const ENetPacket* i_cpPacket) override;
 };
 
