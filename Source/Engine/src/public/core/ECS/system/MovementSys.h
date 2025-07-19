@@ -7,12 +7,12 @@ class MovementSys
 public:
 protected:
 private:
-	ECS* m_pECS = nullptr;
+	ECS* const m_cpECS = nullptr;
 
 public:
-	MovementSys(ECS* i_pECS) : m_pECS(i_pECS) {}
+	MovementSys(ECS* const i_cpECS) : m_cpECS(i_cpECS) {}
 
-	void update(float i_fDt);
+	void update(const float i_cfDt);
 	
 protected:
 private:

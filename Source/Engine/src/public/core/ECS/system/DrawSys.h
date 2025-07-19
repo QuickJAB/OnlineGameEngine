@@ -7,10 +7,10 @@ class DrawSys
 public:
 protected:
 private:
-	ECS* m_pECS = nullptr;
+	ECS* const m_cpECS = nullptr;
 
 public:
-	DrawSys(ECS* i_pECS) : m_pECS(i_pECS) {}
+	DrawSys(ECS* const i_cpECS) : m_cpECS(i_cpECS) {}
 
 	void update();
 

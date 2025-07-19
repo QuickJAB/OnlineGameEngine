@@ -7,11 +7,11 @@ using namespace std;
 
 void DrawSys::update()
 {
-	vector<SpriteComp>* pvSprites = m_pECS->getComponentArray<SpriteComp>();
+	vector<SpriteComp>* pvSprites = m_cpECS->getComponentArray<SpriteComp>();
 
 	if (pvSprites == nullptr) return;
 
-	ComponentContainer<TransformComp>* pTransforms = m_pECS->getComponentContainer<TransformComp>();
+	ComponentContainer<TransformComp>* pTransforms = m_cpECS->getComponentContainer<TransformComp>();
 	for (SpriteComp& rSprite : *pvSprites)
 	{
 		TransformComp* pTransform = pTransforms->get<TransformComp>(rSprite.uOwner);

@@ -8,15 +8,15 @@
 
 using namespace std;
 
-CollisionSys::CollisionSys(ECS* i_pECS) : 
-	m_pECS(i_pECS)
+CollisionSys::CollisionSys(ECS* const i_cpECS) : 
+	m_cpECS(i_cpECS)
 {
 }
 
-void CollisionSys::update(float i_fDt)
+void CollisionSys::update(const float i_cfDt)
 {
-	vector<ColliderComp>* pvColliders = m_pECS->getComponentArray<ColliderComp>();
-	ComponentContainer<TransformComp>* pTransforms = m_pECS->getComponentContainer<TransformComp>();
+	vector<ColliderComp>* pvColliders = m_cpECS->getComponentArray<ColliderComp>();
+	ComponentContainer<TransformComp>* pTransforms = m_cpECS->getComponentContainer<TransformComp>();
 
 	if (pvColliders == nullptr || pTransforms == nullptr) return;
 
@@ -37,10 +37,12 @@ void CollisionSys::update(float i_fDt)
 	}
 }
 
-bool CollisionSys::checkAABB(const TransformComp* cpA, const TransformComp* cpB)
+bool CollisionSys::checkAABB(const TransformComp* const cpcA, const TransformComp* const cpcB)
 {
-	return	(cpA->fX >= cpB->fX && cpA->fX <= cpB->fX + cpB->fWidth && cpA->fY >= cpB->fY && cpA->fY <= cpB->fY + cpB->fHeight) ||
-			(cpA->fX + cpA->fWidth >= cpB->fX && cpA->fX + cpA->fWidth <= cpB->fX + cpB->fWidth && cpA->fY >= cpB->fY && cpA->fY <= cpB->fY + cpB->fHeight) ||
-			(cpA->fX >= cpB->fX && cpA->fX <= cpB->fX + cpB->fWidth && cpA->fY + cpA->fHeight >= cpB->fY && cpA->fY + cpA->fHeight <= cpB->fY + cpB->fHeight) ||
-			(cpA->fX + cpA->fWidth >= cpB->fX && cpA->fX + cpA->fWidth <= cpB->fX + cpB->fWidth && cpA->fY + cpA->fHeight >= cpB->fY && cpA->fY + cpA->fHeight <= cpB->fY + cpB->fHeight);
+	bool bCollided = cpcA->fX >= cpcB->fX && cpcA->fX <= cpcB->fX + cpcB->fWidth && cpcA->fY >= cpcB->fY && cpcA->fY <= cpcB->fY + cpcB->fHeight;
+	bCollided |= cpcA->fX + cpcA->fWidth >= cpcB->fX && cpcA->fX + cpcA->fWidth <= cpcB->fX + cpcB->fWidth && cpcA->fY >= cpcB->fY && cpcA->fY <= cpcB->fY + cpcB->fHeight;
+	bCollided |= cpcA->fX >= cpcB->fX && cpcA->fX <= cpcB->fX + cpcB->fWidth && cpcA->fY + cpcA->fHeight >= cpcB->fY && cpcA->fY + cpcA->fHeight <= cpcB->fY + cpcB->fHeight;
+	bCollided |= cpcA->fX + cpcA->fWidth >= cpcB->fX && cpcA->fX + cpcA->fWidth <= cpcB->fX + cpcB->fWidth && cpcA->fY + cpcA->fHeight >= cpcB->fY && cpcA->fY + cpcA->fHeight <= cpcB->fY + cpcB->fHeight;
+
+	return bCollided;
 }

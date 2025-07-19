@@ -9,13 +9,13 @@ class CollisionSys
 public:
 protected:
 private:
-	ECS* m_pECS = nullptr;
+	ECS* const m_cpECS = nullptr;
 
 public:
-	CollisionSys(ECS* i_pECS);
+	CollisionSys(ECS* const i_cpECS);
 	~CollisionSys() = default;
 
-	void update(float i_fDt);
+	void update(const float i_cfDt);
 
 protected:
 private:
