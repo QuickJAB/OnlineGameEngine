@@ -35,7 +35,7 @@ public:
 	int getMaxPlayers() const { return m_cuMaxPlayers; }
 
 protected:
-	virtual void onConnected(const ENetPacket* i_cpPacket) override;
+	virtual void onConnected(const ENetPacket* const i_cpcPacket) override;
 
 private:
 	void sendPackets() override;
@@ -43,5 +43,5 @@ private:
 	void pingClients();
 	void updateTimeOffset(const std::string i_csData);
 
-	virtual bool shouldQueuePacket(const ENetPacket* i_cpPacket) override;
+	virtual bool shouldQueuePacket(const ENetPacket* const i_cpcPacket) override;
 };

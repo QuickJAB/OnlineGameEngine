@@ -76,9 +76,9 @@ void Client::pongServer(const string i_csPingData)
     queueOutgoingPacketData(csData);
 }
 
-bool Client::shouldQueuePacket(const ENetPacket* i_cpPacket)
+bool Client::shouldQueuePacket(const ENetPacket* const i_cpcPacket)
 {
-    const string csData = (const char*)i_cpPacket->data;
+    const string csData = (const char*)i_cpcPacket->data;
 
     int iServerCommand;
     if (sscanf_s(csData.c_str(), "%i", &iServerCommand) > 0)

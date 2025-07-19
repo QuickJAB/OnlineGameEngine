@@ -29,6 +29,6 @@ private:
 
 	void pongServer(const std::string i_csPingData);
 
-	virtual bool shouldQueuePacket(const ENetPacket* i_cpPacket) override;
+	virtual bool shouldQueuePacket(const ENetPacket* const i_cpcPacket) override;
 };
 

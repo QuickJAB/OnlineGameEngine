@@ -27,7 +27,7 @@ Server::~Server()
     }
 }
 
-void Server::onConnected(const ENetPacket*)
+void Server::onConnected(const ENetPacket* const)
 {
     string sData = to_string(handshake) + "id" + to_string(m_uNextPlayerId);
     ++m_uNextPlayerId;
@@ -118,9 +118,9 @@ void Server::updateTimeOffset(const string i_csData)
     }
 }
 
-bool Server::shouldQueuePacket(const ENetPacket* i_cpPacket)
+bool Server::shouldQueuePacket(const ENetPacket* const i_cpcPacket)
 {
-    const string csData = (const char*)i_cpPacket->data;
+    const string csData = (const char*)i_cpcPacket->data;
 
     int iClientCommand;
     if (sscanf_s(csData.c_str(), "%i", &iClientCommand) > 0)

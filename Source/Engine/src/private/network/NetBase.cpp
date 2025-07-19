@@ -58,18 +58,18 @@ void NetBase::update()
     }
 }
 
-bool NetBase::shouldQueuePacket(const ENetPacket* i_cpPacket)
+bool NetBase::shouldQueuePacket(const ENetPacket* const i_cpcPacket)
 {
     return true;
 }
 
-void NetBase::queueIncomingPacketData(const ENetPacket* i_cpPacket)
+void NetBase::queueIncomingPacketData(const ENetPacket* const i_cpcPacket)
 {
-    if (i_cpPacket == nullptr || !shouldQueuePacket(i_cpPacket)) return;
+    if (i_cpcPacket == nullptr || !shouldQueuePacket(i_cpcPacket)) return;
 
     m_IncomingDataMutex.lock();
     
-    m_qIncomingPacketData.push(*i_cpPacket);
+    m_qIncomingPacketData.push(*i_cpcPacket);
     
     m_IncomingDataMutex.unlock();
 }
@@ -117,10 +117,10 @@ void NetBase::sendPackets()
 {
 }
 
-void NetBase::onConnected(const ENetPacket* i_cpPacket)
+void NetBase::onConnected(const ENetPacket* const i_cpcPacket)
 {
 }
 
-void NetBase::onDisconnected(const ENetPacket* i_cpPacket)
+void NetBase::onDisconnected(const ENetPacket* const i_cpcPacket)
 {
 }
