@@ -12,6 +12,6 @@ void EventHandler::pollEvents()
 		break;
 	}
 
-	m_cpKeyStates = SDL_GetKeyboardState(nullptr);
-	m_muldOnKeyStatesUpdated.broadcast(m_cpKeyStates);
+	m_pcKeyStates = SDL_GetKeyboardState(nullptr);
+	m_muldOnKeyStatesUpdated.broadcast(m_pcKeyStates);
 }
