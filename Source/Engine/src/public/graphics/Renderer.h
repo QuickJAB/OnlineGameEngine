@@ -12,7 +12,7 @@ protected:
 private:
 	SDL_Renderer* const m_cpRenderer;
 
-	const SDL_Color m_cClearColour = { 255, 255, 255, 255 };
+	const SDL_Color m_cClearColour = { 0, 0, 0, 255 };
 
 public:
 	Renderer(SDL_Window* const i_cpWindow);
