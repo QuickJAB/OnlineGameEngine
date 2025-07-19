@@ -16,7 +16,7 @@ public:
 	StateMachine(const std::unordered_map<std::string, State*> i_cumStates, std::string i_sStartState);
 	~StateMachine();
 
-	void update(float i_fDt);
+	void update(const float i_cfDt);
 
 protected:
 private:

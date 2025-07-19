@@ -8,9 +8,9 @@ StateMachine::StateMachine(const unordered_map<string, State*> i_cumStates, stri
 	m_umStates[m_sCurrentState]->enter();
 }
 
-void StateMachine::update(float i_fDt)
+void StateMachine::update(const float i_cfDt)
 {
-	string sNextState = m_umStates[m_sCurrentState]->update(i_fDt);
+	string sNextState = m_umStates[m_sCurrentState]->update(i_cfDt);
 	if (sNextState != "")
 	{
 		m_umStates[m_sCurrentState]->exit();

@@ -13,7 +13,7 @@ public:
 	~State() = default;
 
 	virtual void enter();
-	virtual std::string update(float i_fDt);
+	virtual std::string update(const float i_cfDt);
 	virtual void exit();
 
 protected:
