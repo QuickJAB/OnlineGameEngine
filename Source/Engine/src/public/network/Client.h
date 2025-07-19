@@ -30,5 +30,8 @@ private:
 	void pongServer(const std::string i_csPingData);
 
 	virtual bool shouldQueuePacket(const ENetPacket* const i_cpcPacket) override;
+
+	virtual void onConnected(const ENetPacket* const i_cpcPacket) override {}
+	virtual void onDisconnected(const ENetPacket* const i_cpcPacket) override {}
 };
 

@@ -58,11 +58,6 @@ void NetBase::update()
     }
 }
 
-bool NetBase::shouldQueuePacket(const ENetPacket* const i_cpcPacket)
-{
-    return true;
-}
-
 void NetBase::queueIncomingPacketData(const ENetPacket* const i_cpcPacket)
 {
     if (i_cpcPacket == nullptr || !shouldQueuePacket(i_cpcPacket)) return;
@@ -111,16 +106,4 @@ long long NetBase::getClockTime()
 {
     using namespace chrono;
     return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-}
-
-void NetBase::sendPackets()
-{
-}
-
-void NetBase::onConnected(const ENetPacket* const i_cpcPacket)
-{
-}
-
-void NetBase::onDisconnected(const ENetPacket* const i_cpcPacket)
-{
 }

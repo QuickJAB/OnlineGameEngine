@@ -62,13 +62,10 @@ public:
 	long long getClockTime();
 
 protected:
-	virtual bool shouldQueuePacket(const ENetPacket* const i_cpcPacket);
-
-	virtual void sendPackets();
-
-	virtual void onConnected(const ENetPacket* const i_cpcPacket);
-
-	virtual void onDisconnected(const ENetPacket* const i_cpcPacket);
+	virtual bool shouldQueuePacket(const ENetPacket* const i_cpcPacket) = 0;
+	virtual void sendPackets() = 0;
+	virtual void onConnected(const ENetPacket* const i_cpcPacket) = 0;
+	virtual void onDisconnected(const ENetPacket* const i_cpcPacket) = 0;
 
 private:
 	void queueIncomingPacketData(const ENetPacket* const i_cpcPacket);

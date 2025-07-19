@@ -36,6 +36,7 @@ public:
 
 protected:
 	virtual void onConnected(const ENetPacket* const i_cpcPacket) override;
+	virtual void onDisconnected(const ENetPacket* const i_cpcPacket) override {}
 
 private:
 	void sendPackets() override;
