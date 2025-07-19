@@ -30,7 +30,7 @@ public:
 		const size_t i_cullMaxConnections, const enet_uint32 i_cuInBandwidth, const enet_uint32 i_cuOutBandwidth);
 	~Server();
 
-	int getNumConnections() const { return static_cast<int>(m_pHost->connectedPeers); }
+	int getNumConnections() const { return static_cast<int>(m_cpHost->connectedPeers); }
 
 	int getMaxPlayers() const { return m_cuMaxPlayers; }
 
@@ -45,4 +45,6 @@ private:
 	void updateTimeOffset(const std::string i_csData);
 
 	virtual bool shouldQueuePacket(const ENetPacket* const i_cpcPacket) override;
+
+	static ENetAddress* createAddress(const enet_uint16 i_cuPort);
 };

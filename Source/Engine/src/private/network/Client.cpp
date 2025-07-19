@@ -7,9 +7,8 @@ using namespace std;
 
 Client::Client(atomic<bool>& i_bRunning, const float i_cfTickTime,
     const enet_uint32 i_cuInBandwidth, const enet_uint32 i_cuOutBandwidth) :
-        NetBase(i_bRunning, i_cfTickTime)
+    NetBase(i_bRunning, i_cfTickTime, nullptr, 1, 1, i_cuInBandwidth, i_cuOutBandwidth)
 {
-    m_pHost = enet_host_create(nullptr, 1, 1, i_cuInBandwidth, i_cuOutBandwidth);
 }
 
 Client::~Client()
@@ -20,13 +19,15 @@ Client::~Client()
 
 bool Client::tryConnect(const string i_csIp, const enet_uint16 i_cuPort, const uint32_t i_cuAttemptLength)
 {
-    enet_address_set_host(&m_Address, i_csIp.c_str());
-    m_Address.port = i_cuPort;
+    ENetAddress address = ENetAddress();
 
-    m_pPeer = enet_host_connect(m_pHost, &m_Address, 1, 0);
+    enet_address_set_host(&address, i_csIp.c_str());
+    address.port = i_cuPort;
+
+    m_pPeer = enet_host_connect(m_cpHost, &address, 1, 0);
     if (m_pPeer == nullptr) return false;
 
-    if (enet_host_service(m_pHost, &m_Event, i_cuAttemptLength * static_cast<enet_uint32>(1000.f)) > 0 &&
+    if (enet_host_service(m_cpHost, &m_Event, i_cuAttemptLength * static_cast<enet_uint32>(1000.f)) > 0 &&
         m_Event.type == ENET_EVENT_TYPE_CONNECT)
     {
         return true;

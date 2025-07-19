@@ -4,10 +4,21 @@
 
 using namespace std;
 
-NetBase::NetBase(atomic<bool>& i_bRunning, const float i_cfTickTime) :
-    m_bRunning(i_bRunning), m_cfTickTime(i_cfTickTime)
+ENetHost* const NetBase::initAndCreateHost(const ENetAddress* i_pcAddress, size_t i_ullMaxConnections,
+    size_t i_ullMaxChannels, enet_uint32 i_uInBadnwidth, enet_uint32 i_uOutBandwidth)
 {
     enet_initialize();
+    return enet_host_create(i_pcAddress, i_ullMaxConnections, i_ullMaxChannels,
+        i_uInBadnwidth, i_uOutBandwidth);
+}
+
+NetBase::NetBase(std::atomic<bool>& i_bRunning, const float i_cfTickTime, const ENetAddress* i_pcAddress,
+    const size_t i_cullMaxConnections, const size_t i_cullMaxChannels, const enet_uint32 i_cuInBandwidth,
+    const enet_uint32 i_cuOutBandwidth) :
+        m_cpHost(initAndCreateHost(i_pcAddress, i_cullMaxConnections, i_cullMaxChannels, i_cuInBandwidth,
+            i_cuOutBandwidth)),
+        m_bRunning(i_bRunning), m_cfTickTime(i_cfTickTime)
+{
 }
 
 NetBase::~NetBase()
@@ -23,7 +34,7 @@ NetBase::~NetBase()
         m_qOutgoingPacketData.pop();
     }
 
-    enet_host_destroy(m_pHost);
+    enet_host_destroy(m_cpHost);
 
     enet_deinitialize();
 }
@@ -32,7 +43,7 @@ void NetBase::update()
 {
     while (m_bRunning.load())
     {
-        while (enet_host_service(m_pHost, &m_Event, static_cast<enet_uint32>(m_cfTickTime)) > 0)
+        while (enet_host_service(m_cpHost, &m_Event, static_cast<enet_uint32>(m_cfTickTime)) > 0)
         {
             switch (m_Event.type)
             {

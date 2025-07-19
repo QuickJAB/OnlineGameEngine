@@ -2,27 +2,31 @@
 
 using namespace std;
 
+ENetAddress* Server::createAddress(const enet_uint16 i_cuPort)
+{
+    ENetAddress* address = new ENetAddress();
+    address->host = ENET_HOST_ANY;
+    address->port = i_cuPort;
+    return address;
+}
+
 Server::Server(atomic<bool>& i_bRunning, const float i_cfTickTime, const enet_uint16 i_cuPort,
     const size_t i_cullMaxConnections, const enet_uint32 i_cuInBandwidth, const enet_uint32 i_cuOutBandwidth) :
-        NetBase(i_bRunning, i_cfTickTime), m_cuMaxPlayers(static_cast<int>(i_cullMaxConnections))
+        NetBase(i_bRunning, i_cfTickTime, createAddress(i_cuPort), i_cullMaxConnections, 1, i_cuInBandwidth, i_cuOutBandwidth),
+        m_cuMaxPlayers(static_cast<int>(i_cullMaxConnections))
 {
-    m_Address.host = ENET_HOST_ANY;
-    m_Address.port = i_cuPort;
-
     m_muldOnNetUpdate.add(this, &Server::pingClients);
-
-    m_pHost = enet_host_create(&m_Address, i_cullMaxConnections, 1, i_cuInBandwidth, i_cuOutBandwidth);
 }
 
 Server::~Server()
 {
     m_muldOnNetUpdate.unbindAllFromOwner(this);
 
-    if (m_pHost->connectedPeers > 0)
+    if (m_cpHost->connectedPeers > 0)
     {
-        for (int i = static_cast<int>(m_pHost->connectedPeers) - 1; i > -1; --i)
+        for (int i = static_cast<int>(m_cpHost->connectedPeers) - 1; i > -1; --i)
         {
-            enet_peer_disconnect(&m_pHost->peers[i], 0);
+            enet_peer_disconnect(&m_cpHost->peers[i], 0);
         }
     }
 }
@@ -31,7 +35,7 @@ void Server::onConnected(const ENetPacket* const)
 {
     string sData = to_string(handshake) + "id" + to_string(m_uNextPlayerId);
     ++m_uNextPlayerId;
-    queueOutgoingPacketData(sData, static_cast<int>(m_pHost->connectedPeers) - 1);
+    queueOutgoingPacketData(sData, static_cast<int>(m_cpHost->connectedPeers) - 1);
 }
 
 void Server::sendPackets()
@@ -57,14 +61,14 @@ void Server::sendPackets()
 
     if (cPktInf.iPeerIndex == -1)
     {
-        for (size_t i = 0; i < m_pHost->connectedPeers; ++i)
+        for (size_t i = 0; i < m_cpHost->connectedPeers; ++i)
         {
-            enet_peer_send(&m_pHost->peers[i], 0, pPacket);
+            enet_peer_send(&m_cpHost->peers[i], 0, pPacket);
         }
     }
-    else if (cPktInf.iPeerIndex > -1 && cPktInf.iPeerIndex < static_cast<int>(m_pHost->connectedPeers))
+    else if (cPktInf.iPeerIndex > -1 && cPktInf.iPeerIndex < static_cast<int>(m_cpHost->connectedPeers))
     {
-        enet_peer_send(&m_pHost->peers[cPktInf.iPeerIndex], 0, pPacket);
+        enet_peer_send(&m_cpHost->peers[cPktInf.iPeerIndex], 0, pPacket);
     }
 }
 

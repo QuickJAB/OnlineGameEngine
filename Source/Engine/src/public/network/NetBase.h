@@ -35,8 +35,7 @@ protected:
 	std::atomic<bool>& m_bRunning;
 	const float m_cfTickTime = 0.f;
 
-	ENetHost* m_pHost = nullptr;
-	ENetAddress m_Address = ENetAddress();
+	ENetHost* const m_cpHost;
 	ENetEvent m_Event = ENetEvent();
 
 	std::mutex m_OutgoingDataMutex;
@@ -50,7 +49,9 @@ protected:
 private:
 
 public:
-	NetBase(std::atomic<bool>& i_bRunning, const float i_cfTickTime);
+	NetBase(std::atomic<bool>& i_bRunning, const float i_cfTickTime, const ENetAddress* i_pcAddress,
+			const size_t i_cullMaxConnections, const size_t i_cullMaxChannels,
+			const enet_uint32 i_cuInBandwidth, const enet_uint32 i_cuOutBandwidth);
 	~NetBase();
 
 	void update();
@@ -69,4 +70,8 @@ protected:
 
 private:
 	void queueIncomingPacketData(const ENetPacket* const i_cpcPacket);
+
+	static ENetHost* const initAndCreateHost(const ENetAddress* i_pcAddress,
+		size_t i_ullMaxConnections, size_t i_ullMaxChannels, enet_uint32 i_uInBadnwidth,
+		enet_uint32 i_uOutBandwidth);
 };
