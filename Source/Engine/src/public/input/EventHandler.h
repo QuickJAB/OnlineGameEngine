@@ -13,7 +13,7 @@ protected:
 private:
 	SDL_Event m_Event;
 
-	const bool* m_pKeyStates = nullptr;
+	const bool* m_cpKeyStates = nullptr;
 
 public:
 	EventHandler() = default;
@@ -21,7 +21,7 @@ public:
 
 	void pollEvents();
 
-	const bool* getKeyStates() { return m_pKeyStates; }
+	const bool* getKeyStates() { return m_cpKeyStates; }
 
 protected:
 private:
