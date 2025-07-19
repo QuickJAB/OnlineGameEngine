@@ -12,11 +12,13 @@ protected:
 private:
 	SDL_Renderer* m_pRenderer;
 
+	const SDL_Color m_cClearColour = { 255, 255, 255, 255 };
+
 public:
 	Renderer(SDL_Window* i_pWindow);
 	~Renderer();
 
-	void draw(const std::vector<SpriteComp>* i_pvData);
+	void draw(const std::vector<SpriteComp>* i_cpvData);
 
 protected:
 private:

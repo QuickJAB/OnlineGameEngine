@@ -13,22 +13,19 @@ Renderer::~Renderer()
 	m_pRenderer = nullptr;
 }
 
-void Renderer::draw(const vector<SpriteComp>* i_pvData)
+void Renderer::draw(const vector<SpriteComp>* i_cpvData)
 {
-	SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, 0);
+	SDL_SetRenderDrawColor(m_pRenderer, m_cClearColour.r, m_cClearColour.g, m_cClearColour.b, m_cClearColour.a);
 	SDL_RenderClear(m_pRenderer);
 
-	if (!i_pvData->empty())
+	if (!i_cpvData->empty())
 	{
-		SDL_SetRenderDrawColor(m_pRenderer, 255, 255, 255, 255);
-		for (const SpriteComp& crSpriteComp : *i_pvData)
+		for (const SpriteComp& crSpriteComp : *i_cpvData)
 		{
-			SDL_Color color = crSpriteComp.colour;
-			SDL_SetRenderDrawColor(m_pRenderer, color.r, color.g, color.b, color.a);
+			const SDL_Color cColour = crSpriteComp.colour;
+			SDL_SetRenderDrawColor(m_pRenderer, cColour.r, cColour.g, cColour.b, cColour.a);
 			SDL_RenderFillRect(m_pRenderer, &crSpriteComp.rect);
 		}
-
-		SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, 0);
 	}
 	
 	SDL_RenderPresent(m_pRenderer);

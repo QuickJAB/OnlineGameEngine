@@ -1,16 +1,12 @@
 #include "graphics/Window.h"
 
 #include <SDL3/SDL_init.h>
-#include <print>
 
 using namespace std;
 
-Window::Window(string i_sTitle, int i_iWidth, int i_iHeight)
+Window::Window(const string i_csTitle, const int i_ciWidth, const int i_ciHeight) :
+	m_sTitle(i_csTitle), m_iWidth(i_ciWidth), m_iHeight(i_ciHeight)
 {
-	m_sTitle = i_sTitle;
-	m_iWidth = i_iWidth;
-	m_iHeight = i_iHeight;
-
 	SDL_Init(SDL_INIT_VIDEO);
 	m_pWnd = SDL_CreateWindow(m_sTitle.c_str(), m_iWidth, m_iHeight, SDL_WINDOW_VULKAN);
 }
