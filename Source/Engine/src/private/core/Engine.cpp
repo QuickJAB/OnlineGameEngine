@@ -4,10 +4,10 @@
 
 using namespace std;
 
-Engine::Engine(GameInstance* i_pGameInstance) :
-	m_pGameInstance(i_pGameInstance)
+Engine::Engine(GameInstance* const i_pcGameInstance) :
+	m_pcGameInstance(i_pcGameInstance)
 {
-	if (m_pGameInstance == nullptr) return;
+	if (m_pcGameInstance == nullptr) return;
 	run();
 }
 
@@ -19,19 +19,18 @@ void Engine::run()
 	auto currentTick = high_resolution_clock::now();
 	float fDt = 0.f;
 
-	while (m_pGameInstance->isRunning())
+	while (m_pcGameInstance->isRunning())
 	{
 		currentTick = high_resolution_clock::now();
 		duration<float, milli> diff = currentTick - lastTick;
 		fDt = diff.count();
 		lastTick = currentTick;
 
-		m_pGameInstance->update(fDt);
+		m_pcGameInstance->update(fDt);
 	}
 }
 
 Engine::~Engine()
 {
-	delete m_pGameInstance;
-	m_pGameInstance = nullptr;
+	delete m_pcGameInstance;
 }

@@ -28,15 +28,15 @@ class BinarySerializer
 {
 public:
 	template <typename T>
-	std::string serialize(const std::vector<T>& i_rvData)
+	std::string serialize(const std::vector<T>& i_crvData)
 	{
 		std::string sBin;
 
-		for (const T& rT : i_rvData)
+		for (const T& crT : i_crvData)
 		{
-			for (int i = 0; i < sizeof(i_rvData); ++i)
+			for (int i = 0; i < sizeof(i_crvData); ++i)
 			{
-				sBin += reinterpret_cast<const char*>(&rT)[i];
+				sBin += reinterpret_cast<const char*>(&crT)[i];
 			}
 		}
 

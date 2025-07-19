@@ -7,10 +7,10 @@ class Engine
 public:
 protected:
 private:
-	GameInstance* m_pGameInstance = nullptr;
+	GameInstance* const m_pcGameInstance;
 
 public:
-	Engine(GameInstance* i_pGameInstance = new GameInstance());
+	Engine(GameInstance* const i_pcGameInstance);
 	~Engine();
 
 protected:
