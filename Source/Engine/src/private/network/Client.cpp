@@ -16,25 +16,39 @@ Client::~Client()
     m_pPeer = nullptr;
 }
 
-bool Client::tryConnect(const string i_csIp, const enet_uint16 i_cuPort, const uint32_t i_cuAttemptLength)
+bool Client::tryConnect(const string i_csIp, const enet_uint16 i_cuPort)
 {
+    using namespace chrono;
+
+    m_bConnected = false;
+    float fConnectingTime = 0.f;
+
     ENetAddress address = ENetAddress();
 
     enet_address_set_host(&address, i_csIp.c_str());
     address.port = i_cuPort;
 
     m_pPeer = enet_host_connect(m_cpHost, &address, 1, 0);
-    if (m_pPeer == nullptr) return false;
-
-    if (enet_host_service(m_cpHost, &m_Event, i_cuAttemptLength * static_cast<enet_uint32>(1000.f)) > 0 &&
-        m_Event.type == ENET_EVENT_TYPE_CONNECT)
+    if (m_pPeer == nullptr)
     {
-        return true;
+        printf("bad peer");
+        return false;
     }
 
-    enet_peer_reset(m_pPeer);
+    auto prev = high_resolution_clock::now();
+    auto cur = high_resolution_clock::now();
 
-    enet_packet_destroy(m_Event.packet);
+    while (!m_bConnected && fConnectingTime < m_cfMaxConnectingTime)
+    {
+        cur = high_resolution_clock::now();
+        duration<float, milli> diff = cur - prev;
+        fConnectingTime += diff.count();
+        prev = cur;
+    }
+
+    if (m_bConnected) return true;
+
+    enet_peer_reset(m_pPeer);
 
     return false;
 }
@@ -95,4 +109,9 @@ bool Client::shouldQueuePacket(const ENetPacket* const i_cpcPacket)
     }
 
     return true;
+}
+
+void Client::onConnected(const ENetPacket* const i_cpcPacket)
+{
+    m_bConnected = true;
 }
