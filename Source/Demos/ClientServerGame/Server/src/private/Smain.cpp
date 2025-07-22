@@ -16,7 +16,7 @@ int main()
 
 	HostConfig hostConfig;
 	hostConfig.pcAddress = Server::createAddress(19);
-	hostConfig.ullMaxConnections = 2;
+	hostConfig.ullMaxConnections = 1;
 
 	Server* const cpServer = new Server(bRunning, 0.f, hostConfig);
 

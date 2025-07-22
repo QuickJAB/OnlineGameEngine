@@ -4,8 +4,6 @@
 
 #include <states/GPlayingState.h>
 
-#include "CPlayerController.h"
-
 class Renderer;
 class EventHandler;
 class Level;

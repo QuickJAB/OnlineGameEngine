@@ -1,6 +1,6 @@
 #pragma once
 
-#include <unordered_map>
+#include <vector>
 
 class Controller;
 
@@ -14,10 +14,10 @@ public:
 	GameState() = default;
 	~GameState();
 
-	Controller* const getController(const uint32_t i_cuEntityId);
+	void addController(Controller* const i_cpController);
 
 protected:
-	std::unordered_map<uint32_t, Controller*> m_umControllers;
+	std::vector<Controller*> m_vControllers;
 
 private:
 };

@@ -4,15 +4,15 @@
 
 GameState::~GameState()
 {
-	for (auto pair : m_umControllers)
+	for (Controller* const cpController : m_vControllers)
 	{
-		delete pair.second;
+		delete cpController;
 	}
 
-	m_umControllers.clear();
+	m_vControllers.clear();
 }
 
-Controller* const GameState::getController(const uint32_t i_cuEntityId)
+void GameState::addController(Controller* const i_cpController)
 {
-	return nullptr;
+	m_vControllers.push_back(i_cpController);
 }

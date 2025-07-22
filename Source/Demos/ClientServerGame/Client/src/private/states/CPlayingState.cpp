@@ -6,6 +6,7 @@
 #include <GGameState.h>
 
 #include "CTestLevel.h"
+#include "CPlayerController.h"
 
 using namespace std;
 
@@ -20,12 +21,16 @@ void CPlayingState::enter()
 
 	m_pLevel = new CTestLevel(m_uNetworkId);
 	getLevel()->load();
+
+	const uint32_t playerId = m_pLevel->getPlayerByNetworkId(m_uNetworkId);
+	CPlayerController* const cpPlayerController = new CPlayerController(playerId, m_pLevel, m_cpEventHandler);
+	m_cpGameState->addController(cpPlayerController);
 }
 
 string CPlayingState::update(float in_dt)
 {
 	m_cpEventHandler->pollEvents();
-	m_pLevel->update(in_dt);
+	getLevel()->update(in_dt);
 	m_cpRenderer->draw(getLevel()->getSprites());
 
 	return "";
