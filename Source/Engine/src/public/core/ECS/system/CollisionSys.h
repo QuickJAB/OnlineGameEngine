@@ -3,6 +3,7 @@
 class ECS;
 
 struct TransformComp;
+struct CollisionResult;
 
 class CollisionSys
 {
@@ -16,7 +17,10 @@ public:
 
 	void update(const float i_cfDt);
 
+	static void resolveBlockingCollision(const CollisionResult i_colRes,
+		const float i_cfXDir, const float i_cfYDir, float& o_rfX, float& o_rfY);
+
 protected:
 private:
-	bool checkAABB(const TransformComp* const cpcA, const TransformComp* const cpcB);
+	static bool checkAABB(const TransformComp* const cpcA, const TransformComp* const cpcB);
 };

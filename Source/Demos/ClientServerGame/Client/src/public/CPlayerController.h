@@ -4,6 +4,8 @@
 
 class EventHandler;
 
+struct CollisionResult;
+
 class CPlayerController : public Controller
 {
 public:
@@ -18,7 +20,5 @@ public:
 protected:
 private:
 	void onKeyStatesUpdated(const bool* i_cpKeyStates);
-	void onCollided();
-
-	bool m_bColliding = false;
+	void onCollided(const CollisionResult i_colRes);
 };
