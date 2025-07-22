@@ -18,4 +18,7 @@ public:
 protected:
 private:
 	void onKeyStatesUpdated(const bool* i_cpKeyStates);
+	void onCollided();
+
+	bool m_bColliding = false;
 };

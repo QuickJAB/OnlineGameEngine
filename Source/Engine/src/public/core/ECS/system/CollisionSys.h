@@ -18,5 +18,5 @@ public:
 
 protected:
 private:
-	bool checkAABB(const TransformComp* cpA, const TransformComp* cpB);
+	bool checkAABB(const TransformComp* const cpcA, const TransformComp* const cpcB);
 };
