@@ -183,3 +183,41 @@ project "Client"
 	filter "configurations:Release"
 		symbols "off"
         optimize "on"
+
+project "jNetTestBed"
+	location "Source/Demos/%{prj.name}"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++23"
+	systemversion "latest"
+	staticruntime "on"
+
+	targetdir	("Binaries/bin/" .. outputdir .. "/Demos/%{prj.name}")
+	objdir		("Binaries/obj/" .. outputdir .. "/Demos/%{prj.name}")
+
+	files {
+		"%{prj.location}/src/**.h",
+		"%{prj.location}/src/**.cpp"
+	}
+
+	includedirs {
+		"%{LocalFiles.Public}",
+		"%{LocalFiles.Prive}",
+		"Source/Engine/src/public"
+	}
+
+	links {
+		"Engine"
+	}
+
+	dependson {
+		"Engine"
+	}
+
+	filter "configurations:Debug"
+        symbols "on"
+		optimize "off"
+
+	filter "configurations:Release"
+		symbols "off"
+        optimize "on"
