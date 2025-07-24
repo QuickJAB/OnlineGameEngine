@@ -36,6 +36,7 @@ int main()
 	if (int err = WSAStartup(MAKEWORD(2, 2), &wsaData); err != 0)
 	{
 		println("ERROR: Failed to start WSA with errorcode {}", err);
+		return 1;
 	}
 
 	sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
