@@ -1,37 +1,61 @@
 #pragma once
 
-#include <atomic>
 #include <thread>
 #include <iostream>
 #include <string>
 #include <print>
 
-#include "jNet/JNetBase.h"
+#include <jNet/jNetBase.h>
+#include <jNet/jNetPkts.h>
 
 using namespace std;
 using namespace JNet;
 
-int main()
+void exampleOne()
 {
-	print("IP (s for server) >> ");
+	print("IP: ");
+	string IP;
+	cin >> IP;
 
-	string sIP;
-	cin >> sIP;
-	println("{}", sIP);
+	WSAData data;
+	SOCKET s;
+	if (WSAStartup(MAKEWORD(2, 2), &data) != 0) return;
+	s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
-	atomic<bool> bRunning;
-	bRunning.store(true);
+	sockaddr_in addr;
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(19);
+	inet_pton(AF_INET, IP.c_str(), &addr.sin_addr);
+	bind(s, (sockaddr*)&addr, sizeof(addr));
 
-	JNetBase::init(bRunning);
-	JNetBase::initLocalAddr(sIP == "s" ? nullptr : sIP.c_str());
-	thread t(JNetBase::update);
+	sockaddr_in senderAddr;
+	int addrLen = sizeof(senderAddr);
 
-	while (bRunning.load())
+	const int maxPacketSizeBytes = 1024;
+
+	while (true)
 	{
-		bRunning.store(false);
+		print(">> ");
+		string in;
+		cin >> in;
+
+		sendto(s, in.c_str(), in.length(), 0, (sockaddr*)&addr, sizeof(addr));
+
+		string sData(g_cuMaxPacketSizeBytes, '\0');
+		int pktSize = recvfrom(s, sData.data(), maxPacketSizeBytes, 0, (sockaddr*)&senderAddr, &addrLen);
+		if (pktSize > 0)
+		{
+			sData.resize(pktSize);
+			println("{}", sData);
+		}
 	}
 
-	t.join();
+	closesocket(s);
+	WSACleanup();
+}
 
+int main()
+{
+	exampleOne();
 	return 0;
 }
