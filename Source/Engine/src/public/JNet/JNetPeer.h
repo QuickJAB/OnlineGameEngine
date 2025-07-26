@@ -20,7 +20,7 @@ namespace JNet
 		int iDestID = -1;
 	};
 
-	class JNetServer
+	class JNetPeer
 	{
 	public:
 	protected:
@@ -37,8 +37,8 @@ namespace JNet
 		std::unordered_map<uint8_t, sockaddr_in> m_umConnections;
 
 	public:
-		JNetServer(const u_short i_cuPort);
-		~JNetServer();
+		JNetPeer(const u_short i_cuPort);
+		~JNetPeer();
 
 		void update();
 		void stop();

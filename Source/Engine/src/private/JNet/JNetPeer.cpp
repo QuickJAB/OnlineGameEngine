@@ -1,8 +1,8 @@
-#include "JNet/JNetServer.h"
+#include "JNet/JNetPeer.h"
 
 #include <print>
 
-JNet::JNetServer::JNetServer(const u_short i_cuPort)
+JNet::JNetPeer::JNetPeer(const u_short i_cuPort)
 {
 	JNet::init();
 
@@ -11,12 +11,12 @@ JNet::JNetServer::JNetServer(const u_short i_cuPort)
 	m_bRunning = true;
 }
 
-JNet::JNetServer::~JNetServer()
+JNet::JNetPeer::~JNetPeer()
 {
 	JNet::cleanup();
 }
 
-void JNet::JNetServer::update()
+void JNet::JNetPeer::update()
 {
 	while (m_bRunning)
 	{
@@ -25,12 +25,12 @@ void JNet::JNetServer::update()
 	}
 }
 
-void JNet::JNetServer::stop()
+void JNet::JNetPeer::stop()
 {
 	m_bRunning = false;
 }
 
-std::queue<JNet::JNetInPktData> JNet::JNetServer::getIncomingPkts()
+std::queue<JNet::JNetInPktData> JNet::JNetPeer::getIncomingPkts()
 {
 	std::queue<JNet::JNetInPktData> qPkts;
 	m_mutInPkts.lock();
@@ -43,14 +43,14 @@ std::queue<JNet::JNetInPktData> JNet::JNetServer::getIncomingPkts()
 	return qPkts;
 }
 
-void JNet::JNetServer::queueOutgoingPkt(const JNetOutPktData& i_cOutPktData)
+void JNet::JNetPeer::queueOutgoingPkt(const JNetOutPktData& i_cOutPktData)
 {
 	m_mutOutPkts.lock();
 	m_qOutPkts.push(i_cOutPktData);
 	m_mutOutPkts.unlock();
 }
 
-void JNet::JNetServer::queueIncomingPkt()
+void JNet::JNetPeer::queueIncomingPkt()
 {
 	JNet::JNetInPktData pktData;
 	if (JNet::receive(pktData.sData, pktData.sIP))
@@ -61,7 +61,7 @@ void JNet::JNetServer::queueIncomingPkt()
 	}
 }
 
-void JNet::JNetServer::sendNextPkt()
+void JNet::JNetPeer::sendNextPkt()
 {
 	JNet::JNetOutPktData pktData;
 	
@@ -90,7 +90,7 @@ void JNet::JNetServer::sendNextPkt()
 	}
 }
 
-void JNet::JNetServer::addConnection(const sockaddr_in& i_cDestAddr)
+void JNet::JNetPeer::addConnection(const sockaddr_in& i_cDestAddr)
 {
 	if (!m_umConnections.empty())
 	{

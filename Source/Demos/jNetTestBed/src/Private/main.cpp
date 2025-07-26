@@ -4,7 +4,7 @@
 #include <print>
 #include <thread>
 
-#include <jNet/JNetServer.h>
+#include <jNet/JNetPeer.h>
 
 void exampleOne()
 {
@@ -95,8 +95,8 @@ void exampleThree()
 {
 	u_short port = 19;
 
-	JNet::JNetServer* pServer = new JNet::JNetServer(port);
-	std::thread t(&JNet::JNetServer::update, pServer);
+	JNet::JNetPeer* pServer = new JNet::JNetPeer(port);
+	std::thread t(&JNet::JNetPeer::update, pServer);
 
 	sockaddr_in serverAddr = JNet::createAddr("127.0.0.1", port);
 	pServer->addConnection(serverAddr);
