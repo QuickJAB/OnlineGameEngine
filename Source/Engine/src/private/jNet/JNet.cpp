@@ -1,11 +1,7 @@
 #include "jNet/JNet.h"
 
-using namespace JNet;
-
 WSAData g_winSocData;
 SOCKET g_socket;
-
-constexpr uint16_t g_cuMaxPacketSize = 1024;
 
 bool JNet::init()
 {

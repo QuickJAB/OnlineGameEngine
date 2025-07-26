@@ -6,6 +6,8 @@
 
 namespace JNet
 {
+	inline static constexpr uint16_t g_cuMaxPacketSize = 1024;
+
 	bool init();
 	void cleanup();
 	const sockaddr_in createAddr(const std::string& i_crsIP, const u_short i_cuPort);
