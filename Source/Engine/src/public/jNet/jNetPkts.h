@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <string>
 
+#include "core/Serializer.h"
+
 namespace JNet
 {
 	enum PktType
@@ -16,6 +18,15 @@ namespace JNet
 	struct ClientRequestConnectPkt
 	{
 		const PktType ceType = RequestConnect;
+
+		std::string serialize()
+		{
+			std::string sSerialized = "";
+
+			sSerialized += BinarySerializer::serialize<PktType>(ceType);
+
+			return sSerialized;
+		}
 	};
 
 	struct ServerAcceptConnectPkt
@@ -27,6 +38,7 @@ namespace JNet
 		{
 			std::string sSerialized = "";
 
+			sSerialized += BinarySerializer::serialize<PktType>(ceType);
 			sSerialized += BinarySerializer::serialize<uint32_t>(uClientID);
 
 			return sSerialized;
