@@ -28,7 +28,7 @@ class BinarySerializer
 {
 public:
 	template <typename T>
-	static std::string serialize(const std::vector<T>& i_crvData)
+	static std::string serializeMulti(const std::vector<T>& i_crvData)
 	{
 		std::string sBin;
 
@@ -44,7 +44,7 @@ public:
 	}
 
 	template <typename T>
-	static std::vector<T> deserialize(std::string& i_rsBin, size_t i_uNumValues)
+	static std::vector<T> deserializeMulti(std::string& i_rsBin, size_t i_uNumValues)
 	{
 		std::vector<T> vValues;
 		T value;
@@ -64,6 +64,19 @@ public:
 		}
 
 		return vValues;
+	}
+
+	template <typename T>
+	static std::string serialize(const T& i_crData)
+	{
+		std::string sBin;
+
+		for (int i = 0; i < sizeof(i_crData); ++i)
+		{
+			sBin += reinterpret_cast<const char*>(&i_crData)[i];
+		}
+
+		return sBin;
 	}
 
 	template <typename T>
