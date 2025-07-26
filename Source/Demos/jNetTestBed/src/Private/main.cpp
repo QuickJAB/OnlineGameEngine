@@ -5,6 +5,7 @@
 #include <thread>
 
 #include <jNet/JNetPeer.h>
+#include <jNet/JNetPackets.h>
 
 void exampleOne()
 {
@@ -66,24 +67,22 @@ void exampleTwo()
 
 	const sockaddr_in destAddr = socAddr;
 
-	sockaddr_in senderAddr;
-	int addrLen = sizeof(senderAddr);
-
 	const int maxPacketSizeBytes = 1024;
+
+	std::string in;
+	std::string out;
+	sockaddr_in senderAddr;
 
 	while (true)
 	{
 		std::print(">> ");
-		std::string in;
 		std::cin >> in;
 
 		JNet::send(in, destAddr);
 
-		std::string out;
-		std::string fromIP;
-		if (JNet::receive(out, fromIP))
+		if (JNet::receive(out, senderAddr))
 		{
-			std::println("{}: {}", fromIP, out);
+			std::println("{}: {}", inet_ntoa(senderAddr.sin_addr), out);
 			if (out == "exit") break;
 		}
 	}
@@ -95,33 +94,28 @@ void exampleThree()
 {
 	u_short port = 19;
 
-	JNet::JNetPeer* pServer = new JNet::JNetPeer(port);
+	JNet::JNetPeer* pServer = new JNet::JNetPeer("127.0.0.1", port, 1);
 	std::thread t(&JNet::JNetPeer::update, pServer);
 
 	sockaddr_in serverAddr = JNet::createAddr("127.0.0.1", port);
-	pServer->addConnection(serverAddr);
 
-	JNet::JNetOutPktData outPktData;
+	JNet::RequestConnectPkt pkt;
+	std::string pktData = pkt.serialize();
+	
 	bool running = true;
-
+	std::string in;
 	while (running)
 	{
 		std::print(">> ");
-		std::cin >> outPktData.sData;
-		pServer->queueOutgoingPkt(outPktData);
-
-		std::queue<JNet::JNetInPktData> pkts = pServer->getIncomingPkts();
-		while (!pkts.empty())
+		std::cin >> in;
+		if (in == "exit")
 		{
-			JNet::JNetInPktData inPktData = pkts.front();
-			pkts.pop();
-			std::println("{}: {}", inPktData.sIP, inPktData.sData);
-			if (inPktData.sData == "exit")
-			{
-				running = false;
-				break;
-			}
+			running = false;
+			break;
 		}
+
+		JNet::send(pktData, serverAddr);
+		pServer->processIncomingPkts();
 	}
 
 	pServer->stop();

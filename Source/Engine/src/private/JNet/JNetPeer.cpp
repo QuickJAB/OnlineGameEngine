@@ -2,11 +2,15 @@
 
 #include <print>
 
-JNet::JNetPeer::JNetPeer(const u_short i_cuPort)
+#include "JNet/JNetPackets.h"
+#include "core/Serializer.h"
+
+JNet::JNetPeer::JNetPeer(const std::string i_csIP, const uint16_t i_cuPort, const uint8_t i_cuMaxConnections) :
+	m_cuMaxConnections(i_cuMaxConnections)
 {
 	JNet::init();
 
-	JNet::bindSocket(JNet::createAddr("", i_cuPort));
+	JNet::bindSocket(JNet::createAddr(i_csIP, i_cuPort));
 
 	m_bRunning = true;
 }
@@ -30,19 +34,6 @@ void JNet::JNetPeer::stop()
 	m_bRunning = false;
 }
 
-std::queue<JNet::JNetInPktData> JNet::JNetPeer::getIncomingPkts()
-{
-	std::queue<JNet::JNetInPktData> qPkts;
-	m_mutInPkts.lock();
-	while (!m_qInPkts.empty())
-	{
-		qPkts.push(m_qInPkts.front());
-		m_qInPkts.pop();
-	}
-	m_mutInPkts.unlock();
-	return qPkts;
-}
-
 void JNet::JNetPeer::queueOutgoingPkt(const JNetOutPktData& i_cOutPktData)
 {
 	m_mutOutPkts.lock();
@@ -50,10 +41,31 @@ void JNet::JNetPeer::queueOutgoingPkt(const JNetOutPktData& i_cOutPktData)
 	m_mutOutPkts.unlock();
 }
 
+void JNet::JNetPeer::processIncomingPkts()
+{
+	std::queue<JNet::JNetInPktData> qInPkts = getIncomingPkts();
+	JNet::JNetPktType pktType;
+	while (!qInPkts.empty())
+	{
+		JNet::JNetInPktData inPktData = qInPkts.front();
+		qInPkts.pop();
+
+		pktType = BinarySerializer::deserialize<JNetPktType>(inPktData.sData);
+		switch (pktType)
+		{
+		case JNet::RequestConnect:
+			addConnection(inPktData.addr);
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 void JNet::JNetPeer::queueIncomingPkt()
 {
 	JNet::JNetInPktData pktData;
-	if (JNet::receive(pktData.sData, pktData.sIP))
+	if (JNet::receive(pktData.sData, pktData.addr))
 	{
 		m_mutInPkts.lock();
 		m_qInPkts.push(pktData);
@@ -90,6 +102,19 @@ void JNet::JNetPeer::sendNextPkt()
 	}
 }
 
+std::queue<JNet::JNetInPktData> JNet::JNetPeer::getIncomingPkts()
+{
+	std::queue<JNet::JNetInPktData> qPkts;
+	m_mutInPkts.lock();
+	while (!m_qInPkts.empty())
+	{
+		qPkts.push(m_qInPkts.front());
+		m_qInPkts.pop();
+	}
+	m_mutInPkts.unlock();
+	return qPkts;
+}
+
 void JNet::JNetPeer::addConnection(const sockaddr_in& i_cDestAddr)
 {
 	if (!m_umConnections.empty())
@@ -98,6 +123,7 @@ void JNet::JNetPeer::addConnection(const sockaddr_in& i_cDestAddr)
 		{
 			if (it->second.sin_addr.s_addr == i_cDestAddr.sin_addr.s_addr)
 			{
+				std::println("connection already exists");
 				return;
 			}
 		}
@@ -105,4 +131,5 @@ void JNet::JNetPeer::addConnection(const sockaddr_in& i_cDestAddr)
 	
 	m_umConnections.insert(std::pair<uint8_t, sockaddr_in>(m_uNextConnectionID, i_cDestAddr));
 	++m_uNextConnectionID;
+	std::println("connection added");
 }

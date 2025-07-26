@@ -11,7 +11,7 @@ namespace JNet
 	struct JNetInPktData
 	{
 		std::string sData;
-		std::string sIP;
+		sockaddr_in addr;
 	};
 
 	struct JNetOutPktData
@@ -35,22 +35,23 @@ namespace JNet
 
 		uint8_t m_uNextConnectionID = 0;
 		std::unordered_map<uint8_t, sockaddr_in> m_umConnections;
+		const uint8_t m_cuMaxConnections;
 
 	public:
-		JNetPeer(const u_short i_cuPort);
+		JNetPeer(const std::string i_csIP, const uint16_t i_cuPort, const uint8_t i_cuMaxConnections);
 		~JNetPeer();
 
 		void update();
 		void stop();
 
-		std::queue<JNetInPktData> getIncomingPkts();
 		void queueOutgoingPkt(const JNetOutPktData& i_cOutPktData);
-
-		void addConnection(const sockaddr_in& i_cDestAddr);
+		void processIncomingPkts();
 
 	protected:
 	private:
 		void queueIncomingPkt();
 		void sendNextPkt();
+		std::queue<JNetInPktData> getIncomingPkts();
+		void addConnection(const sockaddr_in& i_cDestAddr);
 	};
 }

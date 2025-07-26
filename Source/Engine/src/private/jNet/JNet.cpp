@@ -45,17 +45,15 @@ void JNet::send(const std::string& i_crsData, const sockaddr_in& i_crDestAddr)
 	sendto(g_socket, i_crsData.c_str(), i_crsData.length(), 0, (sockaddr*)&i_crDestAddr, sizeof(i_crDestAddr));
 }
 
-bool JNet::receive(std::string& o_rsData, std::string& o_rsSenderIP)
+bool JNet::receive(std::string& o_rsData, sockaddr_in& o_rAddr)
 {
 	o_rsData = std::string(g_cuMaxPacketSize, '\0');
-	sockaddr_in senderAddr;
 	int iSenderAddrLen = sizeof(sockaddr_in);
 
-	int iPktSize = recvfrom(g_socket, o_rsData.data(), g_cuMaxPacketSize, 0, (sockaddr*)&senderAddr, &iSenderAddrLen);
+	int iPktSize = recvfrom(g_socket, o_rsData.data(), g_cuMaxPacketSize, 0, (sockaddr*)&o_rAddr, &iSenderAddrLen);
 	if (iPktSize > 0)
 	{
 		o_rsData.resize(iPktSize);
-		o_rsSenderIP = inet_ntoa(senderAddr.sin_addr);
 		return true;
 	}
 
