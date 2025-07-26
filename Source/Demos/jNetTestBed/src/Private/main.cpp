@@ -99,26 +99,28 @@ void exampleThree()
 	std::thread t(&JNet::JNetServer::update, pServer);
 
 	sockaddr_in serverAddr = JNet::createAddr("127.0.0.1", port);
+	pServer->addConnection(serverAddr);
 
+	JNet::JNetOutPktData outPktData;
 	bool running = true;
+
 	while (running)
 	{
 		std::print(">> ");
-		std::string in;
-		std::cin >> in;
+		std::cin >> outPktData.sData;
+		pServer->queueOutgoingPkt(outPktData);
 
-		JNet::send(in, serverAddr);
-
-		std::queue<JNet::JNetInPktData> pkts = pServer->getIncomingPackets();
+		std::queue<JNet::JNetInPktData> pkts = pServer->getIncomingPkts();
 		while (!pkts.empty())
 		{
-			JNet::JNetInPktData pktData = pkts.front();
-			std::println("{}: {}", pktData.sIP, pktData.sData);
-			if (pktData.sData == "exit")
+			JNet::JNetInPktData inPktData = pkts.front();
+			pkts.pop();
+			std::println("{}: {}", inPktData.sIP, inPktData.sData);
+			if (inPktData.sData == "exit")
 			{
 				running = false;
+				break;
 			}
-			pkts.pop();
 		}
 	}
 

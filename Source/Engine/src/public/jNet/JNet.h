@@ -7,6 +7,7 @@
 namespace JNet
 {
 	inline static constexpr uint16_t g_cuMaxPacketSize = 1024;
+	inline static constexpr uint32_t g_cuReceiveTimeoutTimeMilli = 1;
 
 	bool init();
 	void cleanup();
