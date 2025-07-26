@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include <queue>
 #include <mutex>
-#include <atomic>
 #include <WinSock2.h>
 #include <Ws2tcpip.h>
 
@@ -31,33 +30,35 @@ namespace JNet
 	public:
 	protected:
 	private:
-		static WSAData s_WSAData;
-		static SOCKET s_socket;
+		inline static WSAData s_WSAData = WSAData();
+		inline static SOCKET s_socket = SOCKET();
 
-		static sockaddr_in s_localAddr;
-		static std::unordered_map<uint32_t, sockaddr_in> s_umConnections;
+		inline static sockaddr_in s_localAddr = sockaddr_in();
+		inline static std::unordered_map<uint32_t, sockaddr_in> s_umConnections = std::unordered_map<uint32_t, sockaddr_in>();
 
 		inline static uint32_t s_uNextConnectionID = 0;
-		inline static uint32_t s_uLocalID = (uint32_t)-1;
+		inline static uint32_t s_uLocalID = UINT32_MAX;
 
-		static std::queue<IncomingData> s_qIncoming;
-		static std::mutex s_mutIncoming;
+		inline static std::queue<IncomingData> s_qIncoming = std::queue<IncomingData>();
+		inline static std::mutex s_mutIncoming = std::mutex();
 
-		static std::queue<OutgoingData> s_qOutgoing;
-		static std::mutex s_mutOutgoing;
+		inline static std::queue<OutgoingData> s_qOutgoing = std::queue<OutgoingData>();
+		inline static std::mutex s_mutOutgoing = std::mutex();
 
-		static std::atomic<bool>& s_bRunning;
 		inline static bool s_bHasInit = false;
 		inline static bool s_bIsSocketBound = false;
 
 	public:
-		static bool init(std::atomic<bool>& i_bRunning);
+		static const uint32_t getLocalID() { return s_uLocalID; }
+
+		static bool init();
 		static void initLocalAddr(const std::string* const i_cpcsDestIP = nullptr);
 		static void update();
 		static const uint32_t addConnection(const std::string i_csIP);
 		static void queuePacket(const OutgoingData& i_crOutgoingData);
 		static std::queue<IncomingData> getQueuedPackets();
 		static void processIncomingPackets();
+		static void stopNetThread();
 
 	protected:
 	private:

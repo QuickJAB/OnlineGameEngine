@@ -1,14 +1,14 @@
 #include "jNet/jNetBase.h"
 
 #include <string>
+#include <print>
 
-#include "core/Serializer.h"
 #include "jNet/jNetPkts.h"
 
 using namespace JNet;
 using namespace std;
 
-bool JNetBase::init(atomic<bool>& i_bRunning)
+bool JNetBase::init()
 {
 	if (s_bHasInit) return true;
 	
@@ -21,8 +21,6 @@ bool JNetBase::init(atomic<bool>& i_bRunning)
 
 	s_localAddr.sin_family = AF_INET;
 	s_localAddr.sin_port = htons(g_cuPort);
-
-	s_bRunning.exchange(i_bRunning);
 
 	s_bHasInit = true;
 
@@ -50,17 +48,15 @@ void JNetBase::update()
 	int iSenderLen = -1;
 	IncomingData data;
 
-	while (s_bRunning.load())
+	while (s_bHasInit)
 	{
-		if (!s_bIsSocketBound ||
+		if (s_bIsSocketBound &&
 			recvfrom(s_socket, data.sData.data(), g_cuMaxPacketSizeBytes, 0, (sockaddr*)&data.senderAddr, &iSenderLen) <= 0)
 		{
-			continue;
+			s_mutIncoming.lock();
+			s_qIncoming.push(data);
+			s_mutIncoming.unlock();
 		}
-
-		s_mutIncoming.lock();
-		s_qIncoming.push(data);
-		s_mutIncoming.unlock();
 
 		sendNextPacket();
 	}
@@ -140,6 +136,11 @@ void JNetBase::processIncomingPackets()
 			break;
 		}
 	}
+}
+
+void JNetBase::stopNetThread()
+{
+	s_bHasInit = false;
 }
 
 void JNetBase::sendNextPacket()
