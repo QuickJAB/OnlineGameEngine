@@ -28,7 +28,7 @@ class BinarySerializer
 {
 public:
 	template <typename T>
-	std::string serialize(const std::vector<T>& i_crvData)
+	static std::string serialize(const std::vector<T>& i_crvData)
 	{
 		std::string sBin;
 
@@ -44,12 +44,12 @@ public:
 	}
 
 	template <typename T>
-	std::vector<T> deserialize(std::string& i_rsBin, size_t i_uNumValues = 0)
+	static std::vector<T> deserialize(std::string& i_rsBin, size_t i_uNumValues)
 	{
 		std::vector<T> vValues;
 		T value;
 
-		if (i_uNumValues == 0)
+		if (i_uNumValues <= 0)
 		{
 			i_uNumValues = i_rsBin.size() / sizeof(T);
 		}
@@ -64,6 +64,15 @@ public:
 		}
 
 		return vValues;
+	}
+
+	template <typename T>
+	static T deserialize(std::string& i_rsBin)
+	{
+		T value;
+		std::memcpy(&value, i_rsBin.data(), sizeof(T));
+		i_rsBin.erase(0, sizeof(T));
+		return value;
 	}
 
 protected:

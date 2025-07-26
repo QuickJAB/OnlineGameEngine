@@ -1,6 +1,12 @@
 #include "jNet/jNetBase.h"
 
+#include <string>
+
+#include "core/Serializer.h"
+#include "jNet/jNetPkts.h"
+
 using namespace JNet;
+using namespace std;
 
 bool JNetBase::init(std::atomic<bool>& i_bRunning)
 {
@@ -78,6 +84,53 @@ void JNetBase::queuePacket(const OutgoingData& i_crOutgoingData)
 	s_mutOutgoing.lock();
 	s_qOutgoing.push(i_crOutgoingData);
 	s_mutOutgoing.unlock();
+}
+
+queue<IncomingData> JNetBase::getQueuedPackets()
+{
+	s_mutIncoming.lock();
+	queue<IncomingData> qPktData = s_qIncoming;
+
+	for (size_t i = 0; i < s_qIncoming.size(); ++i)
+	{
+		delete s_qIncoming.front().chaData;
+		s_qIncoming.pop();
+	}
+	s_mutIncoming.unlock();
+
+	return qPktData;
+}
+
+void JNetBase::processIncomingPackets()
+{
+	queue<IncomingData> qPktData = getQueuedPackets();
+	
+	while (!qPktData.empty())
+	{
+		const IncomingData cPktData = qPktData.front();
+		string sData = cPktData.chaData;
+		const PktType cuPktType = BinarySerializer::deserialize<PktType>(sData);
+
+		switch (cuPktType)
+		{
+		case RequestConnect:
+			char chIP[g_cuAddrLen];
+			inet_ntop(AF_INET, &(cPktData.senderAddr.sin_addr), chIP, g_cuAddrLen);
+			addConnection(chIP);
+			// Send the accept connect packet
+			break;
+
+		case AcceptConnect:
+			s_uLocalID = BinarySerializer::deserialize<uint32_t>(sData);
+			break;
+
+		case Ping:
+			break;
+
+		case Pong:
+			break;
+		}
+	}
 }
 
 void JNetBase::sendNextPacket()

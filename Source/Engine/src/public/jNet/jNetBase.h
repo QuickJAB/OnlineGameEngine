@@ -11,6 +11,7 @@ namespace JNet
 {
 	inline constexpr uint32_t g_cuMaxPacketSizeBytes = 100;
 	inline constexpr u_short g_cuPort = 19;
+	inline constexpr u_short g_cuAddrLen = 15;
 
 	struct IncomingData
 	{
@@ -37,6 +38,7 @@ namespace JNet
 		static std::unordered_map<uint32_t, sockaddr_in> s_umConnections;
 
 		inline static uint32_t s_uNextConnectionID = 0;
+		inline static uint32_t s_uLocalID = (uint32_t)-1;
 
 		static std::queue<IncomingData> s_qIncoming;
 		static std::mutex s_mutIncoming;
@@ -54,11 +56,14 @@ namespace JNet
 		static void update();
 		static void addConnection(const char* const i_cpcchIP);
 		static void queuePacket(const OutgoingData& i_crOutgoingData);
+		static std::queue<IncomingData> getQueuedPackets();
+		static void processIncomingPackets();
 
 	protected:
 	private:
 		static void sendNextPacket();
 		static void sendPacket(const OutgoingData& cPacketData);
 		static void cleanup();
+		static void onPingReceived();
 	};
 }
