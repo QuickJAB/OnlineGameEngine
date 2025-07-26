@@ -27,9 +27,9 @@ void JNet::JNetServer::stop()
 	m_bRunning = false;
 }
 
-std::queue<std::string> JNet::JNetServer::getIncomingPackets()
+std::queue<JNet::JNetInPktData> JNet::JNetServer::getIncomingPackets()
 {
-	std::queue<std::string> qPkts;
+	std::queue<JNet::JNetInPktData> qPkts;
 	m_mutInPkts.lock();
 	while (!m_qInPkts.empty())
 	{
@@ -42,11 +42,11 @@ std::queue<std::string> JNet::JNetServer::getIncomingPackets()
 
 void JNet::JNetServer::queueIncomingPkt()
 {
-	std::string sPktData;
-	if (JNet::receive(sPktData))
+	JNet::JNetInPktData pktData;
+	if (JNet::receive(pktData.sData, pktData.sIP))
 	{
 		m_mutInPkts.lock();
-		m_qInPkts.push(sPktData);
+		m_qInPkts.push(pktData);
 		m_mutInPkts.unlock();
 	}
 }

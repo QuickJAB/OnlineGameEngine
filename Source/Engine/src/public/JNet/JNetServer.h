@@ -7,6 +7,12 @@
 
 namespace JNet
 {
+	struct JNetInPktData
+	{
+		std::string sData;
+		std::string sIP;
+	};
+
 	class JNetServer
 	{
 	public:
@@ -14,7 +20,7 @@ namespace JNet
 	private:
 		bool m_bRunning;
 
-		std::queue<std::string> m_qInPkts;
+		std::queue<JNetInPktData> m_qInPkts;
 		std::mutex m_mutInPkts;
 
 	public:
@@ -24,7 +30,7 @@ namespace JNet
 		void update();
 		void stop();
 
-		std::queue<std::string> getIncomingPackets();
+		std::queue<JNetInPktData> getIncomingPackets();
 
 	protected:
 	private:

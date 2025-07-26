@@ -80,9 +80,10 @@ void exampleTwo()
 		JNet::send(in, destAddr);
 
 		std::string out;
-		if (JNet::receive(out))
+		std::string fromIP;
+		if (JNet::receive(out, fromIP))
 		{
-			std::println("{}", out);
+			std::println("{}: {}", fromIP, out);
 			if (out == "exit") break;
 		}
 	}
@@ -108,12 +109,12 @@ void exampleThree()
 
 		JNet::send(in, serverAddr);
 
-		std::queue<std::string> pkts = pServer->getIncomingPackets();
+		std::queue<JNet::JNetInPktData> pkts = pServer->getIncomingPackets();
 		while (!pkts.empty())
 		{
-			std::string pkt = pkts.front();
-			std::println("{}", pkt);
-			if (pkt == "exit")
+			JNet::JNetInPktData pktData = pkts.front();
+			std::println("{}: {}", pktData.sIP, pktData.sData);
+			if (pktData.sData == "exit")
 			{
 				running = false;
 			}
