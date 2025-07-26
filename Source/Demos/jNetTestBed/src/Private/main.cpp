@@ -2,16 +2,15 @@
 
 #include <iostream>
 #include <print>
+#include <thread>
 
-#include <jNet/JNet.h>
-
-using namespace std;
+#include <jNet/JNetServer.h>
 
 void exampleOne()
 {
-	print("IP: ");
-	string IP;
-	cin >> IP;
+	std::print("IP: ");
+	std::string IP;
+	std::cin >> IP;
 
 	WSAData data;
 	SOCKET s;
@@ -31,18 +30,18 @@ void exampleOne()
 
 	while (true)
 	{
-		print(">> ");
-		string in;
-		cin >> in;
+		std::print(">> ");
+		std::string in;
+		std::cin >> in;
 
-		sendto(s, in.c_str(), in.length(), 0, (sockaddr*)&addr, sizeof(addr));
+		sendto(s, in.c_str(), static_cast<int>(in.length()), 0, (sockaddr*)&addr, sizeof(addr));
 
-		string sData(maxPacketSizeBytes, '\0');
+		std::string sData(maxPacketSizeBytes, '\0');
 		int pktSize = recvfrom(s, sData.data(), maxPacketSizeBytes, 0, (sockaddr*)&senderAddr, &addrLen);
 		if (pktSize > 0)
 		{
 			sData.resize(pktSize);
-			println("{}", sData);
+			std::println("{}", sData);
 		}
 	}
 
@@ -54,13 +53,13 @@ void exampleTwo()
 {
 	if (!JNet::init()) return;
 
-	print("IP: ");
-	string IP;
-	cin >> IP;
+	std::print("IP: ");
+	std::string IP;
+	std::cin >> IP;
 
-	print("Port: ");
+	std::print("Port: ");
 	u_short port;
-	cin >> port;
+	std::cin >> port;
 
 	const sockaddr_in socAddr = JNet::createAddr(IP, port);
 	JNet::bindSocket(socAddr);
@@ -74,16 +73,16 @@ void exampleTwo()
 
 	while (true)
 	{
-		print(">> ");
-		string in;
-		cin >> in;
+		std::print(">> ");
+		std::string in;
+		std::cin >> in;
 
 		JNet::send(in, destAddr);
 
-		string out;
+		std::string out;
 		if (JNet::receive(out))
 		{
-			println("{}", out);
+			std::println("{}", out);
 			if (out == "exit") break;
 		}
 	}
@@ -91,8 +90,44 @@ void exampleTwo()
 	JNet::cleanup();
 }
 
+void exampleThree()
+{
+	u_short port = 19;
+
+	JNet::JNetServer* pServer = new JNet::JNetServer(port);
+	std::thread t(&JNet::JNetServer::update, pServer);
+
+	sockaddr_in serverAddr = JNet::createAddr("127.0.0.1", port);
+
+	bool running = true;
+	while (running)
+	{
+		std::print(">> ");
+		std::string in;
+		std::cin >> in;
+
+		JNet::send(in, serverAddr);
+
+		std::queue<std::string> pkts = pServer->getIncomingPackets();
+		while (!pkts.empty())
+		{
+			std::string pkt = pkts.front();
+			std::println("{}", pkt);
+			if (pkt == "exit")
+			{
+				running = false;
+			}
+			pkts.pop();
+		}
+	}
+
+	pServer->stop();
+	t.join();
+	delete pServer;
+}
+
 int main()
 {
-	exampleTwo();
+	exampleThree();
 	return 0;
 }
