@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 namespace JNet
 {
@@ -21,6 +22,15 @@ namespace JNet
 	{
 		const PktType ceType = AcceptConnect;
 		uint32_t uClientID = 0;
+
+		std::string serialize()
+		{
+			std::string sSerialized = "";
+
+			sSerialized += BinarySerializer::serialize<uint32_t>(uClientID);
+
+			return sSerialized;
+		}
 	};
 
 	struct ServerPingPkt

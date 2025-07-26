@@ -8,7 +8,7 @@
 using namespace JNet;
 using namespace std;
 
-bool JNetBase::init(std::atomic<bool>& i_bRunning)
+bool JNetBase::init(atomic<bool>& i_bRunning)
 {
 	if (s_bHasInit) return true;
 	
@@ -29,11 +29,11 @@ bool JNetBase::init(std::atomic<bool>& i_bRunning)
 	return true;
 }
 
-void JNetBase::initLocalAddr(const char* const i_cpcchDestIP)
+void JNetBase::initLocalAddr(const string* const i_cpcsDestIP)
 {
-	if (i_cpcchDestIP != nullptr)
+	if (i_cpcsDestIP != nullptr)
 	{
-		inet_pton(AF_INET, i_cpcchDestIP, &s_localAddr.sin_addr);
+		inet_pton(AF_INET, i_cpcsDestIP->c_str(), &s_localAddr.sin_addr);
 	}
 	else
 	{
@@ -52,7 +52,8 @@ void JNetBase::update()
 
 	while (s_bRunning.load())
 	{
-		if (!s_bIsSocketBound || recvfrom(s_socket, data.chaData, g_cuMaxPacketSizeBytes, 0, (sockaddr*)&data.senderAddr, &iSenderLen) <= 0)
+		if (!s_bIsSocketBound ||
+			recvfrom(s_socket, data.sData.data(), g_cuMaxPacketSizeBytes, 0, (sockaddr*)&data.senderAddr, &iSenderLen) <= 0)
 		{
 			continue;
 		}
@@ -67,16 +68,28 @@ void JNetBase::update()
 	cleanup();
 }
 
-void JNetBase::addConnection(const char* const i_cpcchIP)
+const uint32_t JNetBase::addConnection(const string i_csIP)
 {
+	for (const pair<uint32_t, sockaddr_in>& pair : s_umConnections)
+	{
+		string sIP;
+		inet_ntop(AF_INET, &(pair.second.sin_addr), sIP.data(), g_cuAddrLen);
+		if (sIP == i_csIP)
+		{
+			return pair.first;
+		}
+	}
+
 	sockaddr_in destAddr;
 	destAddr.sin_family = AF_INET;
 	destAddr.sin_port = htons(g_cuPort);
-	inet_pton(AF_INET, i_cpcchIP, &destAddr.sin_addr);
+	inet_pton(AF_INET, i_csIP.data(), &destAddr.sin_addr);
 
-	s_umConnections.insert(std::pair<uint32_t, sockaddr_in>(s_uNextConnectionID, destAddr));
-
+	const uint32_t cuNewConnectionID = s_uNextConnectionID;
 	++s_uNextConnectionID;
+	s_umConnections.insert(pair<uint32_t, sockaddr_in>(cuNewConnectionID, destAddr));
+
+	return cuNewConnectionID;
 }
 
 void JNetBase::queuePacket(const OutgoingData& i_crOutgoingData)
@@ -93,7 +106,6 @@ queue<IncomingData> JNetBase::getQueuedPackets()
 
 	for (size_t i = 0; i < s_qIncoming.size(); ++i)
 	{
-		delete s_qIncoming.front().chaData;
 		s_qIncoming.pop();
 	}
 	s_mutIncoming.unlock();
@@ -108,16 +120,13 @@ void JNetBase::processIncomingPackets()
 	while (!qPktData.empty())
 	{
 		const IncomingData cPktData = qPktData.front();
-		string sData = cPktData.chaData;
+		string sData = cPktData.sData;
 		const PktType cuPktType = BinarySerializer::deserialize<PktType>(sData);
 
 		switch (cuPktType)
 		{
 		case RequestConnect:
-			char chIP[g_cuAddrLen];
-			inet_ntop(AF_INET, &(cPktData.senderAddr.sin_addr), chIP, g_cuAddrLen);
-			addConnection(chIP);
-			// Send the accept connect packet
+			onConnectionRequested(cPktData.senderAddr);
 			break;
 
 		case AcceptConnect:
@@ -149,14 +158,13 @@ void JNetBase::sendNextPacket()
 	s_mutOutgoing.unlock();
 
 	sendPacket(packetData);
-	delete packetData.pchData;
 }
 
 void JNetBase::sendPacket(const OutgoingData& cPacketData)
 {
 	sockaddr_in pDestAddr = s_umConnections[cPacketData.uDest];
 
-	sendto(s_socket, cPacketData.pchData, cPacketData.iLength, 0, (sockaddr*)&pDestAddr, sizeof(pDestAddr));
+	sendto(s_socket, cPacketData.sData.c_str(), cPacketData.iLength, 0, (sockaddr*)&pDestAddr, sizeof(pDestAddr));
 }
 
 void JNetBase::cleanup()
@@ -167,7 +175,6 @@ void JNetBase::cleanup()
 	{
 		inData = s_qIncoming.front();
 		s_qIncoming.pop();
-		delete inData.chaData;
 	}
 	s_mutIncoming.unlock();
 
@@ -177,10 +184,25 @@ void JNetBase::cleanup()
 	{
 		outData = s_qOutgoing.front();
 		s_qOutgoing.pop();
-		delete outData.pchData;
 	}
 	s_mutOutgoing.unlock();
 
 	closesocket(s_socket);
 	WSACleanup();
+}
+
+void JNetBase::onConnectionRequested(const sockaddr_in& i_cAddr)
+{
+	string sIP;
+	inet_ntop(AF_INET, &(i_cAddr.sin_addr), sIP.data(), g_cuAddrLen);
+
+	ServerAcceptConnectPkt pkt;
+	pkt.uClientID = addConnection(sIP);
+	
+	OutgoingData pktData;
+	pktData.uDest = pkt.uClientID;
+	pktData.sData = pkt.serialize();
+	pktData.iLength = sizeof(pktData.sData);
+
+	queuePacket(pktData);
 }

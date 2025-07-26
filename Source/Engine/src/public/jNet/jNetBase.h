@@ -16,13 +16,13 @@ namespace JNet
 	struct IncomingData
 	{
 		sockaddr_in senderAddr;
-		char chaData[g_cuMaxPacketSizeBytes];
+		std::string sData;
 	};
 
 	struct OutgoingData
 	{
 		uint32_t uDest;
-		char* pchData;
+		std::string sData;
 		int iLength;
 	};
 
@@ -52,9 +52,9 @@ namespace JNet
 
 	public:
 		static bool init(std::atomic<bool>& i_bRunning);
-		static void initLocalAddr(const char* const i_cpcchDestIP = nullptr);
+		static void initLocalAddr(const std::string* const i_cpcsDestIP = nullptr);
 		static void update();
-		static void addConnection(const char* const i_cpcchIP);
+		static const uint32_t addConnection(const std::string i_csIP);
 		static void queuePacket(const OutgoingData& i_crOutgoingData);
 		static std::queue<IncomingData> getQueuedPackets();
 		static void processIncomingPackets();
@@ -64,6 +64,6 @@ namespace JNet
 		static void sendNextPacket();
 		static void sendPacket(const OutgoingData& cPacketData);
 		static void cleanup();
-		static void onPingReceived();
+		static void onConnectionRequested(const sockaddr_in& i_cAddr);
 	};
 }
