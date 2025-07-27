@@ -26,23 +26,24 @@ namespace JNet
 	protected:
 	private:
 		bool m_bRunning;
+		const bool m_bShouldHeartbeat;
 
-		std::queue<JNetInPktData> m_qInPkts;
 		std::mutex m_mutInPkts;
+		std::queue<JNetInPktData> m_qInPkts;
 
-		std::queue<JNetOutPktData> m_qOutPkts;
 		std::mutex m_mutOutPkts;
+		std::queue<JNetOutPktData> m_qOutPkts;
 
 		uint8_t m_uNextConnectionID = 0;
-		std::unordered_map<uint8_t, sockaddr_in> m_umConnections;
 		const uint8_t m_cuMaxConnections;
+		std::unordered_map<uint8_t, sockaddr_in> m_umConnections;
 
-		float m_fLastHeartBeatTimeMilli = 0;
-		const float m_cfHeartBeatRateMilli = 5000;
+		const float m_cfHeartBeatTimeMilli = 5000;
 		std::unordered_map<uint8_t, unsigned long long> m_umNetOffsetTime;
 
 	public:
-		JNetPeer(const std::string i_csIP, const uint16_t i_cuPort, const uint8_t i_cuMaxConnections);
+		JNetPeer(const std::string i_csIP, const uint16_t i_cuPort, const uint8_t i_cuMaxConnections,
+			bool i_bShouldHeartbeat);
 		~JNetPeer();
 
 		void update();

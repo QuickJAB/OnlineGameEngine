@@ -1,12 +1,14 @@
 #include "JNet/JNetPeer.h"
 
 #include <chrono>
+#include <print>
 
 #include "JNet/JNetPackets.h"
 #include "core/Serializer.h"
 
-JNet::JNetPeer::JNetPeer(const std::string i_csIP, const uint16_t i_cuPort, const uint8_t i_cuMaxConnections) :
-	m_cuMaxConnections(i_cuMaxConnections)
+JNet::JNetPeer::JNetPeer(const std::string i_csIP, const uint16_t i_cuPort, const uint8_t i_cuMaxConnections,
+	bool i_bShouldHeartbeat) :
+	m_cuMaxConnections(i_cuMaxConnections), m_bShouldHeartbeat(i_bShouldHeartbeat)
 {
 	JNet::init();
 
@@ -22,10 +24,25 @@ JNet::JNetPeer::~JNetPeer()
 
 void JNet::JNetPeer::update()
 {
+	unsigned long long ullTick = getCurrentTime();
+	unsigned long long ullPrevTick = ullTick;
+	unsigned long long ullTickAcum = 0;
+
 	while (m_bRunning)
 	{
 		queueIncomingPkt();
 		sendNextPkt();
+
+		if (!m_bShouldHeartbeat) return;
+
+		ullTick = getCurrentTime();
+		ullTickAcum += ullTick - ullPrevTick;
+		ullPrevTick = ullTick;
+		if (ullTickAcum >= m_cfHeartBeatTimeMilli)
+		{
+			dispatchHeartBeat();
+			ullTickAcum -= m_cfHeartBeatTimeMilli;
+		}
 	}
 }
 
@@ -137,15 +154,17 @@ void JNet::JNetPeer::addConnection(const sockaddr_in& i_cDestAddr)
 	m_umConnections.insert(std::pair<uint8_t, sockaddr_in>(m_uNextConnectionID, i_cDestAddr));
 	m_umNetOffsetTime.insert(std::pair<uint8_t, unsigned long long>(m_uNextConnectionID, 0));
 	++m_uNextConnectionID;
+	std::println("Connected!");
 }
 
 void JNet::JNetPeer::dispatchHeartBeat()
 {
+	if (m_umConnections.empty()) return;
+
 	PingPkt pkt;
 	pkt.ullSentTime = getCurrentTime();
 	const std::string sData = pkt.serialize();
 
-	// No need to queue the heartbeat packets
 	for (auto it = m_umConnections.begin(); it != m_umConnections.end(); ++it)
 	{
 		JNet::send(sData, it->second);
@@ -154,18 +173,21 @@ void JNet::JNetPeer::dispatchHeartBeat()
 
 void JNet::JNetPeer::onPinged(JNetInPktData& i_iPktData)
 {
+	std::println("Ping");
+
 	// Make this more streamlined so I don't need to deserialize and reserialize the sent time
 	PongPkt pkt;
 	pkt.ullSentTime = BinarySerializer::deserialize<unsigned long long>(i_iPktData.sData);
 	pkt.ullReceivedTime = getCurrentTime();
 	const std::string sData = pkt.serialize();
 
-	// No need to queue the heartbeat packets
 	JNet::send(sData, i_iPktData.addr);
 }
 
 void JNet::JNetPeer::calcOffsetTime(JNetInPktData& i_iPktData)
 {
+	std::println("Pong");
+
 	PongPkt pkt;
 	pkt.deserialize(i_iPktData.sData);
 

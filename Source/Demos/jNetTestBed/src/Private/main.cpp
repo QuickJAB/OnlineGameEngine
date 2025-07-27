@@ -94,7 +94,7 @@ void exampleThree()
 {
 	u_short port = 19;
 
-	JNet::JNetPeer* pServer = new JNet::JNetPeer("127.0.0.1", port, 1);
+	JNet::JNetPeer* pServer = new JNet::JNetPeer("127.0.0.1", port, 1, true);
 	std::thread t(&JNet::JNetPeer::update, pServer);
 
 	sockaddr_in serverAddr = JNet::createAddr("127.0.0.1", port);
@@ -107,14 +107,6 @@ void exampleThree()
 	std::string in;
 	while (running)
 	{
-		std::print(">> ");
-		std::cin >> in;
-		if (in == "exit")
-		{
-			running = false;
-			break;
-		}
-
 		pServer->processIncomingPkts();
 	}
 
