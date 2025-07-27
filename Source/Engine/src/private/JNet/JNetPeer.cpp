@@ -1,7 +1,6 @@
 #include "JNet/JNetPeer.h"
 
 #include <chrono>
-#include <print>
 
 #include "JNet/JNetPackets.h"
 #include "core/Serializer.h"
@@ -38,11 +37,14 @@ void JNet::JNetPeer::update()
 		ullTick = getCurrentTime();
 		ullTickAcum += ullTick - ullPrevTick;
 		ullPrevTick = ullTick;
-		if (ullTickAcum >= m_cfHeartBeatTimeMilli)
+		if (ullTickAcum >= m_cuHeartBeatTimeMilli)
 		{
+			checkTimeouts();
 			dispatchHeartBeat();
-			ullTickAcum -= m_cfHeartBeatTimeMilli;
+			ullTickAcum -= m_cuHeartBeatTimeMilli;
 		}
+
+		handleDisconnects();
 	}
 }
 
@@ -153,8 +155,8 @@ void JNet::JNetPeer::addConnection(const sockaddr_in& i_cDestAddr)
 	
 	m_umConnections.insert(std::pair<uint8_t, sockaddr_in>(m_uNextConnectionID, i_cDestAddr));
 	m_umNetOffsetTime.insert(std::pair<uint8_t, unsigned long long>(m_uNextConnectionID, 0));
+	m_umLastPongTime.insert(std::pair<uint8_t, unsigned long long>(m_uNextConnectionID, getCurrentTime()));
 	++m_uNextConnectionID;
-	std::println("Connected!");
 }
 
 void JNet::JNetPeer::dispatchHeartBeat()
@@ -173,8 +175,6 @@ void JNet::JNetPeer::dispatchHeartBeat()
 
 void JNet::JNetPeer::onPinged(JNetInPktData& i_iPktData)
 {
-	std::println("Ping");
-
 	// Make this more streamlined so I don't need to deserialize and reserialize the sent time
 	PongPkt pkt;
 	pkt.ullSentTime = BinarySerializer::deserialize<unsigned long long>(i_iPktData.sData);
@@ -186,8 +186,6 @@ void JNet::JNetPeer::onPinged(JNetInPktData& i_iPktData)
 
 void JNet::JNetPeer::calcOffsetTime(JNetInPktData& i_iPktData)
 {
-	std::println("Pong");
-
 	PongPkt pkt;
 	pkt.deserialize(i_iPktData.sData);
 
@@ -201,13 +199,46 @@ void JNet::JNetPeer::calcOffsetTime(JNetInPktData& i_iPktData)
 		}
 	}
 
-	auto it = m_umNetOffsetTime.find(uConnectionID);
+	auto itOffset = m_umNetOffsetTime.find(uConnectionID);
 	
 	const float cfDeltaTime = static_cast<float>(pkt.ullReceivedTime - pkt.ullSentTime) * 0.5f;
-	it->second = pkt.ullReceivedTime - (pkt.ullSentTime + static_cast<unsigned long long>(cfDeltaTime));
+	itOffset->second = pkt.ullReceivedTime - (pkt.ullSentTime + static_cast<unsigned long long>(cfDeltaTime));
+
+	auto itPong = m_umLastPongTime.find(uConnectionID);
+	itPong->second = getCurrentTime();
 }
 
 unsigned long long JNet::JNetPeer::getCurrentTime()
 {
 	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+void JNet::JNetPeer::checkTimeouts()
+{
+	const unsigned long long cullCurTime = getCurrentTime();
+	for (auto it = m_umLastPongTime.begin(); it != m_umLastPongTime.end(); ++it)
+	{
+		if (cullCurTime >= it->second + m_cuTimeoutTimeMilli)
+		{
+			m_vPendingDisconnects.push_back(it->first);
+		}
+	}
+}
+
+void JNet::JNetPeer::handleDisconnects()
+{
+	if (m_vPendingDisconnects.empty()) return;
+
+	DisconnectPkt pkt;
+	const std::string csData = pkt.serialize();
+
+	for (const uint8_t cuConnectionID : m_vPendingDisconnects)
+	{
+		JNet::send(csData, m_umConnections.at(cuConnectionID));
+		m_umConnections.erase(cuConnectionID);
+		m_umNetOffsetTime.erase(cuConnectionID);
+		m_umLastPongTime.erase(cuConnectionID);
+	}
+
+	m_vPendingDisconnects.clear();
 }

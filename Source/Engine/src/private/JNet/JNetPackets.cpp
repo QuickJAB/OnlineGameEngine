@@ -27,3 +27,8 @@ void JNet::PongPkt::deserialize(std::string& i_rsRef)
     ullSentTime = BinarySerializer::deserialize<unsigned long long>(i_rsRef);
     ullReceivedTime = BinarySerializer::deserialize<unsigned long long>(i_rsRef);
 }
+
+const std::string JNet::DisconnectPkt::serialize()
+{
+    return BinarySerializer::serialize<JNetPktType>(type);
+}

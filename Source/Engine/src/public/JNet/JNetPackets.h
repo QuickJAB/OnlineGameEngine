@@ -8,7 +8,8 @@ namespace JNet
 	{
 		RequestConnect,
 		Ping,
-		Pong
+		Pong,
+		Disconnect
 	};
 
 	struct RequestConnectPkt
@@ -34,5 +35,12 @@ namespace JNet
 
 		const std::string serialize();
 		void deserialize(std::string& i_rsRef);
+	};
+
+	struct DisconnectPkt
+	{
+		const JNetPktType type = Disconnect;
+
+		const std::string serialize();
 	};
 }

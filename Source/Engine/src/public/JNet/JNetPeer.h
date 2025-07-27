@@ -38,8 +38,12 @@ namespace JNet
 		const uint8_t m_cuMaxConnections;
 		std::unordered_map<uint8_t, sockaddr_in> m_umConnections;
 
-		const float m_cfHeartBeatTimeMilli = 5000;
+		const uint32_t m_cuHeartBeatTimeMilli = 5000;
+		const uint32_t m_cuTimeoutTimeMilli = 30000;
 		std::unordered_map<uint8_t, unsigned long long> m_umNetOffsetTime;
+		std::unordered_map<uint8_t, unsigned long long> m_umLastPongTime;
+
+		std::vector<uint8_t> m_vPendingDisconnects;
 
 	public:
 		JNetPeer(const std::string i_csIP, const uint16_t i_cuPort, const uint8_t i_cuMaxConnections,
@@ -62,5 +66,7 @@ namespace JNet
 		void onPinged(JNetInPktData& i_iPktData);
 		void calcOffsetTime(JNetInPktData& i_iPktData);
 		unsigned long long getCurrentTime();
+		void checkTimeouts();
+		void handleDisconnects();
 	};
 }
