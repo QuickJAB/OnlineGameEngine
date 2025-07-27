@@ -37,6 +37,9 @@ namespace JNet
 		std::unordered_map<uint8_t, sockaddr_in> m_umConnections;
 		const uint8_t m_cuMaxConnections;
 
+		float m_fLastHeartBeatTimeMilli = 0;
+		const float m_cfHeartBeatRateMilli = 5000;
+
 	public:
 		JNetPeer(const std::string i_csIP, const uint16_t i_cuPort, const uint8_t i_cuMaxConnections);
 		~JNetPeer();
@@ -53,5 +56,8 @@ namespace JNet
 		void sendNextPkt();
 		std::queue<JNetInPktData> getIncomingPkts();
 		void addConnection(const sockaddr_in& i_cDestAddr);
+		void dispatchHeartBeat();
+		void onPinged(JNetInPktData& i_iPktData);
+		void calcOffsetTime(JNetInPktData& i_iPktData);
 	};
 }

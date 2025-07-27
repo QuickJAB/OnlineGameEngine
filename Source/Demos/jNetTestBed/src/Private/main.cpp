@@ -101,6 +101,7 @@ void exampleThree()
 
 	JNet::RequestConnectPkt pkt;
 	std::string pktData = pkt.serialize();
+	JNet::send(pktData, serverAddr);
 	
 	bool running = true;
 	std::string in;
@@ -114,7 +115,6 @@ void exampleThree()
 			break;
 		}
 
-		JNet::send(pktData, serverAddr);
 		pServer->processIncomingPkts();
 	}
 

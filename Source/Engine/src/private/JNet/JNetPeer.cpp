@@ -1,7 +1,5 @@
 #include "JNet/JNetPeer.h"
 
-#include <print>
-
 #include "JNet/JNetPackets.h"
 #include "core/Serializer.h"
 
@@ -55,6 +53,12 @@ void JNet::JNetPeer::processIncomingPkts()
 		{
 		case JNet::RequestConnect:
 			addConnection(inPktData.addr);
+			break;
+		case JNet::Ping:
+			onPinged(inPktData);
+			break;
+		case JNet::Pong:
+			calcOffsetTime(inPktData);
 			break;
 		default:
 			break;
@@ -123,7 +127,6 @@ void JNet::JNetPeer::addConnection(const sockaddr_in& i_cDestAddr)
 		{
 			if (it->second.sin_addr.s_addr == i_cDestAddr.sin_addr.s_addr)
 			{
-				std::println("connection already exists");
 				return;
 			}
 		}
@@ -131,5 +134,35 @@ void JNet::JNetPeer::addConnection(const sockaddr_in& i_cDestAddr)
 	
 	m_umConnections.insert(std::pair<uint8_t, sockaddr_in>(m_uNextConnectionID, i_cDestAddr));
 	++m_uNextConnectionID;
-	std::println("connection added");
+}
+
+void JNet::JNetPeer::dispatchHeartBeat()
+{
+	PingPkt pkt;
+	pkt.ullSentTime = 0; // Change this to get the system time later
+	const std::string sData = pkt.serialize();
+
+	for (auto it = m_umConnections.begin(); it != m_umConnections.end(); ++it)
+	{
+		JNet::send(sData, it->second);
+	}
+}
+
+void JNet::JNetPeer::onPinged(JNetInPktData& i_iPktData)
+{
+	// Make this more streamlined so I don't need to deserialize and reserialize the sent time
+	PongPkt pkt;
+	pkt.ullSentTime = BinarySerializer::deserialize<unsigned long long>(i_iPktData.sData);
+	pkt.ullReceivedTime = 0; // Change this to get the system time later
+	const std::string sData = pkt.serialize();
+
+	JNet::send(sData, i_iPktData.addr);
+}
+
+void JNet::JNetPeer::calcOffsetTime(JNetInPktData& i_iPktData)
+{
+	PongPkt pkt;
+	pkt.deserialize(i_iPktData.sData);
+
+	// Use packet to calc RTT and time offsets per connection
 }
