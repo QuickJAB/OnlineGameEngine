@@ -39,6 +39,7 @@ namespace JNet
 
 		float m_fLastHeartBeatTimeMilli = 0;
 		const float m_cfHeartBeatRateMilli = 5000;
+		std::unordered_map<uint8_t, unsigned long long> m_umNetOffsetTime;
 
 	public:
 		JNetPeer(const std::string i_csIP, const uint16_t i_cuPort, const uint8_t i_cuMaxConnections);
@@ -59,5 +60,6 @@ namespace JNet
 		void dispatchHeartBeat();
 		void onPinged(JNetInPktData& i_iPktData);
 		void calcOffsetTime(JNetInPktData& i_iPktData);
+		unsigned long long getCurrentTime();
 	};
 }

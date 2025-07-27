@@ -1,5 +1,7 @@
 #include "JNet/JNetPeer.h"
 
+#include <chrono>
+
 #include "JNet/JNetPackets.h"
 #include "core/Serializer.h"
 
@@ -133,15 +135,17 @@ void JNet::JNetPeer::addConnection(const sockaddr_in& i_cDestAddr)
 	}
 	
 	m_umConnections.insert(std::pair<uint8_t, sockaddr_in>(m_uNextConnectionID, i_cDestAddr));
+	m_umNetOffsetTime.insert(std::pair<uint8_t, unsigned long long>(m_uNextConnectionID, 0));
 	++m_uNextConnectionID;
 }
 
 void JNet::JNetPeer::dispatchHeartBeat()
 {
 	PingPkt pkt;
-	pkt.ullSentTime = 0; // Change this to get the system time later
+	pkt.ullSentTime = getCurrentTime();
 	const std::string sData = pkt.serialize();
 
+	// No need to queue the heartbeat packets
 	for (auto it = m_umConnections.begin(); it != m_umConnections.end(); ++it)
 	{
 		JNet::send(sData, it->second);
@@ -153,9 +157,10 @@ void JNet::JNetPeer::onPinged(JNetInPktData& i_iPktData)
 	// Make this more streamlined so I don't need to deserialize and reserialize the sent time
 	PongPkt pkt;
 	pkt.ullSentTime = BinarySerializer::deserialize<unsigned long long>(i_iPktData.sData);
-	pkt.ullReceivedTime = 0; // Change this to get the system time later
+	pkt.ullReceivedTime = getCurrentTime();
 	const std::string sData = pkt.serialize();
 
+	// No need to queue the heartbeat packets
 	JNet::send(sData, i_iPktData.addr);
 }
 
@@ -164,5 +169,23 @@ void JNet::JNetPeer::calcOffsetTime(JNetInPktData& i_iPktData)
 	PongPkt pkt;
 	pkt.deserialize(i_iPktData.sData);
 
-	// Use packet to calc RTT and time offsets per connection
+	uint8_t uConnectionID = 0;
+	for (auto it = m_umConnections.begin(); it != m_umConnections.end(); ++it)
+	{
+		if (it->second.sin_addr.s_addr == i_iPktData.addr.sin_addr.s_addr)
+		{
+			uConnectionID = it->first;
+			break;
+		}
+	}
+
+	auto it = m_umNetOffsetTime.find(uConnectionID);
+	
+	const float cfDeltaTime = static_cast<float>(pkt.ullReceivedTime - pkt.ullSentTime) * 0.5f;
+	it->second = pkt.ullReceivedTime - (pkt.ullSentTime + static_cast<unsigned long long>(cfDeltaTime));
+}
+
+unsigned long long JNet::JNetPeer::getCurrentTime()
+{
+	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
