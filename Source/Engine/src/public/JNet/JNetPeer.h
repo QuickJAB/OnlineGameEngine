@@ -3,6 +3,7 @@
 #include <queue>
 #include <mutex>
 #include <unordered_map>
+#include <set>
 
 #include "JNet.h"
 
@@ -43,7 +44,7 @@ namespace JNet
 		std::unordered_map<uint8_t, unsigned long long> m_umNetOffsetTime;
 		std::unordered_map<uint8_t, unsigned long long> m_umLastPongTime;
 
-		std::vector<uint8_t> m_vPendingDisconnects;
+		std::set<uint8_t> m_sPendingDisconnects;
 
 	public:
 		JNetPeer(const std::string i_csIP, const uint16_t i_cuPort, const uint8_t i_cuMaxConnections,
@@ -68,5 +69,6 @@ namespace JNet
 		unsigned long long getCurrentTime();
 		void checkTimeouts();
 		void handleDisconnects();
+		void onDisconnected(const sockaddr_in& i_crAddr);
 	};
 }

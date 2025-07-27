@@ -81,6 +81,9 @@ void JNet::JNetPeer::processIncomingPkts()
 		case JNet::Pong:
 			calcOffsetTime(inPktData);
 			break;
+		case JNet::Disconnect:
+			onDisconnected(inPktData.addr);
+			break;
 		default:
 			break;
 		}
@@ -220,19 +223,19 @@ void JNet::JNetPeer::checkTimeouts()
 	{
 		if (cullCurTime >= it->second + m_cuTimeoutTimeMilli)
 		{
-			m_vPendingDisconnects.push_back(it->first);
+			m_sPendingDisconnects.insert(it->first);
 		}
 	}
 }
 
 void JNet::JNetPeer::handleDisconnects()
 {
-	if (m_vPendingDisconnects.empty()) return;
+	if (m_sPendingDisconnects.empty()) return;
 
 	DisconnectPkt pkt;
 	const std::string csData = pkt.serialize();
 
-	for (const uint8_t cuConnectionID : m_vPendingDisconnects)
+	for (const uint8_t cuConnectionID : m_sPendingDisconnects)
 	{
 		JNet::send(csData, m_umConnections.at(cuConnectionID));
 		m_umConnections.erase(cuConnectionID);
@@ -240,5 +243,13 @@ void JNet::JNetPeer::handleDisconnects()
 		m_umLastPongTime.erase(cuConnectionID);
 	}
 
-	m_vPendingDisconnects.clear();
+	m_sPendingDisconnects.clear();
+}
+
+void JNet::JNetPeer::onDisconnected(const sockaddr_in& i_crAddr)
+{
+	for (auto it = m_umConnections.begin(); it != m_umConnections.end(); ++it)
+	{
+		m_sPendingDisconnects.insert(it->first);
+	}
 }
