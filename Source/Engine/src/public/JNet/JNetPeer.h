@@ -6,9 +6,12 @@
 #include <set>
 
 #include "JNet.h"
+#include "core/Delegates.h"
 
 namespace JNet
 {
+	enum JNetPktType;
+
 	struct JNetInPktData
 	{
 		std::string sData;
@@ -24,6 +27,8 @@ namespace JNet
 	class JNetPeer
 	{
 	public:
+		Delegate<void(JNet::JNetPktType, JNet::JNetInPktData&)> m_unidProcessGamePkt;
+
 	protected:
 	private:
 		bool m_bRunning;

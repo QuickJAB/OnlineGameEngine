@@ -117,6 +117,8 @@ void JNet::JNetPeer::processIncomingPkts()
 		case JNet::RequestConnect:
 			addConnection(inPktData.addr);
 			break;
+		case JNet::Connected:
+			break;
 		case JNet::Ping:
 			onPinged(inPktData);
 			break;
@@ -127,6 +129,7 @@ void JNet::JNetPeer::processIncomingPkts()
 			onDisconnected(inPktData.addr);
 			break;
 		default:
+			m_unidProcessGamePkt.broadcast(pktType, inPktData);
 			break;
 		}
 	}
