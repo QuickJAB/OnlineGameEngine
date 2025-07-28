@@ -41,7 +41,7 @@ namespace JNet
 		unsigned long long ullSentTime;
 		unsigned long long ullReceivedTime;
 
-		const std::string serialize();
+		const std::string serialize(const std::string& i_crsData = "");
 		void deserialize(std::string& i_rsData);
 	};
 

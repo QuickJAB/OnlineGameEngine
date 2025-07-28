@@ -19,10 +19,10 @@ const std::string JNet::PingPkt::serialize()
     return sSerialized;
 }
 
-const std::string JNet::PongPkt::serialize()
+const std::string JNet::PongPkt::serialize(const std::string& i_crsData)
 {
     std::string sSerialized = BinarySerializer::serialize<JNetPktType>(type);
-    sSerialized += BinarySerializer::serialize<unsigned long long>(ullSentTime);
+    sSerialized += i_crsData != "" ? i_crsData : BinarySerializer::serialize<unsigned long long>(ullSentTime);
     sSerialized += BinarySerializer::serialize<unsigned long long>(ullReceivedTime);
     return sSerialized;
 }
