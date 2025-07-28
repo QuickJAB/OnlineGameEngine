@@ -9,6 +9,7 @@ JNet::JNetPeer::JNetPeer(const uint8_t i_cuMaxConnections, bool i_bIsHost) :
 	m_cuMaxConnections(i_cuMaxConnections), m_bIsHost(i_bIsHost)
 {
 	JNet::init();
+	m_bRunning = false;
 }
 
 JNet::JNetPeer::~JNetPeer()
