@@ -7,6 +7,11 @@ const std::string JNet::RequestConnectPkt::serialize()
     return BinarySerializer::serialize<JNetPktType>(type);
 }
 
+const std::string JNet::ConnectedPkt::serialize()
+{
+    return BinarySerializer::serialize<JNetPktType>(type);
+}
+
 const std::string JNet::PingPkt::serialize()
 {
     std::string sSerialized = BinarySerializer::serialize<JNetPktType>(type);
@@ -22,10 +27,10 @@ const std::string JNet::PongPkt::serialize()
     return sSerialized;
 }
 
-void JNet::PongPkt::deserialize(std::string& i_rsRef)
+void JNet::PongPkt::deserialize(std::string& i_rsData)
 {
-    ullSentTime = BinarySerializer::deserialize<unsigned long long>(i_rsRef);
-    ullReceivedTime = BinarySerializer::deserialize<unsigned long long>(i_rsRef);
+    ullSentTime = BinarySerializer::deserialize<unsigned long long>(i_rsData);
+    ullReceivedTime = BinarySerializer::deserialize<unsigned long long>(i_rsData);
 }
 
 const std::string JNet::DisconnectPkt::serialize()

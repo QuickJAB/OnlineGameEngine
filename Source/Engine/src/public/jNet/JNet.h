@@ -15,4 +15,6 @@ namespace JNet
 	void bindSocket(const sockaddr_in& i_crAddr);
 	void send(const std::string& i_crsData, const sockaddr_in& i_crDestAddr);
 	bool receive(std::string& o_rsData, sockaddr_in& o_rAddr);
+	void overrideSocketTimeout(const unsigned long long i_cullOverrideTimeoutMilli);
+	void resetSocketTimeout();
 }

@@ -27,7 +27,7 @@ namespace JNet
 	protected:
 	private:
 		bool m_bRunning;
-		const bool m_bShouldHeartbeat;
+		const bool m_bIsHost;
 
 		std::mutex m_mutInPkts;
 		std::queue<JNetInPktData> m_qInPkts;
@@ -46,10 +46,16 @@ namespace JNet
 
 		std::set<uint8_t> m_sPendingDisconnects;
 
+		const uint8_t m_cuMaxConnectionAttempts = 10;
+		uint8_t m_uNumConnectionAttempts = 0;
+		const unsigned long long m_cullConnectionAttemptDelayMilli = 5000;
+
 	public:
-		JNetPeer(const std::string i_csIP, const uint16_t i_cuPort, const uint8_t i_cuMaxConnections,
-			bool i_bShouldHeartbeat);
+		JNetPeer(const uint8_t i_cuMaxConnections = 1, bool i_bIsHost = false);
 		~JNetPeer();
+
+		void openSocketForConnections(const uint16_t i_cuPort);
+		bool tryConnect(const std::string i_csIP, const uint16_t i_cuPort);
 
 		void update();
 		void stop();

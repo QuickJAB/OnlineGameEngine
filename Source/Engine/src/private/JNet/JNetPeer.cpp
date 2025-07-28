@@ -5,20 +5,61 @@
 #include "JNet/JNetPackets.h"
 #include "core/Serializer.h"
 
-JNet::JNetPeer::JNetPeer(const std::string i_csIP, const uint16_t i_cuPort, const uint8_t i_cuMaxConnections,
-	bool i_bShouldHeartbeat) :
-	m_cuMaxConnections(i_cuMaxConnections), m_bShouldHeartbeat(i_bShouldHeartbeat)
+JNet::JNetPeer::JNetPeer(const uint8_t i_cuMaxConnections, bool i_bIsHost) :
+	m_cuMaxConnections(i_cuMaxConnections), m_bIsHost(i_bIsHost)
 {
 	JNet::init();
-
-	JNet::bindSocket(JNet::createAddr(i_csIP, i_cuPort));
-
-	m_bRunning = true;
 }
 
 JNet::JNetPeer::~JNetPeer()
 {
 	JNet::cleanup();
+}
+
+void JNet::JNetPeer::openSocketForConnections(const uint16_t i_cuPort)
+{
+	JNet::bindSocket(JNet::createAddr("", i_cuPort));
+	m_bRunning = true;
+}
+
+bool JNet::JNetPeer::tryConnect(const std::string i_csIP, const uint16_t i_cuPort)
+{
+	const sockaddr_in cServerAddr = JNet::createAddr(i_csIP, i_cuPort);
+
+	JNet::bindSocket(cServerAddr);
+	JNet::overrideSocketTimeout(m_cullConnectionAttemptDelayMilli);
+	m_uNumConnectionAttempts = 0;
+
+	JNet::RequestConnectPkt pkt;
+	const std::string csPktData = pkt.serialize();
+
+	std::string sData;
+	sockaddr_in receiveAddr;
+	
+	while (m_uNumConnectionAttempts < m_cuMaxConnectionAttempts)
+	{
+		JNet::send(csPktData, cServerAddr);
+		if (JNet::receive(sData, receiveAddr) <= 0)
+		{
+			++m_uNumConnectionAttempts;
+			continue;
+		}
+
+		if (receiveAddr.sin_addr.s_addr != cServerAddr.sin_addr.s_addr)
+		{
+			++m_uNumConnectionAttempts;
+			continue;
+		}
+
+		if (BinarySerializer::deserialize<JNetPktType>(sData) == JNet::Connected)
+		{
+			JNet::resetSocketTimeout();
+			m_bRunning = true;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void JNet::JNetPeer::update()

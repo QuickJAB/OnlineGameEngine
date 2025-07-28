@@ -37,7 +37,7 @@ const sockaddr_in JNet::createAddr(const std::string& i_crsIP, const u_short i_c
 void JNet::bindSocket(const sockaddr_in& i_crAddr)
 {
 	bind(g_socket, (sockaddr*)&i_crAddr, sizeof(i_crAddr));
-	setsockopt(g_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&g_cuReceiveTimeoutTimeMilli, sizeof(g_cuReceiveTimeoutTimeMilli));
+	resetSocketTimeout();
 }
 
 void JNet::send(const std::string& i_crsData, const sockaddr_in& i_crDestAddr)
@@ -58,4 +58,14 @@ bool JNet::receive(std::string& o_rsData, sockaddr_in& o_rAddr)
 	}
 
 	return false;
+}
+
+void JNet::overrideSocketTimeout(const unsigned long long i_cullOverrideTimeoutMilli)
+{
+	setsockopt(g_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&i_cullOverrideTimeoutMilli, sizeof(i_cullOverrideTimeoutMilli));
+}
+
+void JNet::resetSocketTimeout()
+{
+	setsockopt(g_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&g_cuReceiveTimeoutTimeMilli, sizeof(g_cuReceiveTimeoutTimeMilli));
 }

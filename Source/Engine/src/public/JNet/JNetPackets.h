@@ -7,12 +7,20 @@ namespace JNet
 	enum JNetPktType
 	{
 		RequestConnect,
+		Connected,
 		Ping,
 		Pong,
 		Disconnect
 	};
 
 	struct RequestConnectPkt
+	{
+		const JNetPktType type = RequestConnect;
+
+		const std::string serialize();
+	};
+
+	struct ConnectedPkt
 	{
 		const JNetPktType type = RequestConnect;
 
@@ -34,7 +42,7 @@ namespace JNet
 		unsigned long long ullReceivedTime;
 
 		const std::string serialize();
-		void deserialize(std::string& i_rsRef);
+		void deserialize(std::string& i_rsData);
 	};
 
 	struct DisconnectPkt

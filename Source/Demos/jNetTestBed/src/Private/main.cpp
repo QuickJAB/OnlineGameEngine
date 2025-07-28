@@ -94,7 +94,8 @@ void exampleThree()
 {
 	u_short port = 19;
 
-	JNet::JNetPeer* pServer = new JNet::JNetPeer("127.0.0.1", port, 1, true);
+	JNet::JNetPeer* pServer = new JNet::JNetPeer(1, true);
+	pServer->openSocketForConnections(port);
 	std::thread t(&JNet::JNetPeer::update, pServer);
 
 	sockaddr_in serverAddr = JNet::createAddr("127.0.0.1", port);
