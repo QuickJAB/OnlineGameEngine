@@ -39,7 +39,7 @@ bool JNet::JNetPeer::tryConnect(const std::string i_csIP, const uint16_t i_cuPor
 	while (m_uNumConnectionAttempts < m_cuMaxConnectionAttempts)
 	{
 		JNet::send(csPktData, cServerAddr);
-		if (JNet::receive(sData, receiveAddr) <= 0)
+		if (!JNet::receive(sData, receiveAddr))
 		{
 			++m_uNumConnectionAttempts;
 			continue;
@@ -73,7 +73,7 @@ void JNet::JNetPeer::update()
 		queueIncomingPkt();
 		sendNextPkt();
 
-		if (!m_bShouldHeartbeat) return;
+		if (!m_bIsHost) return;
 
 		ullTick = getCurrentTime();
 		ullTickAcum += ullTick - ullPrevTick;

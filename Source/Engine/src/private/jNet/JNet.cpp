@@ -42,7 +42,7 @@ void JNet::bindSocket(const sockaddr_in& i_crAddr)
 
 void JNet::send(const std::string& i_crsData, const sockaddr_in& i_crDestAddr)
 {
-	sendto(g_socket, i_crsData.c_str(), i_crsData.length(), 0, (sockaddr*)&i_crDestAddr, sizeof(i_crDestAddr));
+	sendto(g_socket, i_crsData.c_str(), static_cast<int>(i_crsData.length()), 0, (sockaddr*)&i_crDestAddr, sizeof(i_crDestAddr));
 }
 
 bool JNet::receive(std::string& o_rsData, sockaddr_in& o_rAddr)
