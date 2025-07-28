@@ -220,11 +220,9 @@ void JNet::JNetPeer::dispatchHeartBeat()
 
 void JNet::JNetPeer::onPinged(JNetInPktData& i_iPktData)
 {
-	// Make this more streamlined so I don't need to deserialize and reserialize the sent time
 	PongPkt pkt;
-	pkt.ullSentTime = BinarySerializer::deserialize<unsigned long long>(i_iPktData.sData);
 	pkt.ullReceivedTime = getCurrentTime();
-	const std::string sData = pkt.serialize();
+	const std::string sData = pkt.serialize(i_iPktData.sData);
 
 	JNet::send(sData, i_iPktData.addr);
 }
