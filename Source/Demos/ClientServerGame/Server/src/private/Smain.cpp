@@ -3,7 +3,7 @@
 #include <atomic>
 
 #include <core/Engine.h>
-#include <network/Server.h>
+#include <jNet/JNetPeer.h>
 
 #include "SGameInstance.h"
 
@@ -14,11 +14,7 @@ int main()
 	atomic<bool> bRunning;
 	bRunning.store(true);
 
-	HostConfig hostConfig;
-	hostConfig.pcAddress = Server::createAddress(19);
-	hostConfig.ullMaxConnections = 1;
-
-	Server* const cpServer = new Server(bRunning, 0.f, hostConfig);
+	JNet::JNetPeer* const cpServer = new JNet::JNetPeer(2, true);
 
 	SGameInstance* const cpGameInst = new SGameInstance(bRunning, cpServer);
 

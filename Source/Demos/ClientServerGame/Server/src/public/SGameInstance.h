@@ -5,21 +5,24 @@
 
 #include <core/game base/GameInstance.h>
 
-class Server;
+namespace JNet
+{
+	class JNetPeer;
+}
 
 class SGameInstance : public GameInstance
 {
 public:
 protected:
 private:
-	Server* const m_cpServer;
+	JNet::JNetPeer* const m_cpServer;
 	std::thread* const m_cpNetworkThread;
 
 public:
-	SGameInstance(std::atomic<bool>& i_rbRunning, Server* const i_cpServer);
+	SGameInstance(std::atomic<bool>& i_rbRunning, JNet::JNetPeer* const i_cpServer);
 	~SGameInstance();
 
 protected:
 private:
-	static StateMachine* const initStateMachine(Server* const i_cpServer);
+	static StateMachine* const initStateMachine(JNet::JNetPeer* const i_cpServer);
 };

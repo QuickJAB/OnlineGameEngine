@@ -135,6 +135,11 @@ void JNet::JNetPeer::processIncomingPkts()
 	}
 }
 
+bool JNet::JNetPeer::areConnectionsFull() const
+{
+	return m_umConnections.size() == m_cuMaxConnections;
+}
+
 void JNet::JNetPeer::queueIncomingPkt()
 {
 	JNet::JNetInPktData pktData;

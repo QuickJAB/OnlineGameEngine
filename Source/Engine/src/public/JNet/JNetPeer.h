@@ -68,6 +68,8 @@ namespace JNet
 		void queueOutgoingPkt(const JNetOutPktData& i_cOutPktData);
 		void processIncomingPkts();
 
+		bool areConnectionsFull() const;
+
 	protected:
 	private:
 		void queueIncomingPkt();
