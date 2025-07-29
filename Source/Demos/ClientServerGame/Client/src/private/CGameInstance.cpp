@@ -1,5 +1,7 @@
 #include "CGameInstance.h"
 
+#include <JNet/JNetPeer.h>
+
 #include "states/CMenuState.h"
 #include "states/CConnectingState.h"
 #include "states/CPlayingState.h"
@@ -7,7 +9,7 @@
 using namespace std;
 
 StateMachine* const CGameInstance::initStateMachine(Renderer* const i_cpRenderer,
-	EventHandler* const i_cpEventHandler, Client* const i_cpClient)
+	EventHandler* const i_cpEventHandler, JNet::JNetPeer* const i_cpClient)
 {
 	unordered_map<string, State*> umStates;
 
@@ -23,10 +25,10 @@ StateMachine* const CGameInstance::initStateMachine(Renderer* const i_cpRenderer
 	return new StateMachine(umStates, "Menu");
 }
 
-CGameInstance::CGameInstance(std::atomic<bool>& i_rbRunning, Client* const i_cpClient, Window* const i_cpWnd,
+CGameInstance::CGameInstance(std::atomic<bool>& i_rbRunning, JNet::JNetPeer* const i_cpClient, Window* const i_cpWnd,
 	Renderer* const i_cpRenderer, EventHandler* const i_cpEventHandler) :
 	GameInstance(i_rbRunning, initStateMachine(i_cpRenderer, i_cpEventHandler, i_cpClient)),
-	m_cpClient(i_cpClient), m_cpNetworkThread(new thread(&Client::update, m_cpClient)), m_cpWindow(i_cpWnd),
+	m_cpClient(i_cpClient), m_cpNetworkThread(new thread(&JNet::JNetPeer::update, m_cpClient)), m_cpWindow(i_cpWnd),
 	m_cpRenderer(i_cpRenderer), m_cpEventHandler(i_cpEventHandler)
 {
 	CMenuState* const cpMenu = m_cpStateMachine->getState<CMenuState>("Menu");
@@ -36,8 +38,6 @@ CGameInstance::CGameInstance(std::atomic<bool>& i_rbRunning, Client* const i_cpC
 	cpConnecting->m_unidOnRequestIP.bind(cpMenu, &CMenuState::getIP);
 	cpConnecting->m_unidOnRequestPort.bind(cpMenu, &CMenuState::getPort);
 	cpConnecting->m_unidOnGameStarted.bind(this, &CGameInstance::serverStartedGame);
-
-	cpPlaying->m_unidRequestNetworkId.bind(this, &CGameInstance::getNetworkId);
 
 	m_cpNetworkThread->detach();
 

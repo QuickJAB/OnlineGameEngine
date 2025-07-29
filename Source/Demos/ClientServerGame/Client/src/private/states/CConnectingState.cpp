@@ -2,9 +2,11 @@
 
 #include <print>
 
+#include <JNet/JNetPeer.h>
+
 using namespace std;
 
-CConnectingState::CConnectingState(Client* const i_cpClient) :
+CConnectingState::CConnectingState(JNet::JNetPeer* const i_cpClient) :
     m_cpClient(i_cpClient)
 {
 }
@@ -32,23 +34,24 @@ string CConnectingState::update(float)
             return "Menu";
         }
     }
+    
+    // TODO: Rework game start packet to comply with JNet
+    //queue<ENetPacket> qPkts = m_cpClient->getIncomingPacketData();
 
-    queue<ENetPacket> qPkts = m_cpClient->getIncomingPacketData();
+    //while (!qPkts.empty())
+    //{
+    //    ENetPacket pkt = qPkts.front();
+    //    qPkts.pop();
 
-    while (!qPkts.empty())
-    {
-        ENetPacket pkt = qPkts.front();
-        qPkts.pop();
+    //    int iPktType = -1;
+    //    const char* cpData = (const char*)pkt.data;
 
-        int iPktType = -1;
-        const char* cpData = (const char*)pkt.data;
-
-        if (sscanf_s(cpData, "%i", &iPktType) > 0 && iPktType == ServerCommand::startGame)
-        {
-            startGame(cpData);
-            return "Playing";
-        }
-    }
+    //    if (sscanf_s(cpData, "%i", &iPktType) > 0 && iPktType == ServerCommand::startGame)
+    //    {
+    //        startGame(cpData);
+    //        return "Playing";
+    //    }
+    //}
 
     return "";
 }

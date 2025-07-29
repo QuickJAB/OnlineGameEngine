@@ -3,6 +3,7 @@
 #include <atomic>
 
 #include <core/Engine.h>
+#include <jNet/JNetPeer.h>
 
 #include "CGameInstance.h"
 
@@ -19,7 +20,7 @@ int main()
 
 	EventHandler* const cpEventHandler = new EventHandler();
 
-	Client* const cpClient = new Client(bRunning, 0.f, HostConfig());
+	JNet::JNetPeer* const cpClient = new JNet::JNetPeer();
 
 	CGameInstance* const cpGameInst = new CGameInstance(bRunning, cpClient,
 		cpWnd, cpRenderer, cpEventHandler);
