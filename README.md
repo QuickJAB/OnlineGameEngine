@@ -8,6 +8,7 @@ This is a hobby C++ experimentation repo for learning how best to structure a mo
 
 - A small game engine for online-multiplayer and singleplayer games.
 - A demo online-multiplayer game using a headless server with connected clients
+- A set of unit tests for the custom socket API JNet
 
 ## Build information
 
@@ -30,4 +31,3 @@ Premake5. The .exe and license are provided in this repo under Externals/premake
 All of these dependencies are provided in this repo.
 
 - SDL3: Windowing, rendering, event handling and audio
-- ENet: Socketing

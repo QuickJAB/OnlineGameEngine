@@ -6,8 +6,7 @@ LocalFiles = {
 }
 
 ExternalIncludeDir = {
-	SDL = "Externals/SDL3/include",
-	enet = "Externals/enet/include"
+	SDL = "Externals/SDL3/include"
 }
 
 workspace "OnlineGame"
@@ -33,19 +32,15 @@ project "Engine"
 	includedirs {
 		"%{LocalFiles.Public}",
 		"%{LocalFiles.Prive}",
-		"%{ExternalIncludeDir.SDL}",
-		"%{ExternalIncludeDir.enet}"
+		"%{ExternalIncludeDir.SDL}"
 	}
 
 	libdirs {
-		"Externals/SDL3/lib/x64",
-		"Externals/enet"
+		"Externals/SDL3/lib/x64"
 	}
 
 	links {
 		"SDL3",
-		"enet",
-		"enet64",
 		"ws2_32",
 		"winmm"
 	}
@@ -78,7 +73,6 @@ project "Game"
 		"%{LocalFiles.Public}",
 		"%{LocalFiles.Prive}",
 		"%{ExternalIncludeDir.SDL}",
-		"%{ExternalIncludeDir.enet}",
 		"Source/Engine/src/public"
 	}
 
@@ -118,7 +112,6 @@ project "Server"
 		"%{LocalFiles.Public}",
 		"%{LocalFiles.Prive}",
 		"%{ExternalIncludeDir.SDL}",
-		"%{ExternalIncludeDir.enet}",
 		"Source/Engine/src/public",
 		"Source/Demos/ClientServerGame/Game/src/public"
 	}
@@ -159,7 +152,6 @@ project "Client"
 		"%{LocalFiles.Public}",
 		"%{LocalFiles.Prive}",
 		"%{ExternalIncludeDir.SDL}",
-		"%{ExternalIncludeDir.enet}",
 		"Source/Engine/src/public",
 		"Source/Demos/ClientServerGame/Game/src/public"
 	}
