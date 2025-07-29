@@ -1,4 +1,4 @@
-#include "network/GameState.h"
+#include "jNet/GameState.h"
 
 #include "core/game base/Controller.h"
 
