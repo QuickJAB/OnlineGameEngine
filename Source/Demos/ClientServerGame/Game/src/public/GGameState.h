@@ -1,6 +1,6 @@
 #pragma once
 
-#include <network/GameState.h>
+#include <jNet/GameState.h>
 
 class GGameState : public GameState
 {
