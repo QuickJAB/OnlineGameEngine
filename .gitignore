@@ -1,6 +1,5 @@
 .vs/
 Binaries/
-LocalOnly/
 
 *.sln**
 **.vcxproj

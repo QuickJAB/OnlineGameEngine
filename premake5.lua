@@ -5,10 +5,6 @@ LocalFiles = {
 	Private = "%{prj.location}/src/private"
 }
 
-ExternalIncludeDir = {
-	SDL = "Externals/SDL3/include"
-}
-
 workspace "OnlineGame"
 	architecture "x64"
 	configurations { "Debug", "Release" }
@@ -32,15 +28,10 @@ project "Engine"
 	includedirs {
 		"%{LocalFiles.Public}",
 		"%{LocalFiles.Prive}",
-		"%{ExternalIncludeDir.SDL}"
-	}
-
-	libdirs {
-		"Externals/SDL3/lib/x64"
+		"Externals/SDL3/include"
 	}
 
 	links {
-		"SDL3",
 		"ws2_32",
 		"winmm"
 	}
@@ -72,7 +63,6 @@ project "Game"
 	includedirs {
 		"%{LocalFiles.Public}",
 		"%{LocalFiles.Prive}",
-		"%{ExternalIncludeDir.SDL}",
 		"Source/Engine/src/public"
 	}
 
@@ -111,7 +101,6 @@ project "Server"
 	includedirs {
 		"%{LocalFiles.Public}",
 		"%{LocalFiles.Prive}",
-		"%{ExternalIncludeDir.SDL}",
 		"Source/Engine/src/public",
 		"Source/Demos/ClientServerGame/Game/src/public"
 	}
@@ -151,13 +140,18 @@ project "Client"
 	includedirs {
 		"%{LocalFiles.Public}",
 		"%{LocalFiles.Prive}",
-		"%{ExternalIncludeDir.SDL}",
+		"Externals/SDL3/include",
 		"Source/Engine/src/public",
 		"Source/Demos/ClientServerGame/Game/src/public"
 	}
 
+	libdirs {
+		"Externals/SDL3/lib/x64"
+	}
+
 	links {
-		"Game"
+		"Game",
+		"SDL3"
 	}
 
 	dependson {
