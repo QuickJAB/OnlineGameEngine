@@ -65,15 +65,17 @@ namespace JNet
 		void update();
 		void stop();
 
-		void queueOutgoingPkt(const JNetOutPktData& i_cOutPktData);
+		void queueOutgoingPkt(const JNetOutPktData& i_cOutPktData, const bool bSendInstantly = false);
 		void processIncomingPkts();
 
 		bool areConnectionsFull() const;
+		const uint8_t getMaxConnections() const { return m_cuMaxConnections; }
 
 	protected:
 	private:
 		void queueIncomingPkt();
 		void sendNextPkt();
+		void sendPkt(const JNetOutPktData& i_cOutPktData);
 		std::queue<JNetInPktData> getIncomingPkts();
 		void addConnection(const sockaddr_in& i_cDestAddr);
 		void dispatchHeartBeat();

@@ -2,6 +2,8 @@
 
 #include <JNet/JNetPeer.h>
 
+#include <GGamePkts.h>
+
 using namespace std;
 
 SWaitingForPlayersState::SWaitingForPlayersState(JNet::JNetPeer* const i_cpServer) :
@@ -13,9 +15,16 @@ string SWaitingForPlayersState::update(const float)
 {
     if (m_cpServer->areConnectionsFull())
     {
-        // TODO: Rewrite connecting packet logic to fit JNet
-        //string sData = to_string(ServerCommand::startGame) + "t" + to_string(m_cpServer->getClockTime());
-        //m_cpServer->queueOutgoingPacketData(sData);
+        StartMatchPkt pkt;
+        JNet::JNetOutPktData pktData;
+        for (uint8_t i = 0; i < m_cpServer->getMaxConnections(); ++i)
+        {
+            pkt.uPlayerID = i;
+            pktData.sData = pkt.serialize();
+            pktData.iDestID = i;
+            m_cpServer->queueOutgoingPkt(pktData, true);
+        }
+
         return "Playing";
     }
 

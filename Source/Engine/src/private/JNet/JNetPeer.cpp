@@ -95,8 +95,14 @@ void JNet::JNetPeer::stop()
 	m_bRunning = false;
 }
 
-void JNet::JNetPeer::queueOutgoingPkt(const JNetOutPktData& i_cOutPktData)
+void JNet::JNetPeer::queueOutgoingPkt(const JNetOutPktData& i_cOutPktData, const bool bSendInstantly)
 {
+	if (bSendInstantly)
+	{
+		sendPkt(i_cOutPktData);
+		return;
+	}
+
 	m_mutOutPkts.lock();
 	m_qOutPkts.push(i_cOutPktData);
 	m_mutOutPkts.unlock();
@@ -167,16 +173,21 @@ void JNet::JNetPeer::sendNextPkt()
 	m_qOutPkts.pop();
 	m_mutOutPkts.unlock();
 
-	if (pktData.iDestID == -1)
+	sendPkt(pktData);
+}
+
+void JNet::JNetPeer::sendPkt(const JNetOutPktData& i_cOutPktData)
+{
+	if (i_cOutPktData.iDestID == -1)
 	{
 		for (auto it = m_umConnections.begin(); it != m_umConnections.end(); ++it)
 		{
-			JNet::send(pktData.sData, it->second);
+			JNet::send(i_cOutPktData.sData, it->second);
 		}
 	}
 	else
 	{
-		JNet::send(pktData.sData, m_umConnections.at(pktData.iDestID));
+		JNet::send(i_cOutPktData.sData, m_umConnections.at(i_cOutPktData.iDestID));
 	}
 }
 
