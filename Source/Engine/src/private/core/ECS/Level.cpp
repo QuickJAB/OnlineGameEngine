@@ -11,7 +11,7 @@ Level::~Level()
 	delete m_cpECS;
 }
 
-const uint32_t Level::getPlayerByNetworkId(const uint32_t i_cuNetworkId)
+const uint32_t Level::getPlayerByNetworkId(const uint8_t i_cuNetworkId)
 {
 	return m_umNetPlayerId.at(i_cuNetworkId);
 }

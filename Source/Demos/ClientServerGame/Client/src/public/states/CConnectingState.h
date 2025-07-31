@@ -7,6 +7,8 @@
 namespace JNet
 {
 	class JNetPeer;
+	enum JNetPktType;
+	struct JNetInPktData;
 }
 
 class CConnectingState : public State
@@ -14,7 +16,7 @@ class CConnectingState : public State
 public:
 	Delegate<std::string()> m_unidOnRequestIP;
 	Delegate<uint16_t()> m_unidOnRequestPort;
-	Delegate<void()> m_unidOnGameStarted;
+	Delegate<void(const uint8_t i_cuPlayerID)> m_unidOnGameStarted;
 
 protected:
 private:
@@ -22,6 +24,7 @@ private:
 	uint16_t m_uPort = 0;
 	JNet::JNetPeer* const m_cpClient;
 	bool m_bConnected = false;
+	std::string m_sNextStateID = "";
 
 public:
 	CConnectingState(JNet::JNetPeer* const i_cpClient);
@@ -31,5 +34,6 @@ public:
 
 protected:
 private:
-	void startGame(const char* i_cpData);
+	void startGame(const uint8_t i_cuPlayerID);
+	void processGamePkts(JNet::JNetPktType i_PktType, JNet::JNetInPktData& i_rPktData);
 };

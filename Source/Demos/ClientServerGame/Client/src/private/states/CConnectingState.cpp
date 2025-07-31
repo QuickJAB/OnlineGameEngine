@@ -4,6 +4,8 @@
 
 #include <JNet/JNetPeer.h>
 
+#include <GGamePkts.h>
+
 using namespace std;
 
 CConnectingState::CConnectingState(JNet::JNetPeer* const i_cpClient) :
@@ -28,6 +30,7 @@ string CConnectingState::update(float)
             println("Connected!");
             println("Waiting for other players to join...");
             m_bConnected = true;
+            m_cpClient->m_unidProcessGamePkt.bind(this, &CConnectingState::processGamePkts);
         }
         else
         {
@@ -35,28 +38,27 @@ string CConnectingState::update(float)
         }
     }
     
-    // TODO: Rework game start packet to comply with JNet
-    //queue<ENetPacket> qPkts = m_cpClient->getIncomingPacketData();
-
-    //while (!qPkts.empty())
-    //{
-    //    ENetPacket pkt = qPkts.front();
-    //    qPkts.pop();
-
-    //    int iPktType = -1;
-    //    const char* cpData = (const char*)pkt.data;
-
-    //    if (sscanf_s(cpData, "%i", &iPktType) > 0 && iPktType == ServerCommand::startGame)
-    //    {
-    //        startGame(cpData);
-    //        return "Playing";
-    //    }
-    //}
-
-    return "";
+    m_cpClient->processIncomingPkts();
+    
+    return m_sNextStateID;
 }
 
-void CConnectingState::startGame(const char* i_cpData)
+void CConnectingState::startGame(const uint8_t i_cuPlayerID)
 {
-    m_unidOnGameStarted.broadcast();
+    m_unidOnGameStarted.broadcast(i_cuPlayerID);
+}
+
+void CConnectingState::processGamePkts(JNet::JNetPktType i_pktType, JNet::JNetInPktData& i_rPktData)
+{
+    if (i_pktType != GPktType::StartMatch)
+    {
+        return;
+    }
+
+    m_cpClient->m_unidProcessGamePkt.unbind();
+
+    StartMatchPkt pkt;
+    pkt.deserialize(i_rPktData.sData);
+    startGame(pkt.uPlayerID);
+    m_sNextStateID = "Playing";
 }

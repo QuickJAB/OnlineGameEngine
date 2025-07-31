@@ -38,6 +38,7 @@ CGameInstance::CGameInstance(std::atomic<bool>& i_rbRunning, JNet::JNetPeer* con
 	cpConnecting->m_unidOnRequestIP.bind(cpMenu, &CMenuState::getIP);
 	cpConnecting->m_unidOnRequestPort.bind(cpMenu, &CMenuState::getPort);
 	cpConnecting->m_unidOnGameStarted.bind(this, &CGameInstance::serverStartedGame);
+	cpPlaying->m_unidRequestNetworkId.bind(this, &CGameInstance::getNetworkID);
 
 	m_cpNetworkThread->detach();
 
@@ -59,7 +60,7 @@ CGameInstance::~CGameInstance()
 	delete m_cpClient;
 }
 
-void CGameInstance::serverStartedGame()
+void CGameInstance::serverStartedGame(const uint8_t i_cuPlayerID)
 {
-	
+	m_uNetworkID = i_cuPlayerID;
 }
