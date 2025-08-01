@@ -116,8 +116,36 @@ void exampleThree()
 	delete pServer;
 }
 
+void exampleFour()
+{
+	JNet::init();
+
+	const sockaddr_in destAddr = JNet::createAddr("192.168.0.1", 19);
+	JNet::bindSocket(JNet::createAddr("127.0.0.1", 19));
+	JNet::overrideSocketTimeout(2000);
+
+	sockaddr_in addr;
+	std::string data;
+	int count = 0;
+	while (count < 10)
+	{
+		JNet::send("TestData", destAddr);
+		if (JNet::receive(data, addr))
+		{
+			std::println("Data: {}", data);
+		}
+		else
+		{
+			std::println("Count: {}", std::to_string(count));
+			++count;
+		}
+	}
+
+	JNet::cleanup();
+}
+
 int main()
 {
-	exampleThree();
+	exampleFour();
 	return 0;
 }
