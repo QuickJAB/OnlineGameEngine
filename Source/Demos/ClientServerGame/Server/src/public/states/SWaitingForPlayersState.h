@@ -17,6 +17,7 @@ private:
 public:
 	SWaitingForPlayersState(JNet::JNetPeer* const i_cpServer);
 
+	virtual void enter() override;
 	virtual std::string update(const float) override;
 
 protected:

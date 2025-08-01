@@ -11,8 +11,15 @@ SWaitingForPlayersState::SWaitingForPlayersState(JNet::JNetPeer* const i_cpServe
 {  
 }
 
+void SWaitingForPlayersState::enter()
+{
+    m_cpServer->openSocketForConnections(19);
+}
+
 string SWaitingForPlayersState::update(const float)
 {
+    m_cpServer->processIncomingPkts();
+
     if (m_cpServer->areConnectionsFull())
     {
         StartMatchPkt pkt;

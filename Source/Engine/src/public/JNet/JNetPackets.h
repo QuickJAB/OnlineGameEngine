@@ -22,7 +22,7 @@ namespace JNet
 
 	struct ConnectedPkt
 	{
-		const JNetPktType type = RequestConnect;
+		const JNetPktType type = Connected;
 
 		const std::string serialize();
 	};

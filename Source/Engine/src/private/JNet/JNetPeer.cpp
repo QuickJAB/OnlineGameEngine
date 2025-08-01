@@ -206,21 +206,29 @@ std::queue<JNet::JNetInPktData> JNet::JNetPeer::getIncomingPkts()
 
 void JNet::JNetPeer::addConnection(const sockaddr_in& i_cDestAddr)
 {
+	bool bIsConnectedAlready = false;
 	if (!m_umConnections.empty())
 	{
 		for (auto it = m_umConnections.begin(); it != m_umConnections.end(); ++it)
 		{
 			if (it->second.sin_addr.s_addr == i_cDestAddr.sin_addr.s_addr)
 			{
-				return;
+				bIsConnectedAlready = true;
+				break;
 			}
 		}
 	}
 	
-	m_umConnections.insert(std::pair<uint8_t, sockaddr_in>(m_uNextConnectionID, i_cDestAddr));
-	m_umNetOffsetTime.insert(std::pair<uint8_t, unsigned long long>(m_uNextConnectionID, 0));
-	m_umLastPongTime.insert(std::pair<uint8_t, unsigned long long>(m_uNextConnectionID, getCurrentTime()));
-	++m_uNextConnectionID;
+	if (!bIsConnectedAlready)
+	{
+		m_umConnections.insert(std::pair<uint8_t, sockaddr_in>(m_uNextConnectionID, i_cDestAddr));
+		m_umNetOffsetTime.insert(std::pair<uint8_t, unsigned long long>(m_uNextConnectionID, 0));
+		m_umLastPongTime.insert(std::pair<uint8_t, unsigned long long>(m_uNextConnectionID, getCurrentTime()));
+		++m_uNextConnectionID;
+	}
+
+	JNet::ConnectedPkt pkt;
+	JNet::send(pkt.serialize(), i_cDestAddr);
 }
 
 void JNet::JNetPeer::dispatchHeartBeat()
