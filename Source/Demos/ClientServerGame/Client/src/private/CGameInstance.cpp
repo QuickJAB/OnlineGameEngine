@@ -28,8 +28,7 @@ StateMachine* const CGameInstance::initStateMachine(Renderer* const i_cpRenderer
 CGameInstance::CGameInstance(std::atomic<bool>& i_rbRunning, JNet::JNetPeer* const i_cpClient, Window* const i_cpWnd,
 	Renderer* const i_cpRenderer, EventHandler* const i_cpEventHandler) :
 	GameInstance(i_rbRunning, initStateMachine(i_cpRenderer, i_cpEventHandler, i_cpClient)),
-	m_cpClient(i_cpClient), m_cpNetworkThread(new thread(&JNet::JNetPeer::update, m_cpClient)), m_cpWindow(i_cpWnd),
-	m_cpRenderer(i_cpRenderer), m_cpEventHandler(i_cpEventHandler)
+	m_cpClient(i_cpClient), m_cpWindow(i_cpWnd), m_cpRenderer(i_cpRenderer), m_cpEventHandler(i_cpEventHandler)
 {
 	CMenuState* const cpMenu = m_cpStateMachine->getState<CMenuState>("Menu");
 	CConnectingState* const cpConnecting = m_cpStateMachine->getState<CConnectingState>("Connecting");
@@ -39,8 +38,6 @@ CGameInstance::CGameInstance(std::atomic<bool>& i_rbRunning, JNet::JNetPeer* con
 	cpConnecting->m_unidOnRequestPort.bind(cpMenu, &CMenuState::getPort);
 	cpConnecting->m_unidOnGameStarted.bind(this, &CGameInstance::serverStartedGame);
 	cpPlaying->m_unidRequestNetworkId.bind(this, &CGameInstance::getNetworkID);
-
-	m_cpNetworkThread->detach();
 
 	m_cpEventHandler->m_unidOnEventQuit.bind(static_cast<GameInstance*>(this), &GameInstance::quitGame);
 }
@@ -53,9 +50,6 @@ CGameInstance::~CGameInstance()
 	delete m_cpRenderer;
 
 	delete m_cpWindow;
-
-	m_cpNetworkThread->join();
-	delete m_cpNetworkThread;
 
 	delete m_cpClient;
 }

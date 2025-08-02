@@ -6,14 +6,20 @@
 #include "core/Serializer.h"
 
 JNet::JNetPeer::JNetPeer(const uint8_t i_cuMaxConnections, bool i_bIsHost) :
-	m_cuMaxConnections(i_cuMaxConnections), m_bIsHost(i_bIsHost)
+	m_cuMaxConnections(i_cuMaxConnections), m_bIsHost(i_bIsHost),
+	m_cpSendRecvThread(new std::thread(&JNet::JNetPeer::update, this))
 {
 	JNet::init();
 	m_bRunning = false;
+
+	m_cpSendRecvThread->detach();
 }
 
 JNet::JNetPeer::~JNetPeer()
 {
+	m_cpSendRecvThread->join();
+	delete m_cpSendRecvThread;
+
 	JNet::cleanup();
 }
 

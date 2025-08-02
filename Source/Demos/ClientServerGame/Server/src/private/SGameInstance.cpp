@@ -21,16 +21,11 @@ StateMachine* const SGameInstance::initStateMachine(JNet::JNetPeer* const i_cpSe
 }
 
 SGameInstance::SGameInstance(std::atomic<bool>& i_rbRunning, JNet::JNetPeer* const i_cpServer) :
-	GameInstance(i_rbRunning, initStateMachine(i_cpServer)), m_cpServer(i_cpServer),
-	m_cpNetworkThread(new thread(&JNet::JNetPeer::update, m_cpServer))
+	GameInstance(i_rbRunning, initStateMachine(i_cpServer)), m_cpServer(i_cpServer)
 {
-	m_cpNetworkThread->detach();
 }
 
 SGameInstance::~SGameInstance()
 {
-	m_cpNetworkThread->join();
-	delete m_cpNetworkThread;
-
 	delete m_cpServer;
 }

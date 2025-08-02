@@ -1,7 +1,6 @@
 #pragma once
 
 #include <atomic>
-#include <thread>
 
 #include <graphics/Window.h>
 #include <graphics/Renderer.h>
@@ -25,7 +24,6 @@ private:
 	EventHandler* const m_cpEventHandler;
 
 	JNet::JNetPeer* const m_cpClient;
-	std::thread* const m_cpNetworkThread;
 
 	uint8_t m_uNetworkID;
 

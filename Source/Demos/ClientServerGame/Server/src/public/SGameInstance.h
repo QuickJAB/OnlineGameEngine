@@ -1,6 +1,5 @@
 #pragma once
 
-#include <thread>
 #include <atomic>
 
 #include <core/game base/GameInstance.h>
@@ -16,7 +15,6 @@ public:
 protected:
 private:
 	JNet::JNetPeer* const m_cpServer;
-	std::thread* const m_cpNetworkThread;
 
 public:
 	SGameInstance(std::atomic<bool>& i_rbRunning, JNet::JNetPeer* const i_cpServer);

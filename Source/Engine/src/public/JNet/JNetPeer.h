@@ -4,6 +4,7 @@
 #include <mutex>
 #include <unordered_map>
 #include <set>
+#include <thread>
 
 #include "JNet.h"
 #include "core/Delegates.h"
@@ -54,6 +55,8 @@ namespace JNet
 		const uint8_t m_cuMaxConnectionAttempts = 10;
 		uint8_t m_uNumConnectionAttempts = 0;
 		const unsigned long long m_cullConnectionAttemptDelayMilli = 5000;
+
+		std::thread* const m_cpSendRecvThread;
 
 	public:
 		JNetPeer(const uint8_t i_cuMaxConnections = 1, bool i_bIsHost = false);
