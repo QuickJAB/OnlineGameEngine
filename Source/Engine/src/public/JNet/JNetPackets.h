@@ -10,7 +10,8 @@ namespace JNet
 		Connected,
 		Ping,
 		Pong,
-		Disconnect
+		Disconnect,
+		Size
 	};
 
 	struct RequestConnectPkt

@@ -34,6 +34,5 @@ public:
 
 protected:
 private:
-	void startGame(const uint8_t i_cuPlayerID);
 	void processGamePkts(JNet::JNetPktType i_PktType, JNet::JNetInPktData& i_rPktData);
 };

@@ -43,11 +43,6 @@ string CConnectingState::update(float)
     return m_sNextStateID;
 }
 
-void CConnectingState::startGame(const uint8_t i_cuPlayerID)
-{
-    m_unidOnGameStarted.broadcast(i_cuPlayerID);
-}
-
 void CConnectingState::processGamePkts(JNet::JNetPktType i_pktType, JNet::JNetInPktData& i_rPktData)
 {
     if (i_pktType != GPktType::StartMatch)
@@ -59,6 +54,6 @@ void CConnectingState::processGamePkts(JNet::JNetPktType i_pktType, JNet::JNetIn
 
     StartMatchPkt pkt;
     pkt.deserialize(i_rPktData.sData);
-    startGame(pkt.uPlayerID);
+    m_unidOnGameStarted.broadcast(pkt.uPlayerID);
     m_sNextStateID = "Playing";
 }
