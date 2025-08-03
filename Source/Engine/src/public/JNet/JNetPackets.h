@@ -24,6 +24,7 @@ namespace JNet
 	struct ConnectedPkt
 	{
 		const JNetPktType type = Connected;
+		uint8_t connectionID = 0;
 
 		const std::string serialize();
 	};

@@ -9,7 +9,9 @@ const std::string JNet::RequestConnectPkt::serialize()
 
 const std::string JNet::ConnectedPkt::serialize()
 {
-    return BinarySerializer::serialize<JNetPktType>(type);
+    std::string sData = BinarySerializer::serialize<JNetPktType>(type);;
+    sData += BinarySerializer::serialize<uint8_t>(connectionID);
+    return sData;
 }
 
 const std::string JNet::PingPkt::serialize()
