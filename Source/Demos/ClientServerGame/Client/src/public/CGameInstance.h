@@ -25,19 +25,13 @@ private:
 
 	JNet::JNetPeer* const m_cpClient;
 
-	uint8_t m_uNetworkID;
-
 public:
 	CGameInstance(std::atomic<bool>& i_rbRunning, JNet::JNetPeer* const i_cpClient, Window* const i_cpWnd,
 		Renderer* const i_cpRenderer, EventHandler* const i_cpEventHandler);
 	~CGameInstance();
 
-	const uint8_t getNetworkID() const { return m_uNetworkID; }
-
 protected:
 private:
-	void serverStartedGame(const uint8_t i_cuPlayerID);
-
 	static StateMachine* const initStateMachine(Renderer* const i_cpRenderer,
 		EventHandler* const i_cpEventHandler, JNet::JNetPeer* const i_cpClient);
 };

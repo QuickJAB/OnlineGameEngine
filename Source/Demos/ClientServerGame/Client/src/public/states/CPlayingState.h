@@ -4,6 +4,11 @@
 
 #include <states/GPlayingState.h>
 
+namespace JNet
+{
+	class JNetPeer;
+}
+
 class Renderer;
 class EventHandler;
 class Level;
@@ -12,17 +17,15 @@ class CTestLevel;
 class CPlayingState : public GPlayingState
 {
 public:
-	Delegate<const uint8_t()> m_unidRequestNetworkId;
-
 protected:
 private:
 	Renderer* const m_cpRenderer;
 	EventHandler* const m_cpEventHandler;
-
-	uint8_t m_uNetworkId = (uint8_t)-1;
+	JNet::JNetPeer* const m_cpServer;
 
 public:
-	CPlayingState(Renderer* const i_cpRenderer, EventHandler* const i_cpEventHandler);
+	CPlayingState(Renderer* const i_cpRenderer, EventHandler* const i_cpEventHandler,
+		JNet::JNetPeer* const i_cpServer);
 	~CPlayingState() = default;
 
 	virtual void enter() override;

@@ -15,10 +15,6 @@ enum GPktType : uint8_t
 struct StartMatchPkt
 {
 	const GPktType type = StartMatch;
-	uint8_t uPlayerID;
-
-	const std::string serialize();
-	void deserialize(std::string& i_rsData);
 };
 
 struct GameStateUpdatePkt
@@ -35,8 +31,8 @@ struct ClientInputPkt
 	uint8_t uPlayerID;
 	uint8_t uInputBitMask;
 
-	void buildMask(const int i_ciXDir, const int i_ciYDir, const bool i_cbShooting);
-	void extractFromMask(int& o_riXDir, int& o_riYDir, bool& o_rbShooting);
+	void buildMask(const float i_cfXDir, const float i_cfYDir, const bool i_cbShooting);
+	void extractFromMask(float& o_rfXDir, float& o_rfYDir, bool& o_rbShooting);
 	const std::string serialize();
 	void deserialize(std::string& i_rsData);
 };

@@ -61,6 +61,7 @@ bool JNet::JNetPeer::tryConnect(const std::string i_csIP, const uint16_t i_cuPor
 		if (BinarySerializer::deserialize<JNetPktType>(sData) == JNet::Connected)
 		{
 			JNet::resetSocketTimeout();
+			m_uConnectionID = BinarySerializer::deserialize<uint8_t>(sData);
 			m_bRunning = true;
 			return true;
 		}

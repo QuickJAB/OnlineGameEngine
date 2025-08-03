@@ -56,6 +56,8 @@ namespace JNet
 		uint8_t m_uNumConnectionAttempts = 0;
 		const unsigned long long m_cullConnectionAttemptDelayMilli = 5000;
 
+		uint8_t m_uConnectionID = 255;
+
 		std::thread* const m_cpSendRecvThread;
 
 	public:
@@ -73,6 +75,7 @@ namespace JNet
 
 		bool areConnectionsFull() const;
 		const uint8_t getMaxConnections() const { return m_cuMaxConnections; }
+		const uint8_t getConnectionID() const { return m_uConnectionID; }
 
 	protected:
 	private:

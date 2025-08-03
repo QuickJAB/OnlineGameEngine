@@ -19,7 +19,7 @@ StateMachine* const CGameInstance::initStateMachine(Renderer* const i_cpRenderer
 	CConnectingState* pConnecting = new CConnectingState(i_cpClient);
 	umStates.insert(pair<string, State*>("Connecting", pConnecting));
 
-	CPlayingState* pPlaying = new CPlayingState(i_cpRenderer, i_cpEventHandler);
+	CPlayingState* pPlaying = new CPlayingState(i_cpRenderer, i_cpEventHandler, i_cpClient);
 	umStates.insert(pair<string, State*>("Playing", pPlaying));
 
 	return new StateMachine(umStates, "Menu");
@@ -36,8 +36,6 @@ CGameInstance::CGameInstance(std::atomic<bool>& i_rbRunning, JNet::JNetPeer* con
 
 	cpConnecting->m_unidOnRequestIP.bind(cpMenu, &CMenuState::getIP);
 	cpConnecting->m_unidOnRequestPort.bind(cpMenu, &CMenuState::getPort);
-	cpConnecting->m_unidOnGameStarted.bind(this, &CGameInstance::serverStartedGame);
-	cpPlaying->m_unidRequestNetworkId.bind(this, &CGameInstance::getNetworkID);
 
 	m_cpEventHandler->m_unidOnEventQuit.bind(static_cast<GameInstance*>(this), &GameInstance::quitGame);
 }
@@ -52,9 +50,4 @@ CGameInstance::~CGameInstance()
 	delete m_cpWindow;
 
 	delete m_cpClient;
-}
-
-void CGameInstance::serverStartedGame(const uint8_t i_cuPlayerID)
-{
-	m_uNetworkID = i_cuPlayerID;
 }

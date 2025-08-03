@@ -26,8 +26,6 @@ string SWaitingForPlayersState::update(const float)
         JNet::JNetOutPktData pktData;
         for (uint8_t i = 0; i < m_cpServer->getMaxConnections(); ++i)
         {
-            pkt.uPlayerID = i;
-            pktData.sData = pkt.serialize();
             pktData.iDestID = i;
             m_cpServer->queueOutgoingPkt(pktData, true);
         }

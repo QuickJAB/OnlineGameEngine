@@ -2,6 +2,7 @@
 
 #include <graphics/Renderer.h>
 #include <input/EventHandler.h>
+#include <jNet/JNetPeer.h>
 
 #include <GGameState.h>
 
@@ -10,20 +11,21 @@
 
 using namespace std;
 
-CPlayingState::CPlayingState(Renderer* const i_cpRenderer, EventHandler* const i_cpEventHandler) :
-	GPlayingState(new GGameState()), m_cpRenderer(i_cpRenderer), m_cpEventHandler(i_cpEventHandler)
+CPlayingState::CPlayingState(Renderer* const i_cpRenderer, EventHandler* const i_cpEventHandler,
+	JNet::JNetPeer* const i_cpServer) :
+	GPlayingState(new GGameState()), m_cpRenderer(i_cpRenderer), m_cpEventHandler(i_cpEventHandler),
+	m_cpServer(i_cpServer)
 {
 }
 
 void CPlayingState::enter()
 {
-	m_uNetworkId = m_unidRequestNetworkId.broadcast();
-
-	m_pLevel = new CTestLevel(m_uNetworkId);
+	m_pLevel = new CTestLevel(m_cpServer->getConnectionID());
 	getLevel()->load();
 
-	const uint32_t playerId = m_pLevel->getPlayerByNetworkId(m_uNetworkId);
-	CPlayerController* const cpPlayerController = new CPlayerController(playerId, m_pLevel, m_cpEventHandler);
+	const uint32_t playerId = m_pLevel->getPlayerByNetworkId(m_cpServer->getConnectionID());
+	CPlayerController* const cpPlayerController = new CPlayerController(playerId, m_pLevel, m_cpEventHandler,
+		m_cpServer);
 	m_cpGameState->addController(cpPlayerController);
 }
 

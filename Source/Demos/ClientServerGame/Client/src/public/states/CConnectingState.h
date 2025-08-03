@@ -16,7 +16,6 @@ class CConnectingState : public State
 public:
 	Delegate<std::string()> m_unidOnRequestIP;
 	Delegate<uint16_t()> m_unidOnRequestPort;
-	Delegate<void(const uint8_t i_cuPlayerID)> m_unidOnGameStarted;
 
 protected:
 private:

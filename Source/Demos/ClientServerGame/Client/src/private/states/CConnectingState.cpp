@@ -51,9 +51,5 @@ void CConnectingState::processGamePkts(JNet::JNetPktType i_pktType, JNet::JNetIn
     }
 
     m_cpClient->m_unidProcessGamePkt.unbind();
-
-    StartMatchPkt pkt;
-    pkt.deserialize(i_rPktData.sData);
-    m_unidOnGameStarted.broadcast(pkt.uPlayerID);
     m_sNextStateID = "Playing";
 }
