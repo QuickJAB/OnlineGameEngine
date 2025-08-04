@@ -9,7 +9,7 @@ protected:
 private:
 
 public:
-	GGameState() = default;
+	GGameState(JNet::JNetPeer* const i_cpPeer);
 	~GGameState() = default;
 
 protected:

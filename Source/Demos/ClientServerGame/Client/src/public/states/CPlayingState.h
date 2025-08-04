@@ -21,7 +21,6 @@ protected:
 private:
 	Renderer* const m_cpRenderer;
 	EventHandler* const m_cpEventHandler;
-	JNet::JNetPeer* const m_cpServer;
 
 public:
 	CPlayingState(Renderer* const i_cpRenderer, EventHandler* const i_cpEventHandler,

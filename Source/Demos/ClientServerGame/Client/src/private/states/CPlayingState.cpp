@@ -13,8 +13,7 @@ using namespace std;
 
 CPlayingState::CPlayingState(Renderer* const i_cpRenderer, EventHandler* const i_cpEventHandler,
 	JNet::JNetPeer* const i_cpServer) :
-	GPlayingState(new GGameState()), m_cpRenderer(i_cpRenderer), m_cpEventHandler(i_cpEventHandler),
-	m_cpServer(i_cpServer)
+	GPlayingState(new GGameState(i_cpServer), i_cpServer), m_cpRenderer(i_cpRenderer), m_cpEventHandler(i_cpEventHandler)
 {
 }
 
@@ -26,7 +25,7 @@ void CPlayingState::enter()
 	const uint32_t playerId = m_pLevel->getPlayerByNetworkId(m_cpServer->getConnectionID());
 	CPlayerController* const cpPlayerController = new CPlayerController(playerId, m_pLevel, m_cpEventHandler,
 		m_cpServer);
-	m_cpGameState->addController(cpPlayerController);
+	m_cpGameState->addController(playerId, cpPlayerController);
 }
 
 string CPlayingState::update(float in_dt)

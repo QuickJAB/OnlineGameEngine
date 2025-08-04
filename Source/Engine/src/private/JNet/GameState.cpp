@@ -1,18 +1,31 @@
 #include "jNet/GameState.h"
 
 #include "core/game base/Controller.h"
+#include "jNet/JNetPeer.h"
+#include "jNet/JNetPackets.h"
+
+GameState::GameState(JNet::JNetPeer* const i_cpPeer) : m_cpPeer(i_cpPeer)
+{
+	m_cpPeer->m_unidProcessGamePkt.bind(this, &GameState::processIncomingPkts);
+}
 
 GameState::~GameState()
 {
-	for (Controller* const cpController : m_vControllers)
+	m_cpPeer->m_unidProcessGamePkt.unbind();
+
+	for (auto pIt = m_umControllers.begin(); pIt != m_umControllers.end(); ++pIt)
 	{
-		delete cpController;
+		delete pIt->second;
 	}
 
-	m_vControllers.clear();
+	m_umControllers.clear();
 }
 
-void GameState::addController(Controller* const i_cpController)
+void GameState::addController(const uint8_t i_cuConnectionId, Controller* const i_cpController)
 {
-	m_vControllers.push_back(i_cpController);
+	m_umControllers.insert(std::pair<uint8_t, Controller*>(i_cuConnectionId, i_cpController));
+}
+
+void GameState::updateController(const float i_cfDt, const uint8_t i_cuConnectionId)
+{
 }

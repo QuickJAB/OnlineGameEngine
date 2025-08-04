@@ -1,6 +1,8 @@
 #include "states/GPlayingState.h"
 
-GPlayingState::GPlayingState(GGameState* const i_cpGameState) :
-	m_cpGameState(i_cpGameState)
+#include <JNet/JNetPeer.h>
+
+GPlayingState::GPlayingState(GGameState* const i_cpGameState, JNet::JNetPeer* const i_cpServer) :
+	m_cpGameState(i_cpGameState), m_cpServer(i_cpServer)
 {
 }
