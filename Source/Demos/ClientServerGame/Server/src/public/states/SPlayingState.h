@@ -28,4 +28,5 @@ public:
 protected:
 private:
 	void processIncomingPkts(JNet::JNetPktType i_pktType, JNet::JNetInPktData& i_rPktData);
+	void processClientInput(JNet::JNetInPktData& i_rPktData);
 };

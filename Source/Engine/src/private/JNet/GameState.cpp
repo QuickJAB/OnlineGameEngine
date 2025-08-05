@@ -26,6 +26,11 @@ void GameState::addController(const uint8_t i_cuConnectionId, Controller* const 
 	m_umControllers.insert(std::pair<uint8_t, Controller*>(i_cuConnectionId, i_cpController));
 }
 
-void GameState::updateController(const float i_cfDt, const uint8_t i_cuConnectionId)
+Controller* const GameState::getController(const uint8_t i_cuConnectionId)
 {
+	if (m_umControllers.contains(i_cuConnectionId))
+	{
+		return m_umControllers.at(i_cuConnectionId);
+	}
+	return nullptr;
 }

@@ -26,9 +26,8 @@ public:
 	~GameState();
 
 	void addController(const uint8_t i_cuConnectionId, Controller* const i_cpController);
+	Controller* const getController(const uint8_t i_cuConnectionId);
 
 protected:
-	virtual void updateController(const float i_cfDt, const uint8_t i_cuConnectionId);
-
 private:
 };

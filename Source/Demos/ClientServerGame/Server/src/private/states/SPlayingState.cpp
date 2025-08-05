@@ -4,6 +4,7 @@
 
 #include <GGameState.h>
 #include <GTestLevel.h>
+#include <GGamePkts.h>
 
 using namespace std;
 
@@ -41,5 +42,19 @@ void SPlayingState::exit()
 
 void SPlayingState::processIncomingPkts(JNet::JNetPktType i_pktType, JNet::JNetInPktData& i_rPktData)
 {
+	switch (i_pktType)
+	{
+	case ClientInput:
+		processClientInput(i_rPktData);
+		break;
+	}
+}
+
+void SPlayingState::processClientInput(JNet::JNetInPktData& i_rPktData)
+{
+	ClientInputPkt pkt;
+	pkt.deserialize(i_rPktData.sData);
+
+	Controller* const pController = m_cpGameState->getController(pkt.uPlayerID);
 
 }
