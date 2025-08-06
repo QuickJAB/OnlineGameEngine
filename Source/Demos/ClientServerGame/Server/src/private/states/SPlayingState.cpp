@@ -6,6 +6,8 @@
 #include <GTestLevel.h>
 #include <GGamePkts.h>
 
+#include "SController.h"
+
 using namespace std;
 
 SPlayingState::SPlayingState(JNet::JNetPeer* const i_cpServer) : GPlayingState(new GGameState(i_cpServer), i_cpServer)
@@ -55,6 +57,6 @@ void SPlayingState::processClientInput(JNet::JNetInPktData& i_rPktData)
 	ClientInputPkt pkt;
 	pkt.deserialize(i_rPktData.sData);
 
-	Controller* const pController = m_cpGameState->getController(pkt.uPlayerID);
-
+	SController* const pController = static_cast<SController*>(m_cpGameState->getController(pkt.uPlayerID));
+	pController->update(m_cfTickRateMilli, pkt);
 }
