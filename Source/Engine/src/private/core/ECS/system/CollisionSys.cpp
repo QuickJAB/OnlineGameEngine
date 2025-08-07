@@ -44,6 +44,31 @@ void CollisionSys::update(const float i_cfDt)
 	}
 }
 
+void CollisionSys::checkSpecificEntityCollisions(const uint32_t i_cuEntityId, const float i_cfDt)
+{
+	vector<ColliderComp>* pvColliders = m_cpECS->getComponentArray<ColliderComp>();
+	ColliderComp* pEntityColComp = m_cpECS->getComponent<ColliderComp>(i_cuEntityId);
+	if (pvColliders == nullptr || pEntityColComp == nullptr || pEntityColComp->bIsStatic) return;
+
+	for (auto pIt = pvColliders->begin(); pIt != pvColliders->end(); ++pIt)
+	{
+		if (pIt->uOwner == pEntityColComp->uOwner) continue;
+
+		TransformComp* const cpAT = m_cpECS->getComponent<TransformComp>(pEntityColComp->uOwner);
+		TransformComp* const cpBT = m_cpECS->getComponent<TransformComp>(pIt->uOwner);
+		if (cpAT != nullptr && cpBT != nullptr && checkAABB(cpAT, cpBT))
+		{
+			CollisionResult colRes(
+				min(cpAT->fX + cpAT->fWidth, cpBT->fX + cpBT->fWidth) - max(cpAT->fX, cpBT->fX),
+				min(cpAT->fY + cpAT->fHeight, cpBT->fY + cpBT->fHeight) - max(cpAT->fY, cpBT->fY)
+			);
+
+			pEntityColComp->unidOnCollided.broadcast(colRes);
+			pIt->unidOnCollided.broadcast(colRes);
+		}
+	}
+}
+
 void CollisionSys::resolveBlockingCollision(const CollisionResult i_colRes, const float i_cfXDir,
 	const float i_cfYDir, float& o_rfX, float& o_rfY)
 {

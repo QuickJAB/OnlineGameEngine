@@ -19,6 +19,8 @@ public:
 	~GTestLevel();
 
 	virtual void update(const float i_cfDt) override;
+	void moveSpecificEntity(const uint32_t i_cuEntityId, const float i_cfDt);
+	void checkSpecificEntityCollisions(const uint32_t i_cuEntityId, const float i_cfDt);
 
 	virtual void load() override;
 

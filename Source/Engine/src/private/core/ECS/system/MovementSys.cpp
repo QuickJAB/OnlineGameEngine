@@ -24,3 +24,13 @@ void MovementSys::update(const float i_cfDt)
 		pTransform->fY += crVelocity.fYDir * crVelocity.fSpeed * i_cfDt;
 	}
 }
+
+void MovementSys::moveSpecificEntity(const uint32_t i_uEntityId, const float i_cfDt)
+{
+	VelocityComp* pVelComp = m_cpECS->getComponent<VelocityComp>(i_uEntityId);
+	TransformComp* pTransComp = m_cpECS->getComponent<TransformComp>(i_uEntityId);
+	if (pVelComp == nullptr || pTransComp == nullptr) return;
+
+	pTransComp->fX += pVelComp->fXDir * pVelComp->fSpeed * i_cfDt;
+	pTransComp->fY += pVelComp->fYDir * pVelComp->fSpeed * i_cfDt;
+}

@@ -13,6 +13,7 @@ public:
 	MovementSys(ECS* const i_cpECS) : m_cpECS(i_cpECS) {}
 
 	void update(const float i_cfDt);
+	void moveSpecificEntity(const uint32_t i_uEntityId, const float i_cfDt);
 	
 protected:
 private:

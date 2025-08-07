@@ -21,8 +21,18 @@ GTestLevel::~GTestLevel()
 
 void GTestLevel::update(const float i_cfDt)
 {
-	m_cpCollisionSys->update(i_cfDt);
 	m_cpMovementSys->update(i_cfDt);
+	m_cpCollisionSys->update(i_cfDt);
+}
+
+void GTestLevel::moveSpecificEntity(const uint32_t i_cuEntityId, const float i_cfDt)
+{
+	m_cpMovementSys->moveSpecificEntity(i_cuEntityId, i_cfDt);
+}
+
+void GTestLevel::checkSpecificEntityCollisions(const uint32_t i_cuEntityId, const float i_cfDt)
+{
+	m_cpCollisionSys->checkSpecificEntityCollisions(i_cuEntityId, i_cfDt);
 }
 
 void GTestLevel::load()
