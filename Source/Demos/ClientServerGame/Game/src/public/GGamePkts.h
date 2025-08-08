@@ -19,7 +19,16 @@ struct StartMatchPkt
 
 struct GameStateUpdatePkt
 {
+	struct EntityData
+	{
+		uint32_t EntityID;
+		float x;
+		float y;
+	};
+
 	const GPktType type = GameStateUpdate;
+	const uint8_t cuNumEntities = 2;
+	EntityData entityData[2];
 
 	const std::string serialize();
 	void deserialize(std::string& i_rsData);

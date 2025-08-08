@@ -3,6 +3,7 @@
 #include <cstdint>
 
 class Level;
+struct TransformComp;
 
 class Controller
 {
@@ -15,6 +16,7 @@ private:
 
 public:
 	Controller(const uint32_t i_cuEntity, Level* const i_cpLevel);
+	const TransformComp* const getTransformComp() const;
 
 protected:
 private:

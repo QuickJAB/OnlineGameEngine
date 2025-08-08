@@ -31,6 +31,10 @@ string SPlayingState::update(const float i_cfDt)
 
 		m_cpServer->processIncomingPkts();
 		m_pLevel->update(i_cfDt);
+
+		JNet::JNetOutPktData pkt;
+		m_cpGameState->serializeGameState(pkt.sData);
+		m_cpServer->queueOutgoingPkt(pkt);
 	}
 
 	return "";

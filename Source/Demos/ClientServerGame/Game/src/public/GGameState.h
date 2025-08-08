@@ -2,6 +2,8 @@
 
 #include <jNet/GameState.h>
 
+struct GameStateUpdatePkt;
+
 class GGameState : public GameState
 {
 public:
@@ -9,8 +11,7 @@ protected:
 private:
 
 public:
-	GGameState(JNet::JNetPeer* const i_cpPeer);
-	~GGameState() = default;
+	void serializeGameState(std::string& o_rsData);
 
 protected:
 private:
