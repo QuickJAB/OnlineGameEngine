@@ -1,5 +1,7 @@
 #include "CPlayerController.h"
 
+#include <SDL3/SDL_mouse.h>
+
 #include <input/EventHandler.h>
 #include <core/ECS/Level.h>
 #include <core/ECS/component/VelocityComp.h>
@@ -29,16 +31,17 @@ CPlayerController::~CPlayerController()
 	m_cpLevel->getComponent<ColliderComp>(m_cuEntity)->unidOnCollided.unbind();
 }
 
-void CPlayerController::onKeyStatesUpdated(const bool* i_cpKeyStates)
+void CPlayerController::onKeyStatesUpdated(const bool* i_cpKeyStates, const SDL_MouseButtonFlags* i_cpMouseButtonFlags)
 {
 	VelocityComp* const cpVelocity = m_cpLevel->getComponent<VelocityComp>(m_cuEntity);
-
 	cpVelocity->fXDir = static_cast<float>(i_cpKeyStates[SDL_SCANCODE_D] - i_cpKeyStates[SDL_SCANCODE_A]);
 	cpVelocity->fYDir = static_cast<float>(i_cpKeyStates[SDL_SCANCODE_S] - i_cpKeyStates[SDL_SCANCODE_W]);
 
+	bDidShoot = *i_cpMouseButtonFlags & SDL_BUTTON_LMASK;
+
 	ClientInputPkt pkt;
 	pkt.uPlayerID = m_cpServer->getConnectionID();
-	pkt.buildMask(cpVelocity->fXDir, cpVelocity->fYDir, false);
+	pkt.buildMask(cpVelocity->fXDir, cpVelocity->fYDir, bDidShoot);
 
 	JNet::JNetOutPktData pktData;
 	pktData.sData = pkt.serialize();

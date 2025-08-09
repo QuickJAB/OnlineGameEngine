@@ -8,12 +8,13 @@ class EventHandler final
 {
 public:
 	Delegate<void()> m_unidOnEventQuit;
-	MulticastDelegate<void(const bool*)> m_muldOnKeyStatesUpdated;
+	MulticastDelegate<void(const bool*, const SDL_MouseButtonFlags*)> m_muldOnKeyStatesUpdated;
 protected:
 private:
 	SDL_Event m_Event;
 
 	const bool* m_pcKeyStates = nullptr;
+	SDL_MouseButtonFlags m_MouseButtonFlags;
 
 public:
 	EventHandler() = default;

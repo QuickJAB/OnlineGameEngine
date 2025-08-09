@@ -13,5 +13,6 @@ void EventHandler::pollEvents()
 	}
 
 	m_pcKeyStates = SDL_GetKeyboardState(nullptr);
-	m_muldOnKeyStatesUpdated.broadcast(m_pcKeyStates);
+	m_MouseButtonFlags = SDL_GetRelativeMouseState(nullptr, nullptr);
+	m_muldOnKeyStatesUpdated.broadcast(m_pcKeyStates, &m_MouseButtonFlags);
 }
