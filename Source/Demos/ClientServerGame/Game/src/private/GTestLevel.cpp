@@ -6,6 +6,8 @@
 #include <core/ECS/component/ColliderComp.h>
 #include <core/ECS/component/VelocityComp.h>
 
+#include "components/GCombatComponent.h"
+
 using namespace std;
 
 GTestLevel::GTestLevel() : Level(),
@@ -87,6 +89,7 @@ void GTestLevel::load()
 	m_cpECS->addComponent<TransformComp>(uE, &t);
 	m_cpECS->addComponent<ColliderComp>(uE);
 	m_cpECS->addComponent<VelocityComp>(uE);
+	m_cpECS->addComponent<GCombatComponent>(uE);
 	m_umNetPlayerId.insert(pair<uint32_t, uint32_t>(0, uE));
 
 	uE = m_cpECS->createEntity();
@@ -94,5 +97,6 @@ void GTestLevel::load()
 	m_cpECS->addComponent<TransformComp>(uE, &t);
 	m_cpECS->addComponent<ColliderComp>(uE);
 	m_cpECS->addComponent<VelocityComp>(uE);
+	m_cpECS->addComponent<GCombatComponent>(uE);
 	m_umNetPlayerId.insert(pair<uint32_t, uint32_t>(1, uE));
 }
